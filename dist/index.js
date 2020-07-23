@@ -18,30 +18,32 @@ const Handler_1 = __importDefault(require("./handlers/Handler"));
 const mongoose_1 = require("mongoose");
 const Guild_1 = __importDefault(require("./modules/discord/Guild"));
 const Member_1 = __importDefault(require("./modules/discord/Member"));
-const dbUri = `mongodb://127.0.0.1:27017/thortilla`;
+dotenv_1.config({
+    path: __dirname + "/.env",
+});
+const dbUri = process.env.DBURI;
+// @ts-ignore
 mongoose_1.connect(dbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
 })
-    .then((res) => console.log('✅ connected to database'))
+    .then((res) => console.log("✅ connected to database"))
     .catch((err) => console.log(err));
-discord_js_1.Structures.extend('Guild', Guild => Guild_1.default);
-discord_js_1.Structures.extend('GuildMember', Member => Member_1.default);
+discord_js_1.Structures.extend("Guild", (Guild) => Guild_1.default);
+discord_js_1.Structures.extend("GuildMember", (Member) => Member_1.default);
 const client = new discord_js_1.Client({
-    disableMentions: "everyone"
+    disableMentions: "everyone",
 });
-dotenv_1.config({
-    path: __dirname + '/.env'
-});
-const categories = fs.readdirSync(path.join(__dirname, './assets/commands/'));
-const handler = new Handler_1.default(client, '$', categories);
-handler.load(path.join(__dirname, './assets'), {
+const categories = fs.readdirSync(path.join(__dirname, "./assets/commands/"));
+const handler = new Handler_1.default(client, "$", categories);
+handler.load(path.join(__dirname, "./assets"), {
     client: client,
-    handler: handler
+    handler: handler,
 });
-client.on('error', (err) => {
-    console.log('err');
+client.on("error", (err) => {
+    console.log("err");
 });
-process.on('SIGINT', () => process.exit());
-client.login(process.env.TOKEN);
+process.on("SIGINT", () => process.exit());
+console.log(process.env.NODE_ENV);
+// client.login(process.env.TOKEN);

@@ -24,9 +24,11 @@ class Handler {
         this.events = new discord_js_1.Collection();
         this.nodes = [
             {
-                host: "localhost",
-                port: 8080,
-                password: 'mypasswordlol',
+                host: process.env.DEV === "true"
+                    ? "localhost"
+                    : "https://lavalink-thotilla.herokuapp.com/",
+                port: 80,
+                password: "mypasswordlol",
             },
         ];
         this.client = client;
@@ -35,15 +37,15 @@ class Handler {
     }
     load(directory, args) {
         const files = Utils_1.Utils.readdirSyncRecursive(directory)
-            .filter(file => file.endsWith('.js'))
+            .filter((file) => file.endsWith(".js"))
             .map(require);
-        files.forEach(File => {
+        files.forEach((File) => {
             if (File.prototype instanceof Command_1.default) {
                 const command = new File(args);
                 this.loadCommand(command);
             }
         });
-        files.forEach(File => {
+        files.forEach((File) => {
             if (File.prototype instanceof Event_1.default) {
                 const event = new File(args);
                 this.loadEvent(event);
@@ -57,7 +59,7 @@ class Handler {
         }
         this.commands.set(command.name, command);
         if (command.aliases && Array.isArray(command.aliases)) {
-            command.aliases.forEach(alias => {
+            command.aliases.forEach((alias) => {
                 if (this.commands.has(alias) || this.aliases.has(alias))
                     throw new Error(`The ${alias} is already in use by other command`);
                 this.aliases.set(alias, command);
@@ -74,7 +76,7 @@ class Handler {
         for (const [eventName, events] of Array.from(this.events)) {
             // @ts-ignore
             this.client.on(eventName, (...args) => {
-                events.map(event => {
+                events.map((event) => {
                     if (!event.enabled)
                         return;
                     event.run(...args);
@@ -91,8 +93,9 @@ class Handler {
                 return;
             const [command, ...args] = message.content
                 .slice(prefix.length)
-                .split(' ');
-            let cmd = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
+                .split(" ");
+            let cmd = this.commands.get(command.toLocaleLowerCase()) ||
+                this.aliases.get(command.toLocaleLowerCase());
             let hasPermission = false;
             if (!cmd || !cmd.enabled) {
                 return;
@@ -109,7 +112,7 @@ class Handler {
                 hasPermission = true;
             }
             if (!hasPermission)
-                return message.channel.send('You don\'t have the required permissions');
+                return message.channel.send("You don't have the required permissions");
             cmd.run(message, args);
         }));
     }

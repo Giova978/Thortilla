@@ -1,5 +1,5 @@
 import { Client, Collection, Message, ClientEvents } from "discord.js";
-import { LavaClient } from '@anonymousg/lavajs';
+import { LavaClient } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
 import Event from "./Event";
@@ -20,38 +20,39 @@ export default class Handler {
     public lavaClient: LavaClient;
     public nodes = [
         {
-            host: "localhost",
-            port: 8080,
-            password: 'mypasswordlol',
+            host:
+                process.env.DEV === "true"
+                    ? "localhost"
+                    : "https://lavalink-thotilla.herokuapp.com/",
+            port: 80,
+            password: "mypasswordlol",
         },
     ];
-      
 
-    constructor(client: Client, prefix: string,categories: string[]) {
+    constructor(client: Client, prefix: string, categories: string[]) {
         this.client = client;
         this.categories = categories;
         this.prefix = prefix;
     }
 
     public load(directory: any, args: object) {
-
         const files = Utils.readdirSyncRecursive(directory)
-        .filter(file => file.endsWith('.js'))
-        .map(require);
+            .filter((file) => file.endsWith(".js"))
+            .map(require);
 
-        files.forEach(File => {
+        files.forEach((File) => {
             if (File.prototype instanceof Command) {
-                const command = new File(args)
+                const command = new File(args);
                 this.loadCommand(command);
             }
         });
 
-        files.forEach( File => {
+        files.forEach((File) => {
             if (File.prototype instanceof Event) {
                 const event = new File(args);
                 this.loadEvent(event);
             }
-        })
+        });
 
         this.registerEvents();
     }
@@ -64,8 +65,11 @@ export default class Handler {
         this.commands.set(command.name, command);
 
         if (command.aliases && Array.isArray(command.aliases)) {
-            command.aliases.forEach(alias => {
-                if (this.commands.has(alias) || this.aliases.has(alias)) throw new Error(`The ${alias} is already in use by other command`);   
+            command.aliases.forEach((alias) => {
+                if (this.commands.has(alias) || this.aliases.has(alias))
+                    throw new Error(
+                        `The ${alias} is already in use by other command`
+                    );
                 this.aliases.set(alias, command);
             });
         }
@@ -83,11 +87,11 @@ export default class Handler {
         for (const [eventName, events] of Array.from(this.events)) {
             // @ts-ignore
             this.client.on(eventName, (...args: any) => {
-                events.map(event => {
+                events.map((event) => {
                     if (!event.enabled) return;
                     event.run(...args);
-                })
-            })
+                });
+            });
         }
 
         this.client.on("message", async (message: Message) => {
@@ -96,15 +100,18 @@ export default class Handler {
             const guild: GuildDB = message.guild as GuildDB;
             const prefix: string = guild.getPrefix();
 
-            if (message.author.bot || !message.content.startsWith(prefix)) return;
+            if (message.author.bot || !message.content.startsWith(prefix))
+                return;
 
             const [command, ...args] = message.content
-            .slice(prefix.length)
-            .split(' ');
-            
-            let cmd: Command | undefined = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
+                .slice(prefix.length)
+                .split(" ");
 
-            let hasPermission: boolean = false; 
+            let cmd: Command | undefined =
+                this.commands.get(command.toLocaleLowerCase()) ||
+                this.aliases.get(command.toLocaleLowerCase());
+
+            let hasPermission: boolean = false;
 
             if (!cmd || !cmd.enabled) {
                 return;
@@ -121,11 +128,12 @@ export default class Handler {
                 hasPermission = true;
             }
 
-            if (!hasPermission) return message.channel.send('You don\'t have the required permissions');
+            if (!hasPermission)
+                return message.channel.send(
+                    "You don't have the required permissions"
+                );
 
             cmd.run(message, args);
-        })
+        });
     }
-
-
 }
