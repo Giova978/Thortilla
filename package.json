@@ -1,0 +1,33 @@
+{
+  "name": "thortilla",
+  "version": "1.2.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anonymousg/lavajs": "^3.2.6",
+    "@types/mongoose": "^5.7.30",
+    "@types/ws": "^7.2.4",
+    "ascii-table": "0.0.9",
+    "axios": "^0.19.2",
+    "common-tags": "^1.8.0",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.1.1",
+    "mcquery": "^1.0.2",
+    "mongoose": "^5.9.22",
+    "simple-youtube-api": "^5.2.1",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/common-tags": "^1.8.0",
+    "@types/node": "^13.13.2",
+    "@types/request": "^2.48.4",
+    "nodemon": "^2.0.4"
+  }
+}
