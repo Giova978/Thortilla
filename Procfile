@@ -1,0 +1,1 @@
+workdist: node dist/index.js

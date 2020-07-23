@@ -2,15 +2,18 @@ import { Collection } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
 import { IMusicaData, Song } from "../Utils";
 
-import Lava, { LavaNode, PlayerOptions } from '@anonymousg/lavajs';
+import Lava, { LavaNode, PlayerOptions } from "@anonymousg/lavajs";
 import { Message } from "discord.js";
 import Handler from "./Handler";
 import { VoiceChannel } from "discord.js";
 
 export default class Player {
     private readonly handler: Handler;
-    private readonly lavaClient: Lava.LavaClient; 
-    public readonly guildsMusicData: Collection<Snowflake, IMusicaData> = new Collection();
+    private readonly lavaClient: Lava.LavaClient;
+    public readonly guildsMusicData: Collection<
+        Snowflake,
+        IMusicaData
+    > = new Collection();
 
     constructor(lavaClient: Lava.LavaClient, handler: Handler) {
         this.lavaClient = lavaClient;
@@ -18,13 +21,21 @@ export default class Player {
         this.setListeners();
     }
 
-    public initPlayer(guildId: Snowflake, message: Message, voiceChannel: VoiceChannel) {
-        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel));
+    public initPlayer(
+        guildId: Snowflake,
+        message: Message,
+        voiceChannel: VoiceChannel
+    ) {
+        const player = this.lavaClient.spawnPlayer(
+            this.options(message, voiceChannel)
+        );
 
         if (!this.guildsMusicData.has(guildId)) {
-            this.guildsMusicData.set(guildId, this.initMusicData(guildId, player, voiceChannel, message));
+            this.guildsMusicData.set(
+                guildId,
+                this.initMusicData(guildId, player, voiceChannel, message)
+            );
         }
-        
     }
 
     public getMusicaData(guildId: Snowflake) {
@@ -66,7 +77,12 @@ export default class Player {
         data.player.play();
     }
 
-    private initMusicData(guildId: Snowflake, player: Lava.Player, voiceChannel: VoiceChannel, message: Message): IMusicaData {
+    private initMusicData(
+        guildId: Snowflake,
+        player: Lava.Player,
+        voiceChannel: VoiceChannel,
+        message: Message
+    ): IMusicaData {
         return {
             guildId: guildId,
             player: player,
@@ -79,10 +95,13 @@ export default class Player {
             // @ts-expect-error
             textChannel: message.channel,
             timeout: null,
-        }
+        };
     }
 
-    private options = (message: Message, voiceChannel: VoiceChannel): PlayerOptions => {
+    private options = (
+        message: Message,
+        voiceChannel: VoiceChannel
+    ): PlayerOptions => {
         return {
             guild: message.guild!,
             // @ts-ignore
@@ -91,22 +110,24 @@ export default class Player {
             deafen: true,
             queueRepeat: false,
             skipOnError: false,
-            trackRepeat: false
-        }
-    }
+            trackRepeat: false,
+        };
+    };
 
     private leave(guildId: Snowflake, player: Lava.Player) {
         let data = this.getMusicaData(guildId);
         data.isPlaying = false;
 
         data.timeout = setTimeout(() => {
-            new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
-                op: "leave",
-                guil_id: guildId
-            });
-    
+            new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend(
+                {
+                    op: "leave",
+                    guil_id: guildId,
+                }
+            );
+
             player.destroy();
-            
+
             this.guildsMusicData.delete(guildId);
         }, 300000);
 
@@ -118,62 +139,66 @@ export default class Player {
         let queue;
         let channel;
 
-        this.lavaClient.on('trackPlay', (track, player) => {
-            musicData = this.getMusicaData(player.options.guild.id);
-            queue = musicData.queue;
-            channel = musicData.textChannel;
-            
-            musicData.skipVotes = 0;
-            player.setVolume(musicData.volume);
+        this.lavaClient
+            .on("trackPlay", (track, player) => {
+                musicData = this.getMusicaData(player.options.guild.id);
+                queue = musicData.queue;
+                channel = musicData.textChannel;
 
-            const embed = new MessageEmbed()
-            .setTitle('Current Song')
-            .setColor('GREEN')
-            .addField('Now playing', `[${queue[0].title}](${queue[0].url})`)
-            .addField('Duration', queue[0].duration); 
+                musicData.skipVotes = 0;
+                player.setVolume(musicData.volume);
 
-            if (queue[0].thumbnail) embed.setThumbnail(queue[0].thumbnail)
-            if (queue[1]) embed.addField('Next song', queue[1].title);
-            channel!.send(embed);
+                const embed = new MessageEmbed()
+                    .setTitle("Current Song")
+                    .setColor("GREEN")
+                    .addField(
+                        "Now playing",
+                        `[${queue[0].title}](${queue[0].url})`
+                    )
+                    .addField("Duration", queue[0].duration);
 
-            musicData.nowPlaying = queue[0];
-            queue.shift();           
-            
-            this.guildsMusicData.set(player.options.guild.id, musicData);
-        })
-        .on('trackOver', (track, player) => {
-            musicData = this.getMusicaData(player.options.guild.id);
-            queue = musicData.queue;
+                if (queue[0].thumbnail) embed.setThumbnail(queue[0].thumbnail);
+                if (queue[1]) embed.addField("Next song", queue[1].title);
+                channel!.send(embed);
 
-            if (queue.length > 0) {
-                player.play();
-            } else {
-                this.leave(player.options.guild.id, player);
-            }
-        })
-        .on('queueOver', (player) => {
-            musicData = this.getMusicaData(player.options.guild.id);
-            queue = musicData.queue;
+                musicData.nowPlaying = queue[0];
+                queue.shift();
 
-            if (queue.length > 0) {
-                player.play();
-            } else {
-                this.leave(player.options.guild.id, player);
-            }
-        })
-        .on('trackError', (track, player, err) => {
-            musicData = this.getMusicaData(player.options.guild.id);
-            queue = musicData.queue;
-            channel = musicData.textChannel;
-            
-            console.error('Error',err);
-            player.stop();
-            channel!.send('There was a problem with the playback');
-            if (queue.length < 1) {
-                this.leave(player.options.guild.id, player);
-            } else {
-                player.play();
-            }
-        })
+                this.guildsMusicData.set(player.options.guild.id, musicData);
+            })
+            .on("trackOver", (track, player) => {
+                musicData = this.getMusicaData(player.options.guild.id);
+                queue = musicData.queue;
+
+                if (queue.length > 0) {
+                    player.play();
+                } else {
+                    this.leave(player.options.guild.id, player);
+                }
+            })
+            .on("queueOver", (player) => {
+                musicData = this.getMusicaData(player.options.guild.id);
+                queue = musicData.queue;
+
+                if (queue.length > 0) {
+                    player.play();
+                } else {
+                    this.leave(player.options.guild.id, player);
+                }
+            })
+            .on("trackError", (track, player, err) => {
+                musicData = this.getMusicaData(player.options.guild.id);
+                queue = musicData.queue;
+                channel = musicData.textChannel;
+
+                console.error("Error", err);
+                player.stop();
+                channel!.send("There was a problem with the playback");
+                if (queue.length < 1) {
+                    this.leave(player.options.guild.id, player);
+                } else {
+                    player.play();
+                }
+            });
     }
 }
