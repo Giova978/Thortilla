@@ -92,7 +92,7 @@ export default class Player {
             nowPlaying: null,
             isPlaying: false,
             voiceChannel: voiceChannel,
-            // @ts-expect-error
+            // @ts-ignore
             textChannel: message.channel,
             timeout: null,
         };
