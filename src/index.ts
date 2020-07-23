@@ -46,5 +46,4 @@ client.on("error", (err) => {
 
 process.on("SIGINT", () => process.exit());
 
-console.log(process.env.NODE_ENV);
-// client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);
