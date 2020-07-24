@@ -8,7 +8,7 @@ const lavajs_1 = require("@anonymousg/lavajs");
 const Player_1 = __importDefault(require("../../handlers/Player"));
 module.exports = class extends Event_1.default {
     constructor({ client, handler }) {
-        super('ready');
+        super("ready");
         this.client = client;
         this.handler = handler;
     }
@@ -16,12 +16,14 @@ module.exports = class extends Event_1.default {
         var _a;
         (_a = this.client.user) === null || _a === void 0 ? void 0 : _a.setPresence({
             activity: {
-                name: 'A TI! 😈',
-                type: "WATCHING"
-            }
+                name: "A TI! 😈",
+                type: "WATCHING",
+            },
         });
         console.log(`Bot Online`);
-        this.handler.lavaClient = new lavajs_1.LavaClient(this.client, this.handler.nodes);
+        this.handler.lavaClient = new lavajs_1.LavaClient(this.client, 
+        // @ts-ignore
+        this.handler.nodes);
         this.handler.player = new Player_1.default(this.handler.lavaClient, this.handler);
     }
 };

@@ -24,9 +24,7 @@ class Handler {
         this.events = new discord_js_1.Collection();
         this.nodes = [
             {
-                host: process.env.DEV === "true"
-                    ? "localhost"
-                    : "https://lavalink-thotilla.herokuapp.com/",
+                host: process.env.LAVALINK,
                 port: 80,
                 password: "mypasswordlol",
             },

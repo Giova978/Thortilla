@@ -119,6 +119,7 @@ export default class Player {
         data.isPlaying = false;
 
         data.timeout = setTimeout(() => {
+            // @ts-ignore
             new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend(
                 {
                     op: "leave",

@@ -86,6 +86,7 @@ class Player {
         let data = this.getMusicaData(guildId);
         data.isPlaying = false;
         data.timeout = setTimeout(() => {
+            // @ts-ignore
             new lavajs_1.LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
                 op: "leave",
                 guil_id: guildId,

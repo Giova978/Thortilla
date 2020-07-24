@@ -20,10 +20,7 @@ export default class Handler {
     public lavaClient: LavaClient;
     public nodes = [
         {
-            host:
-                process.env.DEV === "true"
-                    ? "localhost"
-                    : "https://lavalink-thotilla.herokuapp.com/",
+            host: process.env.LAVALINK,
             port: 80,
             password: "mypasswordlol",
         },

@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { LavaClient } from '@anonymousg/lavajs';
+import { LavaClient } from "@anonymousg/lavajs";
 import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
@@ -10,7 +10,7 @@ module.exports = class extends Event {
     public handler: Handler;
 
     constructor({ client, handler }: IArgs) {
-        super('ready');
+        super("ready");
 
         this.client = client;
         this.handler = handler;
@@ -19,14 +19,18 @@ module.exports = class extends Event {
     public run() {
         this.client.user?.setPresence({
             activity: {
-                name: 'A TI! 😈',
-                type: "WATCHING"
-            }
+                name: "A TI! 😈",
+                type: "WATCHING",
+            },
         });
 
         console.log(`Bot Online`);
-        
-        this.handler.lavaClient = new LavaClient(this.client, this.handler.nodes);
+
+        this.handler.lavaClient = new LavaClient(
+            this.client,
+            // @ts-ignore
+            this.handler.nodes
+        );
         this.handler.player = new Player(this.handler.lavaClient, this.handler);
     }
-}
+};
