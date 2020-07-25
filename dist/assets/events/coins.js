@@ -14,6 +14,8 @@ module.exports = class extends Event_1.default {
     }
     run(message) {
         const guild = message.guild;
+        if (!guild.getModulesStatus().balance)
+            return;
         if (!message.content.startsWith(guild.getPrefix()) && !message.author.bot) {
             const member = message.member;
             const chance = !!0.4 && Math.random() <= 0.4;

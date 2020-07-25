@@ -26,24 +26,25 @@ module.exports = class extends Command_1.default {
         });
     }
     run(message, args) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __awaiter(this, void 0, void 0, function* () {
             const member = (Utils_1.Utils.getMember(message, args[0]) || message.member);
-            let roles = member === null || member === void 0 ? void 0 : member.roles.cache.map((role) => `\`${role.name}\``);
+            let roles = (_a = member) === null || _a === void 0 ? void 0 : _a.roles.cache.map((role) => `\`${role.name}\``);
             // Remove @everyone from roles
-            roles === null || roles === void 0 ? void 0 : roles.pop();
-            if (!(roles === null || roles === void 0 ? void 0 : roles.length))
+            (_b = roles) === null || _b === void 0 ? void 0 : _b.pop();
+            if (!((_c = roles) === null || _c === void 0 ? void 0 : _c.length))
                 roles = ['None'];
             const embed = new discord_js_1.MessageEmbed()
                 .setColor('GREEN')
                 .setTitle('User Info')
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: false }))
                 .setDescription(common_tags_1.stripIndent `
-            **Username:** ${member === null || member === void 0 ? void 0 : member.user.username}
-            **Nickname:** ${(member === null || member === void 0 ? void 0 : member.nickname) || 'None'}
-            **Identifier:** #${member === null || member === void 0 ? void 0 : member.user.discriminator}
-            **Roles:** ${roles === null || roles === void 0 ? void 0 : roles.join(' ')}
-            **Account Created At:** ${Utils_1.Utils.formatTimestamp(member === null || member === void 0 ? void 0 : member.user.createdAt)}
-            **Joined At:** ${Utils_1.Utils.formatTimestamp(member === null || member === void 0 ? void 0 : member.joinedAt)}
+            **Username:** ${(_d = member) === null || _d === void 0 ? void 0 : _d.user.username}
+            **Nickname:** ${((_e = member) === null || _e === void 0 ? void 0 : _e.nickname) || 'None'}
+            **Identifier:** #${(_f = member) === null || _f === void 0 ? void 0 : _f.user.discriminator}
+            **Roles:** ${(_g = roles) === null || _g === void 0 ? void 0 : _g.join(' ')}
+            **Account Created At:** ${Utils_1.Utils.formatTimestamp((_h = member) === null || _h === void 0 ? void 0 : _h.user.createdAt)}
+            **Joined At:** ${Utils_1.Utils.formatTimestamp((_j = member) === null || _j === void 0 ? void 0 : _j.joinedAt)}
             [**Avatar UR**](${member.user.displayAvatarURL({ dynamic: false })})
             **Balance:** ${member.getBalance()} coins 
             `);

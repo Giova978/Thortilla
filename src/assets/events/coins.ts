@@ -19,6 +19,8 @@ module.exports = class extends Event {
     public run(message: Message) {
         const guild: GuildDB = message.guild as GuildDB;
 
+        if (!guild.getModulesStatus().balance) return;
+
         if (!message.content.startsWith(guild.getPrefix()) && !message.author.bot) {
             const member: MemberDB = message.member as MemberDB;
 

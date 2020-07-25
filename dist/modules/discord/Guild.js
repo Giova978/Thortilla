@@ -43,7 +43,7 @@ class GuildDB extends discord_js_1.Guild {
         Guild_model_1.default.findOne({
             guildId: this.id,
         })
-            .then((data) => { var _a; return (this.prefix = (_a = data.prefix) !== null && _a !== void 0 ? _a : "$"); })
+            .then((data) => { var _a; return (this.prefix = (_a = data.prefix, (_a !== null && _a !== void 0 ? _a : "$"))); })
             .catch(console.error);
         return this.prefix;
     }
