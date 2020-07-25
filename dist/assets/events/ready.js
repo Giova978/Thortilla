@@ -8,7 +8,7 @@ const lavajs_1 = require("@anonymousg/lavajs");
 const Player_1 = __importDefault(require("../../handlers/Player"));
 module.exports = class extends Event_1.default {
     constructor({ client, handler }) {
-        super("ready");
+        super("ready", "required");
         this.client = client;
         this.handler = handler;
     }

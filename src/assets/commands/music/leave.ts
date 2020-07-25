@@ -20,8 +20,7 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData)
-            return message.channel.send("I am not in a voicechannel");
+        if (!musicData) return message.channel.send("I am not in a voicechannel");
 
         musicData.player.destroy();
 

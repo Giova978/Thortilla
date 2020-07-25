@@ -89,13 +89,11 @@ class Handler {
             const prefix = guild.getPrefix();
             if (message.author.bot || !message.content.startsWith(prefix))
                 return;
-            const [command, ...args] = message.content
-                .slice(prefix.length)
-                .split(" ");
-            let cmd = this.commands.get(command.toLocaleLowerCase()) ||
-                this.aliases.get(command.toLocaleLowerCase());
+            const [command, ...args] = message.content.slice(prefix.length).split(" ");
+            let cmd = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
             let hasPermission = false;
-            if (!cmd || !cmd.enabled) {
+            const modules = guild.getModulesStatus();
+            if (!cmd || !cmd.enabled || !modules[cmd.category]) {
                 return;
             }
             if (cmd.permissions) {

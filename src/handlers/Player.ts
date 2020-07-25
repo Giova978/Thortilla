@@ -10,10 +10,7 @@ import { VoiceChannel } from "discord.js";
 export default class Player {
     private readonly handler: Handler;
     private readonly lavaClient: Lava.LavaClient;
-    public readonly guildsMusicData: Collection<
-        Snowflake,
-        IMusicaData
-    > = new Collection();
+    public readonly guildsMusicData: Collection<Snowflake, IMusicaData> = new Collection();
 
     constructor(lavaClient: Lava.LavaClient, handler: Handler) {
         this.lavaClient = lavaClient;
@@ -21,20 +18,11 @@ export default class Player {
         this.setListeners();
     }
 
-    public initPlayer(
-        guildId: Snowflake,
-        message: Message,
-        voiceChannel: VoiceChannel
-    ) {
-        const player = this.lavaClient.spawnPlayer(
-            this.options(message, voiceChannel)
-        );
+    public initPlayer(guildId: Snowflake, message: Message, voiceChannel: VoiceChannel) {
+        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel));
 
         if (!this.guildsMusicData.has(guildId)) {
-            this.guildsMusicData.set(
-                guildId,
-                this.initMusicData(guildId, player, voiceChannel, message)
-            );
+            this.guildsMusicData.set(guildId, this.initMusicData(guildId, player, voiceChannel, message));
         }
     }
 
@@ -77,12 +65,7 @@ export default class Player {
         data.player.play();
     }
 
-    private initMusicData(
-        guildId: Snowflake,
-        player: Lava.Player,
-        voiceChannel: VoiceChannel,
-        message: Message
-    ): IMusicaData {
+    private initMusicData(guildId: Snowflake, player: Lava.Player, voiceChannel: VoiceChannel, message: Message): IMusicaData {
         return {
             guildId: guildId,
             player: player,
@@ -98,10 +81,7 @@ export default class Player {
         };
     }
 
-    private options = (
-        message: Message,
-        voiceChannel: VoiceChannel
-    ): PlayerOptions => {
+    private options = (message: Message, voiceChannel: VoiceChannel): PlayerOptions => {
         return {
             guild: message.guild!,
             // @ts-ignore
@@ -120,12 +100,10 @@ export default class Player {
 
         data.timeout = setTimeout(() => {
             // @ts-ignore
-            new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend(
-                {
-                    op: "leave",
-                    guil_id: guildId,
-                }
-            );
+            new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
+                op: "leave",
+                guil_id: guildId,
+            });
 
             player.destroy();
 
@@ -149,14 +127,7 @@ export default class Player {
                 musicData.skipVotes = 0;
                 player.setVolume(musicData.volume);
 
-                const embed = new MessageEmbed()
-                    .setTitle("Current Song")
-                    .setColor("GREEN")
-                    .addField(
-                        "Now playing",
-                        `[${queue[0].title}](${queue[0].url})`
-                    )
-                    .addField("Duration", queue[0].duration);
+                const embed = new MessageEmbed().setTitle("Current Song").setColor("GREEN").addField("Now playing", `[${queue[0].title}](${queue[0].url})`).addField("Duration", queue[0].duration);
 
                 if (queue[0].thumbnail) embed.setThumbnail(queue[0].thumbnail);
                 if (queue[1]) embed.addField("Next song", queue[1].title);

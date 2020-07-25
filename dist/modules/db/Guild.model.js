@@ -4,23 +4,31 @@ const mongoose_1 = require("mongoose");
 const GuildSchema = new mongoose_1.Schema({
     guildId: {
         type: String,
-        required: true
+        required: true,
     },
     prefix: {
         type: String,
-        default: '$',
-        required: false
+        default: "$",
+        required: false,
     },
     mcAdress: {
         type: String,
-        default: '',
-        required: false
-    }
-    // logChannel: {
-    //     type: String,
-    //     default: null,
-    //     required: false
-    // }
+        default: "",
+        required: false,
+    },
+    modules: {
+        type: Object,
+        default: {
+            config: true,
+            debug: false,
+            fun: true,
+            info: true,
+            moderation: true,
+            music: true,
+            balance: true,
+        },
+        required: false,
+    },
 });
-const GuildModel = mongoose_1.model('guild', GuildSchema);
+const GuildModel = mongoose_1.model("guild", GuildSchema);
 exports.default = GuildModel;

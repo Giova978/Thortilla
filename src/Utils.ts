@@ -21,7 +21,7 @@ interface IMusicaData {
     player: Player;
     queue: Song[];
     volume: number;
-    skipVotes: number
+    skipVotes: number;
     nowPlaying: Song | null;
     isPlaying: boolean;
     voiceChannel: VoiceChannel | null;
@@ -81,7 +81,7 @@ class Utils {
     static readdirSyncRecursive(directory: any): string[] {
         let files: any[] = [];
 
-        fs.readdirSync(directory).forEach(file => {
+        fs.readdirSync(directory).forEach((file) => {
             const fileLocation = path.join(directory, file);
 
             if (fs.lstatSync(fileLocation).isDirectory()) {
@@ -89,36 +89,32 @@ class Utils {
             } else {
                 files.push(fileLocation);
             }
-
         });
 
         return files;
     }
 
-    static getMember(message: Message, toFind: string = ''): GuildMember | undefined {
+    static getMember(message: Message, toFind: string = ""): GuildMember | undefined {
         toFind = toFind.toLowerCase();
 
         let target = message.guild?.members.cache.get(toFind);
-        
-        if (!target && message.mentions.members)
-            target = message.mentions.members.first();
+
+        if (!target && message.mentions.members) target = message.mentions.members.first();
 
         if (!target && toFind) {
-            target = message.guild?.members.cache.find(member => {
-                return member.displayName.toLowerCase().includes(toFind) ||
-                member.user.tag.toLowerCase().includes(toFind)
+            target = message.guild?.members.cache.find((member) => {
+                return member.displayName.toLowerCase().includes(toFind) || member.user.tag.toLowerCase().includes(toFind);
             });
         }
-            
-        if (!target) 
-            target = undefined;
-            
+
+        if (!target) target = undefined;
+
         return target;
     }
 
     static formatDate(date: Date | undefined | null): string | undefined {
         if (date === undefined || date === null) return undefined;
-        return new Intl.DateTimeFormat('es-ES',{ weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }).format(date)
+        return new Intl.DateTimeFormat("es-ES", { weekday: "long", year: "numeric", month: "numeric", day: "numeric" }).format(date);
     }
 
     static formatTimestamp(timestamp: Date | undefined | null): string | undefined {
@@ -132,9 +128,9 @@ class Utils {
         let month: string | number = date.getMonth();
         month = month >= 10 ? month : `0${month}`;
         let year = date.getFullYear();
-    
+
         let dateFormated = `${day}, ${monthDay}/${month}/${year}`;
-    
+
         return dateFormated;
     }
 

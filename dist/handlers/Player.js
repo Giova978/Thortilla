@@ -39,7 +39,7 @@ class Player {
     }
     getMusicaData(guildId) {
         var _a;
-        return _a = this.guildsMusicData.get(guildId), (_a !== null && _a !== void 0 ? _a : {});
+        return (_a = this.guildsMusicData.get(guildId)) !== null && _a !== void 0 ? _a : {};
     }
     add(guildId, message, song) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -107,11 +107,7 @@ class Player {
             channel = musicData.textChannel;
             musicData.skipVotes = 0;
             player.setVolume(musicData.volume);
-            const embed = new discord_js_2.MessageEmbed()
-                .setTitle("Current Song")
-                .setColor("GREEN")
-                .addField("Now playing", `[${queue[0].title}](${queue[0].url})`)
-                .addField("Duration", queue[0].duration);
+            const embed = new discord_js_2.MessageEmbed().setTitle("Current Song").setColor("GREEN").addField("Now playing", `[${queue[0].title}](${queue[0].url})`).addField("Duration", queue[0].duration);
             if (queue[0].thumbnail)
                 embed.setThumbnail(queue[0].thumbnail);
             if (queue[1])

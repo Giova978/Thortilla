@@ -17,18 +17,16 @@ const Guild_model_1 = __importDefault(require("../db/Guild.model"));
 class GuildDB extends discord_js_1.Guild {
     constructor(client, data) {
         super(client, data);
-        this.prefix = '$';
-        this.mcAdress = '';
         this.getDataFromDB();
     }
     getDataFromDB() {
         Guild_model_1.default.findOne({
-            guildId: this.id
+            guildId: this.id,
         })
             .then((data) => {
             if (!data) {
                 return Guild_model_1.default.create({
-                    guildId: this.id
+                    guildId: this.id,
                 })
                     .then((data) => {
                     this.prefix = data.prefix;
@@ -37,31 +35,40 @@ class GuildDB extends discord_js_1.Guild {
             }
             this.prefix = data.prefix;
             this.mcAdress = data.mcAdress;
+            this.modules = data.modules;
         })
             .catch(console.error);
     }
     getPrefix() {
         Guild_model_1.default.findOne({
-            guildId: this.id
+            guildId: this.id,
         })
-            .then((data) => { var _a; return this.prefix = (_a = data.prefix, (_a !== null && _a !== void 0 ? _a : '$')); })
+            .then((data) => { var _a; return (this.prefix = (_a = data.prefix) !== null && _a !== void 0 ? _a : "$"); })
             .catch(console.error);
         return this.prefix;
     }
     getMCAdress() {
         Guild_model_1.default.findOne({
-            guildId: this.id
+            guildId: this.id,
         })
-            .then((data) => this.mcAdress = data.mcAdress)
+            .then((data) => (this.mcAdress = data.mcAdress))
             .catch(console.error);
         return this.mcAdress;
+    }
+    getModulesStatus() {
+        Guild_model_1.default.findOne({
+            guildId: this.id,
+        })
+            .then((data) => (this.modules = data.modules))
+            .catch(console.error);
+        return this.modules;
     }
     setPrefix(prefix) {
         return __awaiter(this, void 0, void 0, function* () {
             if (prefix.length > 5)
-                return Promise.resolve('Can\'t set a prefix longer than 4 characters');
+                return Promise.resolve("Can't set a prefix longer than 4 characters");
             yield Guild_model_1.default.findOneAndUpdate({ guildId: this.id }, { prefix: prefix }, { new: true, upsert: true })
-                .then((data) => this.prefix = data.prefix)
+                .then((data) => (this.prefix = data.prefix))
                 .catch((err) => Promise.reject(err));
             return Promise.resolve(`The new prefix is \`${this.prefix}\``);
         });
@@ -69,11 +76,19 @@ class GuildDB extends discord_js_1.Guild {
     setMCAdress(adress) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!adress)
-                return Promise.resolve('Can\'t set a empty ip');
+                return Promise.resolve("Can't set a empty ip");
             yield Guild_model_1.default.findOneAndUpdate({ guildId: this.id }, { mcAdress: adress }, { new: true, upsert: true })
-                .then((data) => this.mcAdress = data.mcAdress)
+                .then((data) => (this.mcAdress = data.mcAdress))
                 .catch((err) => Promise.reject(err));
             return Promise.resolve(`The new ip is \`${this.mcAdress}\``);
+        });
+    }
+    setModulesStatus(modules) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Guild_model_1.default.findOneAndUpdate({ guildId: this.id }, { modules }, { new: true, upsert: true })
+                .then((data) => (this.modules = data.modules))
+                .catch((err) => Promise.reject(err));
+            return Promise.resolve(true);
         });
     }
 }

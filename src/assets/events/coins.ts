@@ -10,7 +10,7 @@ module.exports = class extends Event {
     public handler: Handler;
 
     constructor({ client, handler }: IArgs) {
-        super('message');
+        super("message", "balance");
 
         this.client = client;
         this.handler = handler;
@@ -25,17 +25,14 @@ module.exports = class extends Event {
             const chance = !!0.4 && Math.random() <= 0.4;
 
             if (chance) {
-                const coinsAdd = Math.floor(Math.random() * (40 - 8) - 5);
+                const coinsAdd = Math.floor(Math.random() * (30 - 5) + 5);
 
                 member.updateBalance(coinsAdd);
 
-                const embed = new MessageEmbed()
-                .setColor('YELLOW')
-                .setDescription(`${message.author} you earned ${coinsAdd} coins`);
+                const embed = new MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
 
-                message.channel.send(embed)
-                .then(Utils.deleteMessage);
+                message.channel.send(embed).then(Utils.deleteMessage);
             }
         }
     }
-}
+};

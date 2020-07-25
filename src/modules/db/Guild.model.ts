@@ -3,18 +3,31 @@ import { Schema, model } from "mongoose";
 const GuildSchema: Schema = new Schema({
     guildId: {
         type: String,
-        required: true
+        required: true,
     },
     prefix: {
         type: String,
-        default: '$',
-        required: false
+        default: "$",
+        required: false,
     },
     mcAdress: {
         type: String,
-        default: '',
-        required: false
-    }
+        default: "",
+        required: false,
+    },
+    modules: {
+        type: Object,
+        default: {
+            config: true,
+            debug: false,
+            fun: true,
+            info: true,
+            moderation: true,
+            music: true,
+            balance: true,
+        },
+        required: false,
+    },
 
     // logChannel: {
     //     type: String,
@@ -23,6 +36,6 @@ const GuildSchema: Schema = new Schema({
     // }
 });
 
-const GuildModel = model('guild', GuildSchema);
+const GuildModel = model("guild", GuildSchema);
 
 export default GuildModel;

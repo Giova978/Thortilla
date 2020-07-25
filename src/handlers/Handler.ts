@@ -1,4 +1,4 @@
-import { Client, Collection, Message, ClientEvents } from "discord.js";
+import { Client, Collection, Message } from "discord.js";
 import { LavaClient } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
@@ -63,10 +63,7 @@ export default class Handler {
 
         if (command.aliases && Array.isArray(command.aliases)) {
             command.aliases.forEach((alias) => {
-                if (this.commands.has(alias) || this.aliases.has(alias))
-                    throw new Error(
-                        `The ${alias} is already in use by other command`
-                    );
+                if (this.commands.has(alias) || this.aliases.has(alias)) throw new Error(`The ${alias} is already in use by other command`);
                 this.aliases.set(alias, command);
             });
         }
@@ -97,20 +94,16 @@ export default class Handler {
             const guild: GuildDB = message.guild as GuildDB;
             const prefix: string = guild.getPrefix();
 
-            if (message.author.bot || !message.content.startsWith(prefix))
-                return;
+            if (message.author.bot || !message.content.startsWith(prefix)) return;
 
-            const [command, ...args] = message.content
-                .slice(prefix.length)
-                .split(" ");
+            const [command, ...args] = message.content.slice(prefix.length).split(" ");
 
-            let cmd: Command | undefined =
-                this.commands.get(command.toLocaleLowerCase()) ||
-                this.aliases.get(command.toLocaleLowerCase());
+            let cmd: Command | undefined = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
 
             let hasPermission: boolean = false;
+            const modules = guild.getModulesStatus();
 
-            if (!cmd || !cmd.enabled) {
+            if (!cmd || !cmd.enabled || !modules[cmd.category]) {
                 return;
             }
 
@@ -125,10 +118,7 @@ export default class Handler {
                 hasPermission = true;
             }
 
-            if (!hasPermission)
-                return message.channel.send(
-                    "You don't have the required permissions"
-                );
+            if (!hasPermission) return message.channel.send("You don't have the required permissions");
 
             cmd.run(message, args);
         });

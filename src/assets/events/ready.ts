@@ -10,7 +10,7 @@ module.exports = class extends Event {
     public handler: Handler;
 
     constructor({ client, handler }: IArgs) {
-        super("ready");
+        super("ready", "required");
 
         this.client = client;
         this.handler = handler;

@@ -8,7 +8,7 @@ const discord_js_1 = require("discord.js");
 const Utils_1 = require("../../Utils");
 module.exports = class extends Event_1.default {
     constructor({ client, handler }) {
-        super('message');
+        super("message", "balance");
         this.client = client;
         this.handler = handler;
     }
@@ -18,13 +18,10 @@ module.exports = class extends Event_1.default {
             const member = message.member;
             const chance = !!0.4 && Math.random() <= 0.4;
             if (chance) {
-                const coinsAdd = Math.floor(Math.random() * (40 - 8) - 5);
+                const coinsAdd = Math.floor(Math.random() * (30 - 5) + 5);
                 member.updateBalance(coinsAdd);
-                const embed = new discord_js_1.MessageEmbed()
-                    .setColor('YELLOW')
-                    .setDescription(`${message.author} you earned ${coinsAdd} coins`);
-                message.channel.send(embed)
-                    .then(Utils_1.Utils.deleteMessage);
+                const embed = new discord_js_1.MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
+                message.channel.send(embed).then(Utils_1.Utils.deleteMessage);
             }
         }
     }
