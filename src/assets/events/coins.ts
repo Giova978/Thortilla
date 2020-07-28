@@ -33,7 +33,7 @@ module.exports = class extends Event {
 
                 const embed = new MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
 
-                message.channel.send(embed).then(Utils.deleteMessage);
+                message.channel.send(embed).then((msg) => Utils.deleteMessage(msg, 2000));
             }
         }
     }

@@ -45,7 +45,10 @@ class Player {
         return __awaiter(this, void 0, void 0, function* () {
             let data = this.getMusicaData(guildId);
             data.queue.push(song);
-            yield data.player.lavaSearch(song.url, message.author, true);
+            yield data.player.lavaSearch(song.url, message.author, {
+                add: true,
+                source: "yt",
+            });
             this.guildsMusicData.set(guildId, data);
         });
     }

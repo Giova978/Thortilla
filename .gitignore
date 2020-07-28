@@ -6,6 +6,7 @@ test.js
 bot.ps1
 start.bat
 /Lavalink
+/dist
 
 ### Node ###
 # Logs

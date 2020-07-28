@@ -16,34 +16,38 @@ const Command_1 = __importDefault(require("../../../handlers/Command"));
 const Utils_1 = require("../../../Utils");
 module.exports = class extends Command_1.default {
     constructor() {
-        super('clear', {
+        super("clear", {
             permissions: ["MANAGE_MESSAGES"],
-            category: 'moderation',
-            description: 'Clear messages or search x messages for the author given and delete them',
-            usage: '<amount> [user]',
+            category: "moderation",
+            description: "Clear messages or search x messages for the author given and delete them",
+            usage: "<amount> [user]",
         });
     }
     run(message, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const toDelete = +args[0];
             if (!toDelete)
-                return message.channel.send('Provide a valid number to delete');
+                return message.channel.send("Provide a valid number to delete");
             if (toDelete < 1 || toDelete > 100)
-                return message.channel.send('Provide a number between 1 and 100');
+                return message.channel.send("Provide a number between 1 and 100");
             message.delete();
             const user = Utils_1.Utils.getMember(message, args[1]);
             if (user) {
-                const messages = yield message.channel.messages.fetch({
+                const messages = yield message.channel.messages
+                    .fetch({
                     limit: toDelete,
-                }).then(messages => messages.filter(msg => msg.author.id === user.id));
+                })
+                    .then((messages) => messages.filter((msg) => msg.author.id === user.id));
                 if (messages.size < 1)
                     return message.channel.send(`No messages found for \`${user.displayName}\``).then(Utils_1.Utils.deleteMessage);
-                return message.channel.bulkDelete(messages, true).then(messagesDeleted => {
+                return message.channel
+                    .bulkDelete(messages, true)
+                    .then((messagesDeleted) => {
                     message.channel.send(`Successfully deleted \`${messagesDeleted.size}\` messages from \`${user.displayName}\``).then(Utils_1.Utils.deleteMessage);
                 })
-                    .catch(err => {
+                    .catch((err) => {
                     console.error(err);
-                    message.channel.send('Try again later').then(Utils_1.Utils.deleteMessage);
+                    message.channel.send("Try again later").then(Utils_1.Utils.deleteMessage);
                 });
             }
             message.channel
@@ -51,9 +55,9 @@ module.exports = class extends Command_1.default {
                 .then((messagesDeleted) => {
                 message.channel.send(`Successfully deleted \`${messagesDeleted.size}\` messages`).then(Utils_1.Utils.deleteMessage);
             })
-                .catch(err => {
+                .catch((err) => {
                 console.error(err);
-                message.channel.send('Try again later').then(Utils_1.Utils.deleteMessage);
+                message.channel.send("Try again later").then(Utils_1.Utils.deleteMessage);
             });
         });
     }

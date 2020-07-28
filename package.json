@@ -9,21 +9,21 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@anonymousg/lavajs": "^3.2.6",
-        "@types/mongoose": "^5.7.30",
-        "@types/ws": "^7.2.4",
+        "@anonymousg/lavajs": "^3.3.1",
         "@types/common-tags": "^1.8.0",
-        "@types/node": "^13.13.2",
+        "@types/mongoose": "^5.7.34",
+        "@types/node": "^13.13.15",
         "@types/request": "^2.48.4",
+        "@types/ws": "^7.2.6",
         "ascii-table": "0.0.9",
         "axios": "^0.19.2",
         "common-tags": "^1.8.0",
         "discord.js": "^12.2.0",
         "dotenv": "^8.2.0",
         "mcquery": "^1.0.2",
-        "mongoose": "^5.9.22",
+        "mongoose": "^5.9.26",
         "simple-youtube-api": "^5.2.1",
-        "typescript": "^3.8.3"
+        "typescript": "^3.9.7"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"

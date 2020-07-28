@@ -23,7 +23,7 @@ module.exports = class extends Event_1.default {
                 const coinsAdd = Math.floor(Math.random() * (30 - 5) + 5);
                 member.updateBalance(coinsAdd);
                 const embed = new discord_js_1.MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
-                message.channel.send(embed).then(Utils_1.Utils.deleteMessage);
+                message.channel.send(embed).then((msg) => Utils_1.Utils.deleteMessage(msg, 2000));
             }
         }
     }

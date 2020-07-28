@@ -35,7 +35,10 @@ export default class Player {
 
         data.queue.push(song);
 
-        await data.player.lavaSearch(song.url, message.author, true);
+        await data.player.lavaSearch(song.url, message.author, {
+            add: true,
+            source: "yt",
+        });
 
         this.guildsMusicData.set(guildId, data);
     }
