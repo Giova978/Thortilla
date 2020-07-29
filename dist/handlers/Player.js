@@ -48,11 +48,16 @@ class Player {
         return __awaiter(this, void 0, void 0, function* () {
             let data = this.getMusicaData(guildId);
             data.queue.push(song);
-            const songs = yield data.player.lavaSearch(song.url, message.author, { add: false });
+            const songs = yield data.player.lavaSearch(song.url, message.author, { add: true });
+            console.log(data.player.queue.toArray());
             // @ts-ignore
             data.player.queue.add(songs[0]);
-            this.guildsMusicData.set(guildId, data);
+            console.log("Song Array", songs);
+            // @ts-expect-error
+            console.log("Song Array Length", songs.length);
             console.log(data.player.queue.toArray());
+            console.log(data.player.queue.toArray().length);
+            this.guildsMusicData.set(guildId, data);
         });
     }
     play(guildId) {
@@ -111,6 +116,8 @@ class Player {
             musicData = this.getMusicaData(player.options.guild.id);
             queue = musicData.queue;
             channel = musicData.textChannel;
+            if (!queue[0])
+                return;
             musicData.skipVotes = 0;
             player.setVolume(musicData.volume);
             const embed = new discord_js_2.MessageEmbed().setTitle("Current Song").setColor("GREEN").addField("Now playing", `[${queue[0].title}](${queue[0].url})`).addField("Duration", queue[0].duration);
