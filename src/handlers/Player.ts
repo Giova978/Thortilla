@@ -10,6 +10,11 @@ import { VoiceChannel } from "discord.js";
 export default class Player {
     private readonly handler: Handler;
     private readonly lavaClient: Lava.LavaClient;
+    private readonly queueOptions = {
+        repeatTrack: false,
+        repeatQueue: false,
+        skipOnError: false,
+    };
     public readonly guildsMusicData: Collection<Snowflake, IMusicaData> = new Collection();
 
     constructor(lavaClient: Lava.LavaClient, handler: Handler) {
@@ -19,7 +24,7 @@ export default class Player {
     }
 
     public initPlayer(guildId: Snowflake, message: Message, voiceChannel: VoiceChannel) {
-        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel));
+        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel), this.queueOptions);
 
         if (!this.guildsMusicData.has(guildId)) {
             this.guildsMusicData.set(guildId, this.initMusicData(guildId, player, voiceChannel, message));
@@ -91,9 +96,6 @@ export default class Player {
             textChannel: message.channel,
             voiceChannel: voiceChannel,
             deafen: true,
-            queueRepeat: false,
-            skipOnError: false,
-            trackRepeat: false,
         };
     };
 
