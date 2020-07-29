@@ -21,8 +21,8 @@ export default class Handler {
     public nodes = [
         {
             host: process.env.LAVALINK,
-            port: 80,
-            password: "mypasswordlol",
+            port: process.env.PORTLAVA,
+            password: process.env.LAVAPASS,
         },
     ];
 

@@ -25,8 +25,8 @@ class Handler {
         this.nodes = [
             {
                 host: process.env.LAVALINK,
-                port: 80,
-                password: "mypasswordlol",
+                port: process.env.PORTLAVA,
+                password: process.env.LAVAPASS,
             },
         ];
         this.client = client;
