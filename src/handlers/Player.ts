@@ -103,6 +103,7 @@ export default class Player {
     private leave(guildId: Snowflake, player: Lava.Player) {
         let data = this.getMusicaData(guildId);
         data.isPlaying = false;
+        data.nowPlaying = null;
 
         data.timeout = setTimeout(() => {
             // @ts-ignore
