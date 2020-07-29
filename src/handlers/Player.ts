@@ -40,12 +40,13 @@ export default class Player {
 
         data.queue.push(song);
 
-        await data.player.lavaSearch(song.url, message.author, {
-            add: true,
-            source: "yt",
-        });
+        const songs = await data.player.lavaSearch(song.url, message.author, { add: false });
+
+        // @ts-ignore
+        data.player.queue.add(songs[0]);
 
         this.guildsMusicData.set(guildId, data);
+        console.log(data.player.queue.toArray());
     }
 
     public play(guildId: Snowflake) {
@@ -95,6 +96,7 @@ export default class Player {
             // @ts-ignore
             textChannel: message.channel,
             voiceChannel: voiceChannel,
+            volume: 50,
             deafen: true,
         };
     };

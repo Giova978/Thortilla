@@ -14,6 +14,11 @@ const discord_js_2 = require("discord.js");
 const lavajs_1 = require("@anonymousg/lavajs");
 class Player {
     constructor(lavaClient, handler) {
+        this.queueOptions = {
+            repeatTrack: false,
+            repeatQueue: false,
+            skipOnError: false,
+        };
         this.guildsMusicData = new discord_js_1.Collection();
         this.options = (message, voiceChannel) => {
             return {
@@ -21,10 +26,8 @@ class Player {
                 // @ts-ignore
                 textChannel: message.channel,
                 voiceChannel: voiceChannel,
+                volume: 50,
                 deafen: true,
-                queueRepeat: false,
-                skipOnError: false,
-                trackRepeat: false,
             };
         };
         this.lavaClient = lavaClient;
@@ -32,24 +35,24 @@ class Player {
         this.setListeners();
     }
     initPlayer(guildId, message, voiceChannel) {
-        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel));
+        const player = this.lavaClient.spawnPlayer(this.options(message, voiceChannel), this.queueOptions);
         if (!this.guildsMusicData.has(guildId)) {
             this.guildsMusicData.set(guildId, this.initMusicData(guildId, player, voiceChannel, message));
         }
     }
     getMusicaData(guildId) {
         var _a;
-        return _a = this.guildsMusicData.get(guildId), (_a !== null && _a !== void 0 ? _a : {});
+        return (_a = this.guildsMusicData.get(guildId)) !== null && _a !== void 0 ? _a : {};
     }
     add(guildId, message, song) {
         return __awaiter(this, void 0, void 0, function* () {
             let data = this.getMusicaData(guildId);
             data.queue.push(song);
-            yield data.player.lavaSearch(song.url, message.author, {
-                add: true,
-                source: "yt",
-            });
+            const songs = yield data.player.lavaSearch(song.url, message.author, { add: false });
+            // @ts-ignore
+            data.player.queue.add(songs[0]);
             this.guildsMusicData.set(guildId, data);
+            console.log(data.player.queue.toArray());
         });
     }
     play(guildId) {
