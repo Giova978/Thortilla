@@ -89,10 +89,25 @@ export default class Handler {
         }
 
         this.client.on("message", async (message: Message) => {
+
             if (!message.guild) return;
 
             const guild: GuildDB = message.guild as GuildDB;
             const prefix: string = guild.getPrefix();
+
+            if (message.mentions.has(this.client.user!)) {
+                if (message.member?.hasPermission("ADMINISTRATOR")) {
+                    const newPrefix = message.content.split(" ")[1];
+
+                    if (!newPrefix) return  message.channel.send(`The prefix is \`${prefix}\``);
+
+                    return  guild.setPrefix(newPrefix)
+                        .then((text: string) => message.channel.send(text))
+                        .catch(console.error);
+                }
+
+                return message.channel.send(`The prefix is \`${prefix}\``);
+            }
 
             if (message.author.bot || !message.content.startsWith(prefix)) return;
 

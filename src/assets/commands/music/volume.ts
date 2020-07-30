@@ -7,12 +7,14 @@ module.exports = class extends Command {
     private readonly handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('volume',{
+        super('volume', {
             aliases: ['v'],
             category: 'music',
             description: 'Skips to the gived timestamp',
-            usage: '<timestamp(formata m:s)>'
+            usage: '<timestamp(formata m:s)>',
         });
+
+        this.disbale();
 
         this.handler = handler;
     }

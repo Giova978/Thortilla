@@ -82,11 +82,22 @@ class Handler {
             });
         }
         this.client.on("message", (message) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _a, _b;
             if (!message.guild)
                 return;
             const guild = message.guild;
             const prefix = guild.getPrefix();
+            if (message.mentions.has(this.client.user)) {
+                if ((_a = message.member) === null || _a === void 0 ? void 0 : _a.hasPermission("ADMINISTRATOR")) {
+                    const newPrefix = message.content.split(" ")[1];
+                    if (!newPrefix)
+                        return message.channel.send(`The prefix is \`${prefix}\``);
+                    return guild.setPrefix(newPrefix)
+                        .then((text) => message.channel.send(text))
+                        .catch(console.error);
+                }
+                return message.channel.send(`The prefix is \`${prefix}\``);
+            }
             if (message.author.bot || !message.content.startsWith(prefix))
                 return;
             const [command, ...args] = message.content.slice(prefix.length).split(" ");
@@ -98,7 +109,7 @@ class Handler {
             }
             if (cmd.permissions) {
                 for (const perm of cmd.permissions) {
-                    if ((_a = message.member) === null || _a === void 0 ? void 0 : _a.hasPermission(perm)) {
+                    if ((_b = message.member) === null || _b === void 0 ? void 0 : _b.hasPermission(perm)) {
                         hasPermission = true;
                         break;
                     }

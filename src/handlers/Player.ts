@@ -136,7 +136,11 @@ export default class Player {
                 musicData.skipVotes = 0;
                 player.setVolume(musicData.volume);
 
-                const embed = new MessageEmbed().setTitle("Current Song").setColor("GREEN").addField("Now playing", `[${queue[0].title}](${queue[0].url})`).addField("Duration", queue[0].duration);
+                const embed = new MessageEmbed()
+                    .setTitle("Current Song")
+                    .setColor("GREEN")
+                    .addField("Now playing", `[${queue[0].title}](${queue[0].url})`)
+                    .addField("Duration", queue[0].duration);
 
                 if (queue[0].thumbnail) embed.setThumbnail(queue[0].thumbnail);
                 if (queue[1]) embed.addField("Next song", queue[1].title);

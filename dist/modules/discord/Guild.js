@@ -40,27 +40,27 @@ class GuildDB extends discord_js_1.Guild {
             .catch(console.error);
     }
     getPrefix() {
-        Guild_model_1.default.findOne({
-            guildId: this.id,
-        })
-            .then((data) => { var _a; return (this.prefix = (_a = data.prefix) !== null && _a !== void 0 ? _a : "$"); })
-            .catch(console.error);
+        // GuildModel.findOne({
+        //     guildId: this.id,
+        // })
+        //     .then((data: any) => (this.prefix = data.prefix ?? "$"))
+        //     .catch(console.error);
         return this.prefix;
     }
     getMCAdress() {
-        Guild_model_1.default.findOne({
-            guildId: this.id,
-        })
-            .then((data) => (this.mcAdress = data.mcAdress))
-            .catch(console.error);
+        // GuildModel.findOne({
+        //     guildId: this.id,
+        // })
+        //     .then((data: any) => (this.mcAdress = data.mcAdress))
+        //     .catch(console.error);
         return this.mcAdress;
     }
     getModulesStatus() {
-        Guild_model_1.default.findOne({
-            guildId: this.id,
-        })
-            .then((data) => (this.modules = data.modules))
-            .catch(console.error);
+        // GuildModel.findOne({
+        //     guildId: this.id,
+        // })
+        //     .then((data: any) => (this.modules = data.modules))
+        //     .catch(console.error);
         return this.modules;
     }
     setPrefix(prefix) {

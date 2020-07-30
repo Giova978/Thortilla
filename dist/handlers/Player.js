@@ -49,14 +49,8 @@ class Player {
             let data = this.getMusicaData(guildId);
             data.queue.push(song);
             const songs = yield data.player.lavaSearch(song.url, message.author, { add: true });
-            console.log(data.player.queue.toArray());
             // @ts-ignore
             data.player.queue.add(songs[0]);
-            console.log("Song Array", songs);
-            // @ts-expect-error
-            console.log("Song Array Length", songs.length);
-            console.log(data.player.queue.toArray());
-            console.log(data.player.queue.toArray().length);
             this.guildsMusicData.set(guildId, data);
         });
     }
@@ -96,6 +90,7 @@ class Player {
     leave(guildId, player) {
         let data = this.getMusicaData(guildId);
         data.isPlaying = false;
+        data.nowPlaying = null;
         data.timeout = setTimeout(() => {
             // @ts-ignore
             new lavajs_1.LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
@@ -120,7 +115,11 @@ class Player {
                 return;
             musicData.skipVotes = 0;
             player.setVolume(musicData.volume);
-            const embed = new discord_js_2.MessageEmbed().setTitle("Current Song").setColor("GREEN").addField("Now playing", `[${queue[0].title}](${queue[0].url})`).addField("Duration", queue[0].duration);
+            const embed = new discord_js_2.MessageEmbed()
+                .setTitle("Current Song")
+                .setColor("GREEN")
+                .addField("Now playing", `[${queue[0].title}](${queue[0].url})`)
+                .addField("Duration", queue[0].duration);
             if (queue[0].thumbnail)
                 embed.setThumbnail(queue[0].thumbnail);
             if (queue[1])

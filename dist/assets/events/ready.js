@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Event_1 = __importDefault(require("../../handlers/Event"));
 const lavajs_1 = require("@anonymousg/lavajs");
 const Player_1 = __importDefault(require("../../handlers/Player"));
+const timers_1 = require("timers");
 module.exports = class extends Event_1.default {
     constructor({ client, handler }) {
         super("ready", "required");
@@ -24,6 +25,11 @@ module.exports = class extends Event_1.default {
         this.handler.lavaClient = new lavajs_1.LavaClient(this.client, 
         // @ts-ignore
         this.handler.nodes);
+        timers_1.setInterval(() => {
+            this.handler.lavaClient.optimisedNode.wsSend({
+                op: null
+            });
+        }, 50 * 1000);
         this.handler.player = new Player_1.default(this.handler.lavaClient, this.handler);
     }
 };
