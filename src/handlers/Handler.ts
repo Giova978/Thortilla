@@ -110,7 +110,7 @@ export default class Handler {
             let cmd: Command | undefined = this.commands.get(command!.toLocaleLowerCase()) || this.aliases.get(command!.toLocaleLowerCase());
 
             let hasPermission: boolean = false;
-            const modules = guild.getModulesStatus();
+            const modules = guild.getModulesStatus;
 
             if (!cmd || !cmd.enabled || !modules[cmd.category]) {
                 return;

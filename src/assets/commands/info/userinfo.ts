@@ -31,7 +31,7 @@ module.exports = class extends Command {
             .addField("**Joined At**", Utils.formatTimestamp(member?.joinedAt), true)
             .addField("**Roles**", roles.join(" "))
             .addField("**Avatar**", `[**Avatar URL**](${member!.user.displayAvatarURL({ dynamic: false })})`, true)
-            .addField("**Balance**", `${member.getBalance()} coins`, true)
+            .addField("**Balance**", `${member.getBalance} coins`, true)
             .setThumbnail(member!.user.displayAvatarURL({ dynamic: false }));
 
         message.channel.send(embed);
