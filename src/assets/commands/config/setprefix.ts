@@ -8,7 +8,7 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('setprefix',{
+        super('setprefix', {
             aliases: ['stp'],
             permissions: ['MANAGE_GUILD'],
             category: 'config',
@@ -24,10 +24,10 @@ module.exports = class extends Command {
         const guild: GuildDB = message.guild as GuildDB;
 
         const prefix = args[0];
-        if (!prefix) return message.channel.send(`Please provide a prefix`);
+        if (!prefix) return message.channel.send(`The current prefix is ${guild.getPrefix()}`);
 
         guild.setPrefix(prefix)
-        .then((text: string) => message.channel.send(text))
-        .catch(console.error);
+            .then((text: string) => message.channel.send(text))
+            .catch(console.error);
     }
 }

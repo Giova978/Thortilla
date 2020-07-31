@@ -19,8 +19,9 @@ module.exports = class extends Command_1.default {
             aliases: ['v'],
             category: 'music',
             description: 'Skips to the gived timestamp',
-            usage: '<timestamp(formata m:s)>'
+            usage: '<timestamp(formata m:s)>',
         });
+        this.disbale();
         this.handler = handler;
     }
     run(message, args) {

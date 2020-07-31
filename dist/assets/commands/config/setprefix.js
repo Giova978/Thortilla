@@ -29,7 +29,7 @@ module.exports = class extends Command_1.default {
             const guild = message.guild;
             const prefix = args[0];
             if (!prefix)
-                return message.channel.send(`Please provide a prefix`);
+                return message.channel.send(`The current prefix is ${guild.getPrefix()}`);
             guild.setPrefix(prefix)
                 .then((text) => message.channel.send(text))
                 .catch(console.error);

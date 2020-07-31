@@ -95,25 +95,19 @@ export default class Handler {
             const guild: GuildDB = message.guild as GuildDB;
             const prefix: string = guild.getPrefix();
 
-            if (message.mentions.has(this.client.user!)) {
+            if (message.mentions.has(this.client.user!) && !message.mentions.everyone) {
                 if (message.member?.hasPermission("ADMINISTRATOR")) {
-                    const newPrefix = message.content.split(" ")[1];
-
-                    if (!newPrefix) return  message.channel.send(`The prefix is \`${prefix}\``);
-
-                    return  guild.setPrefix(newPrefix)
-                        .then((text: string) => message.channel.send(text))
-                        .catch(console.error);
+                    message.content = prefix + message.content.slice(this.client.user!.id.length + 4).trim();
+                } else {
+                    return message.channel.send(`The prefix is \`${prefix}\``);
                 }
-
-                return message.channel.send(`The prefix is \`${prefix}\``);
             }
 
             if (message.author.bot || !message.content.startsWith(prefix)) return;
 
             const [command, ...args] = message.content.slice(prefix.length).split(" ");
 
-            let cmd: Command | undefined = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
+            let cmd: Command | undefined = this.commands.get(command!.toLocaleLowerCase()) || this.aliases.get(command!.toLocaleLowerCase());
 
             let hasPermission: boolean = false;
             const modules = guild.getModulesStatus();
@@ -134,6 +128,16 @@ export default class Handler {
             }
 
             if (!hasPermission) return message.channel.send("You don't have the required permissions");
+
+            const now = (new Date).getTime()
+            if (cmd.cooldowns.has(message.author.id)) {
+                const cooldown = cmd.cooldowns.get(message.member!.id);
+                const leftCooldown = `${Math.floor(cooldown! - now) / 1000}`.substring(0, 3);
+
+                if (now < cooldown!) return message.channel.send(`You have to wait ${leftCooldown}`);
+            }
+
+            cmd.cooldowns.set(message.author.id, now + cmd.cooldown * 1000);
 
             cmd.run(message, args);
         });

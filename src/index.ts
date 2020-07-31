@@ -31,7 +31,7 @@ const client: Client = new Client({
 
 const categories: Array<string> = fs.readdirSync(
     path.join(__dirname, "./assets/commands/")
-);
+).filter((cat) => cat !== "debug")
 
 const handler: Handler = new Handler(client, "$", categories);
 

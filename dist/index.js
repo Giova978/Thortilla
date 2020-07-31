@@ -47,7 +47,7 @@ discord_js_1.Structures.extend("GuildMember", (Member) => Member_1.default);
 const client = new discord_js_1.Client({
     disableMentions: "everyone",
 });
-const categories = fs.readdirSync(path.join(__dirname, "./assets/commands/"));
+const categories = fs.readdirSync(path.join(__dirname, "./assets/commands/")).filter((cat) => cat !== "debug");
 const handler = new Handler_1.default(client, "$", categories);
 handler.load(path.join(__dirname, "./assets"), {
     client: client,

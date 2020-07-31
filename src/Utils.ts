@@ -46,6 +46,7 @@ interface IOptionsCommand {
     category: string;
     usage: string;
     description: string;
+    cooldown?: number;
 }
 
 interface IToogle {
