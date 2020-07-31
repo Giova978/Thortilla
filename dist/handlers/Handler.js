@@ -87,6 +87,7 @@ class Handler {
                 return;
             const guild = message.guild;
             const prefix = guild.getPrefix;
+            console.log(prefix);
             if (message.mentions.has(this.client.user) && !message.mentions.everyone) {
                 if ((_a = message.member) === null || _a === void 0 ? void 0 : _a.hasPermission("ADMINISTRATOR")) {
                     message.content = prefix + message.content.slice(this.client.user.id.length + 4).trim();
@@ -100,7 +101,7 @@ class Handler {
             const [command, ...args] = message.content.slice(prefix.length).split(" ");
             let cmd = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
             let hasPermission = false;
-            const modules = guild.getModulesStatus();
+            const modules = guild.getModulesStatus;
             if (!cmd || !cmd.enabled || !modules[cmd.category]) {
                 return;
             }

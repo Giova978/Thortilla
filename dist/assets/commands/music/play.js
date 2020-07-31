@@ -28,7 +28,7 @@ module.exports = class extends Command_1.default {
         this.handler = handler;
     }
     run(message, args) {
-        var _a, _b, _c;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const voiceChannel = (_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel;
             if (!voiceChannel)
@@ -66,7 +66,7 @@ module.exports = class extends Command_1.default {
                         skipVoteUsers: [],
                     };
                     yield this.handler.player.add(message.guild.id, message, song);
-                    if (!((_b = musicData) === null || _b === void 0 ? void 0 : _b.isPlaying)) {
+                    if (!(musicData === null || musicData === void 0 ? void 0 : musicData.isPlaying)) {
                         this.handler.player.play(message.guild.id);
                         message.delete();
                         return message.channel.send(`\`${song.title}\` is ready to play`).then(Utils_1.Utils.deleteMessage);
@@ -153,7 +153,7 @@ module.exports = class extends Command_1.default {
                 skipVoteUsers: [],
             };
             yield this.handler.player.add(message.guild.id, message, song);
-            if (!((_c = musicData) === null || _c === void 0 ? void 0 : _c.isPlaying)) {
+            if (!(musicData === null || musicData === void 0 ? void 0 : musicData.isPlaying)) {
                 this.handler.player.play(message.guild.id);
                 return songEmbed.delete();
             }
