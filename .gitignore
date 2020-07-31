@@ -7,6 +7,7 @@ bot.ps1
 start.bat
 /Lavalink
 /dist
+.idea
 
 ### Node ###
 # Logs
