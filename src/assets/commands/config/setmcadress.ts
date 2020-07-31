@@ -23,9 +23,9 @@ module.exports = class extends Command {
     public async run(message: Message, args: string[]) {
         const guild: GuildDB = message.guild as GuildDB;
         if (!args[0]) {
-            const adress = guild.getMCAdress();
-            if (adress) {
-                return message.channel.send(`The current ip is \`${adress}\``);
+            const address = guild.getMCAdress();
+            if (address) {
+                return message.channel.send(`The current ip is \`${address}\``);
             }
 
             return message.channel.send('There is no ip');

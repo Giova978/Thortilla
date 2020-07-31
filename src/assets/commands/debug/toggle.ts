@@ -10,7 +10,7 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super("toggle", {
             aliases: ["tg"],
-            description: "Toogle the provided command",
+            description: "Toggle the provided command",
             category: "debug",
             usage: "<Name or Alias> [command, feature or event] Default: command",
         });
@@ -19,21 +19,21 @@ module.exports = class extends Command {
     }
 
     public async run(message: Message, args: string[]) {
-        if (message.author.id !== process.env.OWNER) return message.channel.send("Command olny for debug").then((msg) => Utils.deleteMessage(msg, 1000));
+        if (message.author.id !== process.env.OWNER) return message.channel.send("Command only for debug").then((msg) => Utils.deleteMessage(msg, 1000));
 
-        // The name of the command, event or feauture
+        // The name of the command, event or feature
         const name: string | undefined = args[0];
 
-        if (!name) return message.channel.send("Please give me a command, feature or event to toogle").then(Utils.deleteMessage);
+        if (!name) return message.channel.send("Please give me a command, feature or event to toggle").then(Utils.deleteMessage);
 
-        // The type (command, event or feauture)
+        // The type (command, event or feature)
         const type: string | undefined = args[1];
 
         // Enabled / Disabled variable in string
         let stateInString: string;
 
-        // Toogle the specified type command, event or feauture
-        // If isn't specified then toogle a command
+        // Toggle the specified type command, event or feature
+        // If isn't specified then toggle a command
         switch (type) {
             case "event":
                 const events: Event[] | undefined = this.handler.events.get(name);
@@ -49,7 +49,7 @@ module.exports = class extends Command {
                 break;
 
             default:
-                // Toogle a command
+                // Toggle a command
                 const command: Command | undefined = this.handler.commands.get(name) || this.handler.aliases.get(name);
 
                 if (!command) return message.channel.send("I can't found the command");

@@ -34,33 +34,15 @@ class GuildDB extends Guild {
             .catch(console.error);
     }
 
-    public getPrefix() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.prefix = data.prefix ?? "$"))
-        //     .catch(console.error);
-
+    get getPrefix() {
         return this.prefix;
     }
 
-    public getMCAdress() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.mcAdress = data.mcAdress))
-        //     .catch(console.error);
-
+    get getMCAdress() {
         return this.mcAdress;
     }
 
-    public getModulesStatus() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.modules = data.modules))
-        //     .catch(console.error);
-
+    get getModulesStatus() {
         return this.modules;
     }
 
