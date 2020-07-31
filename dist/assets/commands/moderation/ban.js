@@ -25,7 +25,7 @@ module.exports = class extends Command_1.default {
         });
     }
     run(message, args) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const member = Utils_1.Utils.getMember(message, args[0]);
             if (!member)
@@ -43,7 +43,7 @@ module.exports = class extends Command_1.default {
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle('Ban')
                 .setColor('RED')
-                .addField('Banned by: ', `<@${admin === null || admin === void 0 ? void 0 : admin.id}>`)
+                .addField('Banned by: ', `<@${(_b = admin) === null || _b === void 0 ? void 0 : _b.id}>`)
                 .addField('Banned: ', `<@${member.id}>`)
                 .addField('Reason: ', reason)
                 .addField('Date: ', new Date);

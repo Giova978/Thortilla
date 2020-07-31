@@ -25,11 +25,11 @@ module.exports = class extends Command_1.default {
         this.handler = handler;
     }
     run(message, args) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             ;
-            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== (musicData === null || musicData === void 0 ? void 0 : musicData.voiceChannel))
+            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== ((_b = musicData) === null || _b === void 0 ? void 0 : _b.voiceChannel))
                 return message.channel.send('You have to be in the same voice channel of the song');
             if (!musicData)
                 return message.channel.send('There is no song to skip');

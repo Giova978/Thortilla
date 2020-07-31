@@ -42,7 +42,7 @@ class Player {
     }
     getMusicaData(guildId) {
         var _a;
-        return (_a = this.guildsMusicData.get(guildId)) !== null && _a !== void 0 ? _a : {};
+        return _a = this.guildsMusicData.get(guildId), (_a !== null && _a !== void 0 ? _a : {});
     }
     add(guildId, message, song) {
         return __awaiter(this, void 0, void 0, function* () {

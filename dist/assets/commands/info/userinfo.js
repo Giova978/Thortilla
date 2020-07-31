@@ -25,21 +25,22 @@ module.exports = class extends Command_1.default {
         });
     }
     run(message, args) {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         return __awaiter(this, void 0, void 0, function* () {
             const member = (Utils_1.Utils.getMember(message, args[0]) || message.member);
-            let roles = member === null || member === void 0 ? void 0 : member.roles.cache.map((role) => `<@&${role.id}>`);
+            let roles = (_a = member) === null || _a === void 0 ? void 0 : _a.roles.cache.map((role) => `<@&${role.id}>`);
             // Remove @everyone from roles
-            roles === null || roles === void 0 ? void 0 : roles.pop();
-            if (!(roles === null || roles === void 0 ? void 0 : roles.length))
+            (_b = roles) === null || _b === void 0 ? void 0 : _b.pop();
+            if (!((_c = roles) === null || _c === void 0 ? void 0 : _c.length))
                 roles = ["None"];
             const embed = new discord_js_1.MessageEmbed()
                 .setColor("GREEN")
                 .setTitle("User Info")
-                .addField("**Username**", member === null || member === void 0 ? void 0 : member.user.username, true)
-                .addField("**Nickname**", (member === null || member === void 0 ? void 0 : member.nickname) || "None", true)
-                .addField("**Identifier**", `#${member === null || member === void 0 ? void 0 : member.user.discriminator}`, true)
-                .addField("**Account Created At**", Utils_1.Utils.formatTimestamp(member === null || member === void 0 ? void 0 : member.user.createdAt), true)
-                .addField("**Joined At**", Utils_1.Utils.formatTimestamp(member === null || member === void 0 ? void 0 : member.joinedAt), true)
+                .addField("**Username**", (_d = member) === null || _d === void 0 ? void 0 : _d.user.username, true)
+                .addField("**Nickname**", ((_e = member) === null || _e === void 0 ? void 0 : _e.nickname) || "None", true)
+                .addField("**Identifier**", `#${(_f = member) === null || _f === void 0 ? void 0 : _f.user.discriminator}`, true)
+                .addField("**Account Created At**", Utils_1.Utils.formatTimestamp((_g = member) === null || _g === void 0 ? void 0 : _g.user.createdAt), true)
+                .addField("**Joined At**", Utils_1.Utils.formatTimestamp((_h = member) === null || _h === void 0 ? void 0 : _h.joinedAt), true)
                 .addField("**Roles**", roles.join(" "))
                 .addField("**Avatar**", `[**Avatar URL**](${member.user.displayAvatarURL({ dynamic: false })})`, true)
                 .addField("**Balance**", `${member.getBalance()} coins`, true)

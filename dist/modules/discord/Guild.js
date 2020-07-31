@@ -39,28 +39,13 @@ class GuildDB extends discord_js_1.Guild {
         })
             .catch(console.error);
     }
-    getPrefix() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.prefix = data.prefix ?? "$"))
-        //     .catch(console.error);
+    get getPrefix() {
         return this.prefix;
     }
-    getMCAdress() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.mcAdress = data.mcAdress))
-        //     .catch(console.error);
+    get getMCAdress() {
         return this.mcAdress;
     }
-    getModulesStatus() {
-        // GuildModel.findOne({
-        //     guildId: this.id,
-        // })
-        //     .then((data: any) => (this.modules = data.modules))
-        //     .catch(console.error);
+    get getModulesStatus() {
         return this.modules;
     }
     setPrefix(prefix) {

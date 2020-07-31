@@ -28,7 +28,7 @@ module.exports = class extends Command_1.default {
     run(message, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const guild = message.guild;
-            const ip = guild.getMCAdress();
+            const ip = guild.getMCAdress;
             if (!ip)
                 return message.channel.send('There is no ip');
             const { motd, players } = yield (yield axios_1.default.get(`https://mcapi.us/server/status?ip=${ip}`)).data;

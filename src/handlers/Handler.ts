@@ -93,7 +93,7 @@ export default class Handler {
             if (!message.guild) return;
 
             const guild: GuildDB = message.guild as GuildDB;
-            const prefix: string = guild.getPrefix();
+            const prefix: string = guild.getPrefix;
 
             if (message.mentions.has(this.client.user!) && !message.mentions.everyone) {
                 if (message.member?.hasPermission("ADMINISTRATOR")) {

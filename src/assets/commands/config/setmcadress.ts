@@ -8,7 +8,7 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('setmcadress',{
+        super('setmcadress', {
             aliases: ['stmc'],
             permissions: ['ADMINISTRATOR'],
             category: 'config',
@@ -22,8 +22,9 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const guild: GuildDB = message.guild as GuildDB;
+
         if (!args[0]) {
-            const address = guild.getMCAdress();
+            const address = guild.getMCAdress;
             if (address) {
                 return message.channel.send(`The current ip is \`${address}\``);
             }
@@ -32,7 +33,7 @@ module.exports = class extends Command {
         }
 
         guild.setMCAdress(args[0])
-        .then((text: string) => message.channel.send(text))
-        .catch(console.error);
+            .then((text: string) => message.channel.send(text))
+            .catch(console.error);
     }
 }

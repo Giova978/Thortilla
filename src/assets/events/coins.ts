@@ -21,7 +21,7 @@ module.exports = class extends Event {
 
         if (!guild.getModulesStatus().balance) return;
 
-        if (!message.content.startsWith(guild.getPrefix()) && !message.author.bot) {
+        if (!message.content.startsWith(guild.getPrefix) && !message.author.bot) {
             const member: MemberDB = message.member as MemberDB;
 
             const chance = !!0.4 && Math.random() <= 0.4;

@@ -9,7 +9,7 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('getmcplayers',{
+        super('getmcplayers', {
             aliases: ['gmcp', 'gmc'],
             category: 'info',
             description: 'Gets the player count for the current minecraft server ip',
@@ -23,16 +23,16 @@ module.exports = class extends Command {
     public async run(message: Message, args: string[]) {
         const guild: GuildDB = message.guild as GuildDB;
 
-        const ip = guild.getMCAdress();
-    
+        const ip = guild.getMCAdress;
+
         if (!ip) return message.channel.send('There is no ip')
 
         const { motd, players }: any = await (await Axios.get(`https://mcapi.us/server/status?ip=${ip}`)).data;
 
         const embed = new MessageEmbed()
-        .setTitle(`Players in ${motd}`)
-        .setColor("GREEN")
-        .addField('Players online', `${players.now}/${players.max}`, true)
+            .setTitle(`Players in ${motd}`)
+            .setColor("GREEN")
+            .addField('Players online', `${players.now}/${players.max}`, true)
 
         message.channel.send(embed);
     }

@@ -10,7 +10,7 @@ class Command extends Toggleable_1.default {
         super();
         this.name = name;
         this.cooldowns = new discord_js_1.Collection();
-        this.cooldown = 3;
+        this.cooldown = 4;
         if (options.cooldown && !isNaN(options.cooldown))
             this.cooldown = options.cooldown;
         if (Array.isArray(options.aliases) && options.aliases.length != 0)

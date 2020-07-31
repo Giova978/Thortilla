@@ -28,9 +28,9 @@ module.exports = class extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const guild = message.guild;
             if (!args[0]) {
-                const adress = guild.getMCAdress();
-                if (adress) {
-                    return message.channel.send(`The current ip is \`${adress}\``);
+                const address = guild.getMCAdress;
+                if (address) {
+                    return message.channel.send(`The current ip is \`${address}\``);
                 }
                 return message.channel.send('There is no ip');
             }
