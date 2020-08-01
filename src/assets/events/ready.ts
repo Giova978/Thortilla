@@ -28,12 +28,12 @@ module.exports = class extends Event {
 
         console.log(`Bot Online`);
 
-        // this.handler.lavaClient = new LavaClient(
-        //     this.client,
-        //     // @ts-ignore
-        //     this.handler.nodes
-        // );
+        this.handler.lavaClient = new LavaClient(
+            this.client,
+            // @ts-ignore
+            this.handler.nodes
+        );
 
-        // this.handler.player = new Player(this.handler.lavaClient, this.handler);
+        this.handler.player = new Player(this.handler.lavaClient, this.handler);
     }
 };

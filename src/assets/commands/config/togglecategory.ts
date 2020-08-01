@@ -27,7 +27,7 @@ module.exports = class extends Command {
 
         const guild: GuildDB = message.guild as GuildDB;
 
-        const modules = guild.getModulesStatus();
+        const modules = guild.getModulesStatus;
         const modulesKeys = Object.keys(modules);
 
         if (!modulesKeys.includes(module)) return message.channel.send("Please provide a valid category");
