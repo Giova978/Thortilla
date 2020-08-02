@@ -9,7 +9,7 @@ module.exports = class extends Command {
         super("userinfo", {
             aliases: ["whois", "id"],
             category: "info",
-            description: "Send the user info",
+            description: "Send user info like balance, pfp and id",
             usage: "[user]",
         });
     }

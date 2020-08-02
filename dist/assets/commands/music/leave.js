@@ -19,7 +19,8 @@ module.exports = class extends Command_1.default {
         super("leave", {
             aliases: ["l"],
             category: "music",
-            description: "Shows the current queue",
+            permissions: ["PRIORITY_SPEAKER"],
+            description: "Leave the channel",
             usage: "No arguments",
         });
         this.handler = handler;

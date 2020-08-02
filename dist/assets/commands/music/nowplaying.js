@@ -20,12 +20,13 @@ module.exports = class extends Command_1.default {
         super("nowplaying", {
             aliases: ["np"],
             category: "music",
-            description: "Shows the current song",
+            description: "Shows info of current song",
             usage: "No arguments",
         });
         this.handler = handler;
     }
     run(message, args) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             if (!musicData)
@@ -34,7 +35,7 @@ module.exports = class extends Command_1.default {
                 return message.channel.send("There is no song playing");
             const song = musicData.nowPlaying;
             let description;
-            if ((song === null || song === void 0 ? void 0 : song.duration) === "Live stream") {
+            if (((_a = song) === null || _a === void 0 ? void 0 : _a.duration) === "Live stream") {
                 description = "Live stream";
             }
             else {

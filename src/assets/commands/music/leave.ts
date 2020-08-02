@@ -11,7 +11,8 @@ module.exports = class extends Command {
         super("leave", {
             aliases: ["l"],
             category: "music",
-            description: "Shows the current queue",
+            permissions: ["PRIORITY_SPEAKER"],
+            description: "Leave the channel",
             usage: "No arguments",
         });
 

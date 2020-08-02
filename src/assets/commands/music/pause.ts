@@ -10,6 +10,7 @@ module.exports = class extends Command {
         super('pause', {
             aliases: ['stop'],
             category: 'music',
+            permissions: ["PRIORITY_SPEAKER"],
             description: 'Pauses the current song',
             usage: 'No arguments'
         });

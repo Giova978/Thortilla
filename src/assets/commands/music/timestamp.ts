@@ -7,9 +7,10 @@ module.exports = class extends Command {
     private readonly handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('timestamp',{
+        super('timestamp', {
             aliases: ['seek', 'ts'],
             category: 'music',
+            permissions: ["PRIORITY_SPEAKER"],
             description: 'Skips to the gived timestamp',
             usage: '<timestamp(formata m:s)>'
         });

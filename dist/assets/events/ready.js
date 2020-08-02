@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Event_1 = __importDefault(require("../../handlers/Event"));
+const lavajs_1 = require("@anonymousg/lavajs");
+const Player_1 = __importDefault(require("../../handlers/Player"));
 module.exports = class extends Event_1.default {
     constructor({ client, handler }) {
         super("ready", "required");
@@ -19,11 +21,9 @@ module.exports = class extends Event_1.default {
             },
         });
         console.log(`Bot Online`);
-        // this.handler.lavaClient = new LavaClient(
-        //     this.client,
-        //     // @ts-ignore
-        //     this.handler.nodes
-        // );
-        // this.handler.player = new Player(this.handler.lavaClient, this.handler);
+        this.handler.lavaClient = new lavajs_1.LavaClient(this.client, 
+        // @ts-ignore
+        this.handler.nodes);
+        this.handler.player = new Player_1.default(this.handler.lavaClient, this.handler);
     }
 };

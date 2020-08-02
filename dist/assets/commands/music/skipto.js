@@ -19,17 +19,17 @@ module.exports = class extends Command_1.default {
         super('skipto', {
             aliases: ['sto'],
             category: 'music',
-            description: 'Skip to a song spicified in the queue',
+            description: 'Skip to a song specified in the queue',
             usage: '<Song index>'
         });
         this.handler = handler;
     }
     run(message, args) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             ;
-            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== (musicData === null || musicData === void 0 ? void 0 : musicData.voiceChannel))
+            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== ((_b = musicData) === null || _b === void 0 ? void 0 : _b.voiceChannel))
                 return message.channel.send('You have to be in the same voice channel of the song');
             if (!musicData)
                 return message.channel.send('There is no song to skip');
@@ -38,7 +38,7 @@ module.exports = class extends Command_1.default {
             const queueIndex = parseInt(args[0]);
             if (!queueIndex || queueIndex < 1 || queueIndex > 5)
                 return message.channel.send('Please enter a valid queue index');
-            if (args[1] === 'f' && message.member.id === process.env.OWNER) {
+            if (args[1] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
                 this.handler.player.skip(message.guild.id, queueIndex);
                 return message.channel.send(`Skipped to ${queueIndex}!`);
             }

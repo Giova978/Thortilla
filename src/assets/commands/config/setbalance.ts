@@ -8,11 +8,11 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('setbalance',{
+        super('setbalance', {
             aliases: ['stb'],
             permissions: ['ADMINISTRATOR'],
             category: 'config',
-            description: 'Sets the balance of a user',
+            description: 'Set the balance of a user',
             usage: '<user> <quantity>'
         });
 
@@ -28,12 +28,12 @@ module.exports = class extends Command {
         if (isNaN(newBalance)) return message.channel.send('Please give a valid number');
 
         member.setBalance(newBalance)
-        .then(() => {
-            message.channel.send('Balance changed successfully');
-        })
-        .catch(err => {
-            message.channel.send('Something went wrong, please try again later');
-            console.error(err);
-        })
+            .then(() => {
+                message.channel.send('Balance changed successfully');
+            })
+            .catch(err => {
+                message.channel.send('Something went wrong, please try again later');
+                console.error(err);
+            })
     }
 }

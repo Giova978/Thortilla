@@ -12,7 +12,7 @@ module.exports = class extends Command {
             aliases: ['stmc'],
             permissions: ['ADMINISTRATOR'],
             category: 'config',
-            description: 'Sets the ip for `getmcplayers` command',
+            description: 'Set the ip for `getmcplayers` command',
             usage: '<ip>'
         });
 

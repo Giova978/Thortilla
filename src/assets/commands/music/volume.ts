@@ -11,7 +11,7 @@ module.exports = class extends Command {
             aliases: ['v'],
             category: 'music',
             description: 'Skips to the gived timestamp',
-            usage: '<timestamp(formata m:s)>',
+            usage: '<volume>',
         });
 
         this.disbale();

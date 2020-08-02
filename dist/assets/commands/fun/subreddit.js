@@ -20,7 +20,7 @@ module.exports = class extends Command_1.default {
         super('subreddit', {
             aliases: ['sub'],
             category: 'fun',
-            description: 'Sends a content from a subreddit',
+            description: 'Sends content from the specified subreddit',
             usage: '<subreddit>'
         });
     }

@@ -33,7 +33,7 @@ module.exports = class extends Command_1.default {
             if (!stateString || !["on", "off"].includes(stateString))
                 return message.channel.send("Please provide a valid state");
             const guild = message.guild;
-            const modules = guild.getModulesStatus();
+            const modules = guild.getModulesStatus;
             const modulesKeys = Object.keys(modules);
             if (!modulesKeys.includes(module))
                 return message.channel.send("Please provide a valid category");

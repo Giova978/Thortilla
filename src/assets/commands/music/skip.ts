@@ -7,11 +7,11 @@ module.exports = class extends Command {
     private readonly handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('skip',{
+        super('skip', {
             aliases: ['s'],
             category: 'music',
             description: 'Skip the current song',
-            usage: 'No arguments'
+            usage: '<f for force skip(need PRIORITY_SPEAKER)>'
         });
 
         this.handler = handler;
@@ -24,22 +24,22 @@ module.exports = class extends Command {
         if (!musicData) return message.channel.send('There is no song playing');
         if (musicData.queue.length === 0) return message.channel.send('There is no song to skip');
 
-        if (args[0] === 'f' && message.member!.id === process.env.OWNER) {
+        if (args[0] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id);
             return message.channel.send('Skipped!');
         }
 
         if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return message.channel.send('You cant vote twice');
-        
+
         if (musicData.voiceChannel!.members.size <= 2) {
             this.handler.player.skip(message.guild!.id);
             return message.channel.send('Skipped!');
         }
-        
+
         musicData.skipVotes++;
 
         const trueMembers = musicData.player.options.voiceChannel.members.map(member => !member.user.bot);
-    
+
         const requiredVotes = Math.ceil(trueMembers.length / 2);
 
         if (musicData.skipVotes >= requiredVotes) {
@@ -50,9 +50,9 @@ module.exports = class extends Command {
         musicData.nowPlaying!.skipVoteUsers.push(message.member!.id);
 
         const embed = new MessageEmbed()
-        .setTitle('Skip votes')
-        .setColor('GREEN')
-        .addField('Skip', `${musicData.skipVotes}/${requiredVotes}`)
+            .setTitle('Skip votes')
+            .setColor('GREEN')
+            .addField('Skip', `${musicData.skipVotes}/${requiredVotes}`)
 
         message.channel.send(embed);
     }

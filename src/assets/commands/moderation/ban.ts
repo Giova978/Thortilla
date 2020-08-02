@@ -4,18 +4,18 @@ import { Utils } from "../../../Utils";
 import { MessageEmbed } from "discord.js";
 
 module.exports = class extends Command {
-    
+
     constructor() {
-        super('ban',{
+        super('ban', {
             permissions: ["BAN_MEMBERS"],
             category: 'moderation',
-            description: 'Bans a user',
+            description: 'Ban a user',
             usage: '<user> [reason]',
         });
     }
 
     public async run(message: Message, args: string[]) {
-        const member: GuildMember | undefined = Utils.getMember(message,args[0]);
+        const member: GuildMember | undefined = Utils.getMember(message, args[0]);
         if (!member) return message.channel.send(`I couldn't find ${args[0]}`).then(Utils.deleteMessage)
         if (!member.bannable) return message.channel.send(`I can't ban ${member.displayName}`).then(Utils.deleteMessage)
 
@@ -31,12 +31,12 @@ module.exports = class extends Command {
         });
 
         const embed = new MessageEmbed()
-        .setTitle('Ban')
-        .setColor('RED')
-        .addField('Banned by: ', `<@${admin?.id}>`)
-        .addField('Banned: ', `<@${member.id}>`)
-        .addField('Reason: ', reason)
-        .addField('Date: ', new Date);
+            .setTitle('Ban')
+            .setColor('RED')
+            .addField('Banned by: ', `<@${admin?.id}>`)
+            .addField('Banned: ', `<@${member.id}>`)
+            .addField('Reason: ', reason)
+            .addField('Date: ', new Date);
 
         message.channel.send(embed);
     }

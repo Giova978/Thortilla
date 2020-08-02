@@ -19,7 +19,7 @@ module.exports = class extends Command_1.default {
             aliases: ['stp'],
             permissions: ['MANAGE_GUILD'],
             category: 'config',
-            description: 'Sets the prefix for the current guild or gets the prefix',
+            description: 'Set the prefix for the current guild or gets the prefix',
             usage: '[prefix]'
         });
         this.handler = handler;

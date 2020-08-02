@@ -19,7 +19,7 @@ module.exports = class extends Command_1.default {
         super('queue', {
             aliases: ['q'],
             category: 'music',
-            description: 'Shows the current queue',
+            description: 'Show the current queue',
             usage: 'No arguments'
         });
         this.handler = handler;

@@ -11,7 +11,7 @@ module.exports = class extends Command {
         super('help', {
             aliases: ['info', 'h'],
             category: 'info',
-            description: 'Send info for the commands or a specified command',
+            description: 'Send the commands or info about a command',
             usage: '[command]',
         });
 

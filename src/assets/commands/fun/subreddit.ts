@@ -4,10 +4,10 @@ import { Message, MessageEmbed } from "discord.js";
 
 module.exports = class extends Command {
     constructor() {
-        super('subreddit',{
+        super('subreddit', {
             aliases: ['sub'],
             category: 'fun',
-            description: 'Sends a content from a subreddit',
+            description: 'Sends content from the specified subreddit',
             usage: '<subreddit>'
         });
     }
@@ -15,7 +15,7 @@ module.exports = class extends Command {
     public async run(messsage: Message, args: string[]) {
         messsage.delete();
 
-        const subreddit: string | undefined = args[0]; 
+        const subreddit: string | undefined = args[0];
         if (!subreddit) return messsage.channel.send('Give me a valid subreddit please');
 
         let data: any | undefined;
@@ -29,8 +29,8 @@ module.exports = class extends Command {
 
         if (!data) return messsage.channel.send('No data found');
 
-        const collectorFilter = (reaction: any, user: any) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽'  && user.id === messsage.author.id;
-        
+        const collectorFilter = (reaction: any, user: any) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === messsage.author.id;
+
         const embed: MessageEmbed = new MessageEmbed().setTitle('Image');
 
         // The actual image for the embed
@@ -50,7 +50,7 @@ module.exports = class extends Command {
 
         collector.on('collect', (reaction, reactionCollector) => {
             const newEmbed: MessageEmbed = new MessageEmbed()
-            .setTitle('Image');
+                .setTitle('Image');
 
             if (reaction.emoji.name === '⬅️') {
                 index = index-- <= 0 ? 0 : index--;

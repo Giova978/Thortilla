@@ -19,7 +19,7 @@ module.exports = class extends Command_1.default {
         super("clear", {
             permissions: ["MANAGE_MESSAGES"],
             category: "moderation",
-            description: "Clear messages or search x messages for the author given and delete them",
+            description: "Clear x messages or search x messages for the author given and delete them",
             usage: "<amount> [user]",
         });
     }

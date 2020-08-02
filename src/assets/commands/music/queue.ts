@@ -7,10 +7,10 @@ module.exports = class extends Command {
     private readonly handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('queue',{
+        super('queue', {
             aliases: ['q'],
             category: 'music',
-            description: 'Shows the current queue',
+            description: 'Show the current queue',
             usage: 'No arguments'
         });
 
@@ -23,10 +23,10 @@ module.exports = class extends Command {
         if (musicData.queue.length === 0) return message.channel.send('There is no queue');
 
         const embed = new MessageEmbed()
-        .setColor('GREEN')
-        .setTitle('Queue')
-        .setTimestamp()
-        .setAuthor(this.handler.client.user?.username, this.handler.client.user?.displayAvatarURL());
+            .setColor('GREEN')
+            .setTitle('Queue')
+            .setTimestamp()
+            .setAuthor(this.handler.client.user?.username, this.handler.client.user?.displayAvatarURL());
 
         let description = '';
 

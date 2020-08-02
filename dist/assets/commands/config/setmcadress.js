@@ -19,7 +19,7 @@ module.exports = class extends Command_1.default {
             aliases: ['stmc'],
             permissions: ['ADMINISTRATOR'],
             category: 'config',
-            description: 'Sets the ip for `getmcplayers` command',
+            description: 'Set the ip for `getmcplayers` command',
             usage: '<ip>'
         });
         this.handler = handler;

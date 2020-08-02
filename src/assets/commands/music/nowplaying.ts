@@ -11,7 +11,7 @@ module.exports = class extends Command {
         super("nowplaying", {
             aliases: ["np"],
             category: "music",
-            description: "Shows the current song",
+            description: "Shows info of current song",
             usage: "No arguments",
         });
 

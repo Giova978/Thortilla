@@ -11,7 +11,7 @@ module.exports = class extends Command_1.default {
             aliases: ['s'],
             category: 'music',
             description: 'Skip the current song',
-            usage: 'No arguments'
+            usage: '<f for force skip(need PRIORITY_SPEAKER)>'
         });
         this.handler = handler;
     }
@@ -24,7 +24,7 @@ module.exports = class extends Command_1.default {
             return message.channel.send('There is no song playing');
         if (musicData.queue.length === 0)
             return message.channel.send('There is no song to skip');
-        if (args[0] === 'f' && message.member.id === process.env.OWNER) {
+        if (args[0] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild.id);
             return message.channel.send('Skipped!');
         }
