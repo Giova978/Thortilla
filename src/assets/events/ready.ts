@@ -21,7 +21,7 @@ module.exports = class extends Event {
     public run() {
         this.client.user?.setPresence({
             activity: {
-                name: "A TI! 😈",
+                name: "$",
                 type: "WATCHING",
             },
         });
