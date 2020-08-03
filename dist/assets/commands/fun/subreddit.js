@@ -16,20 +16,21 @@ const Command_1 = __importDefault(require("../../../handlers/Command"));
 const axios_1 = __importDefault(require("axios"));
 const discord_js_1 = require("discord.js");
 module.exports = class extends Command_1.default {
-    constructor() {
+    constructor({ handler }) {
         super('subreddit', {
             aliases: ['sub'],
             category: 'fun',
             description: 'Sends content from the specified subreddit',
             usage: '<subreddit>'
         });
+        this.handler = handler;
     }
-    run(messsage, args) {
+    run(message, args) {
         return __awaiter(this, void 0, void 0, function* () {
-            messsage.delete();
+            message.delete();
             const subreddit = args[0];
             if (!subreddit)
-                return messsage.channel.send('Give me a valid subreddit please');
+                return this.handler.error('Give me a valid subreddit please', message.channel);
             let data;
             try {
                 let response = yield axios_1.default.get(`https://www.reddit.com/r/${subreddit}/hot.json`);
@@ -39,13 +40,13 @@ module.exports = class extends Command_1.default {
                 console.error(error);
             }
             if (!data)
-                return messsage.channel.send('No data found');
-            const collectorFilter = (reaction, user) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === messsage.author.id;
+                return this.handler.error('Nothing found', message.channel);
+            const collectorFilter = (reaction, user) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === message.author.id;
             const embed = new discord_js_1.MessageEmbed().setTitle('Image');
             // The actual image for the embed
             let index = 0;
             embed.setImage(data.children[index].data.url);
-            const msg = yield messsage.channel.send(embed);
+            const msg = yield message.channel.send(embed);
             yield Promise.all([
                 msg.react('⬅️'),
                 msg.react('➡️'),

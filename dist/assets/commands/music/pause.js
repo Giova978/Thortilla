@@ -25,15 +25,15 @@ module.exports = class extends Command_1.default {
         this.handler = handler;
     }
     run(message, args) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
-            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== ((_b = musicData) === null || _b === void 0 ? void 0 : _b.voiceChannel))
-                return message.channel.send('You have to be in the same voice channel of the song');
+            if (((_a = message.member) === null || _a === void 0 ? void 0 : _a.voice.channel) !== (musicData === null || musicData === void 0 ? void 0 : musicData.voiceChannel))
+                return this.handler.error('You have to be in the same voice channel of the song', message.channel);
             if (!musicData)
-                return message.channel.send('There is no song playing');
+                return this.handler.error('There is no song playing', message.channel);
             if (musicData.player.paused)
-                return message.channel.send('The song is already paused');
+                return this.handler.error('The song is already paused', message.channel);
             musicData.player.pause();
             message.channel.send('The song has been paused');
         });

@@ -22,17 +22,16 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const member = (Utils.getMember(message, args[0]) || message.member) as MemberDB;
-        if (!member) return message.channel.send('Please give a user');
+        if (!member) return this.handler.error('Please give a user', message.channel);
 
         const newBalance = +args[0];
-        if (isNaN(newBalance)) return message.channel.send('Please give a valid number');
-
+        if (isNaN(newBalance)) return this.handler.error('Please give a valid number', message.channel);
         member.setBalance(newBalance)
             .then(() => {
                 message.channel.send('Balance changed successfully');
             })
             .catch(err => {
-                message.channel.send('Something went wrong, please try again later');
+                this.handler.error('Something went wrong, please try again later', message.channel);
                 console.error(err);
             })
     }

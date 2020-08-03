@@ -25,7 +25,7 @@ module.exports = class extends Command {
 
         const ip = guild.getMCAdress;
 
-        if (!ip) return message.channel.send('There is no ip')
+        if (!ip) return this.handler.error('There is no ip', message.channel);
 
         const { motd, players }: any = await (await Axios.get(`https://mcapi.us/server/status?ip=${ip}`)).data;
 

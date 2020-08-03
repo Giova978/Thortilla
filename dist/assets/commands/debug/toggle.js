@@ -13,25 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Command_1 = __importDefault(require("../../../handlers/Command"));
-const Utils_1 = require("../../../Utils");
 module.exports = class extends Command_1.default {
     constructor({ handler }) {
         super("toggle", {
             aliases: ["tg"],
             description: "Toggle the provided command",
             category: "debug",
-            usage: "<Name or Alias> [command, feature or event] Default: command",
+            usage: "<Name or Alias> [command or event] Default: command",
         });
         this.handler = handler;
     }
     run(message, args) {
         return __awaiter(this, void 0, void 0, function* () {
             if (message.author.id !== process.env.OWNER)
-                return message.channel.send("Command only for debug").then((msg) => Utils_1.Utils.deleteMessage(msg, 1000));
+                return this.handler.error("Command only for debug", message.channel, 1000);
             // The name of the command, event or feature
             const name = args[0];
             if (!name)
-                return message.channel.send("Please give me a command, feature or event to toggle").then(Utils_1.Utils.deleteMessage);
+                return this.handler.error("Please give me a command, feature or event to toggle", message.channel);
             // The type (command, event or feature)
             const type = args[1];
             // Enabled / Disabled variable in string
@@ -42,7 +41,7 @@ module.exports = class extends Command_1.default {
                 case "event":
                     const events = this.handler.events.get(name);
                     if (!events)
-                        return message.channel.send("I can't found the events");
+                        return this.handler.error("I can't found the events", message.channel);
                     events.map((event) => {
                         event.toogle();
                     });
@@ -53,7 +52,7 @@ module.exports = class extends Command_1.default {
                     // Toggle a command
                     const command = this.handler.commands.get(name) || this.handler.aliases.get(name);
                     if (!command)
-                        return message.channel.send("I can't found the command");
+                        return this.handler.error("I can't found the command", message.channel);
                     command.toogle();
                     stateInString = command.enabled ? "`enabled`" : "`disabled`";
                     message.channel.send(`Command \`${name}\` is now ${stateInString}`);

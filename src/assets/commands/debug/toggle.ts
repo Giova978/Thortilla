@@ -12,19 +12,19 @@ module.exports = class extends Command {
             aliases: ["tg"],
             description: "Toggle the provided command",
             category: "debug",
-            usage: "<Name or Alias> [command, feature or event] Default: command",
+            usage: "<Name or Alias> [command or event] Default: command",
         });
 
         this.handler = handler;
     }
 
     public async run(message: Message, args: string[]) {
-        if (message.author.id !== process.env.OWNER) return message.channel.send("Command only for debug").then((msg) => Utils.deleteMessage(msg, 1000));
+        if (message.author.id !== process.env.OWNER) return this.handler.error("Command only for debug", message.channel, 1000)
 
         // The name of the command, event or feature
         const name: string | undefined = args[0];
 
-        if (!name) return message.channel.send("Please give me a command, feature or event to toggle").then(Utils.deleteMessage);
+        if (!name) return this.handler.error("Please give me a command, feature or event to toggle", message.channel)
 
         // The type (command, event or feature)
         const type: string | undefined = args[1];
@@ -37,7 +37,7 @@ module.exports = class extends Command {
         switch (type) {
             case "event":
                 const events: Event[] | undefined = this.handler.events.get(name);
-                if (!events) return message.channel.send("I can't found the events");
+                if (!events) return this.handler.error("I can't found the events", message.channel);
 
                 events.map((event: Event) => {
                     event.toogle();
@@ -52,7 +52,7 @@ module.exports = class extends Command {
                 // Toggle a command
                 const command: Command | undefined = this.handler.commands.get(name) || this.handler.aliases.get(name);
 
-                if (!command) return message.channel.send("I can't found the command");
+                if (!command) return this.handler.error("I can't found the command", message.channel);
 
                 command.toogle();
 

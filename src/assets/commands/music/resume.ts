@@ -19,9 +19,9 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (message.member?.voice.channel !== musicData?.voiceChannel) return message.channel.send('You have to be in the same voice channel of the song')
-        if (!musicData) return message.channel.send('There is no song playing');
-        if (!musicData.player.paused) return message.channel.send('The song is not paused');
+        if (message.member?.voice.channel !== musicData?.voiceChannel) return this.handler.error('You have to be in the same voice channel of the song', message.channel);
+        if (!musicData) return this.handler.error('There is no song playing', message.channel);
+        if (!musicData.player.paused) return this.handler.error('The song is not paused', message.channel);
 
         musicData.player.resume();
         message.channel.send('The song has been resumed');

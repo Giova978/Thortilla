@@ -27,16 +27,16 @@ module.exports = class extends Command_1.default {
     run(message, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const module = args[0];
-            if (!module || module === "config")
-                return message.channel.send("Please provide a valid category");
+            if (!module || module === "config" || module === "debug")
+                return this.handler.error("Please provide a valid category", message.channel);
             const stateString = args[1];
             if (!stateString || !["on", "off"].includes(stateString))
-                return message.channel.send("Please provide a valid state");
+                return this.handler.error("Please provide a valid state", message.channel);
             const guild = message.guild;
             const modules = guild.getModulesStatus;
             const modulesKeys = Object.keys(modules);
             if (!modulesKeys.includes(module))
-                return message.channel.send("Please provide a valid category");
+                return this.handler.error("Please provide a valid category", message.channel);
             const state = stateString === "on" ? true : false;
             modules[module] = state;
             guild
@@ -45,7 +45,7 @@ module.exports = class extends Command_1.default {
                 return message.channel.send(`Successfully changed \`${module}\` to \`${stateString}\``);
             })
                 .catch((err) => {
-                return message.channel.send("An error ocurred while changing module status, please try again later");
+                return this.handler.error("An error ocurred while changing module status, please try again later", message.channel);
             });
         });
     }

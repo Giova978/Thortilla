@@ -28,14 +28,14 @@ module.exports = class extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             if (!musicData)
-                return message.channel.send('There is no song playing');
+                return this.handler.error('There is no song playing', message.channel);
             const volume = parseInt(args[0]);
             if (isNaN(volume))
-                return message.channel.send('Give a valid  volume');
+                return this.handler.error('Give a valid  volume', message.channel);
             if (volume > 100)
-                return message.channel.send('Give a valid  volume');
+                return this.handler.error('Give a valid  volume', message.channel);
             if (volume < 1)
-                return message.channel.send('Give a valid  volume');
+                return this.handler.error('Give a valid  volume', message.channel);
             musicData.player.setVolume(volume);
             musicData.volume = volume;
             message.channel.send(`Volume is ${volume}`);

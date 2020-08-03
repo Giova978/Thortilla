@@ -16,7 +16,7 @@ const Command_1 = __importDefault(require("../../../handlers/Command"));
 const Utils_1 = require("../../../Utils");
 const discord_js_1 = require("discord.js");
 module.exports = class extends Command_1.default {
-    constructor() {
+    constructor({ handler }) {
         super('addrole', {
             aliases: ['adrole', 'adr'],
             permissions: ['MANAGE_ROLES'],
@@ -24,18 +24,19 @@ module.exports = class extends Command_1.default {
             description: 'Adds a role to the given user',
             usage: '<user> <role name>',
         });
+        this.handler = handler;
     }
     run(message, args) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const user = Utils_1.Utils.getMember(message, args.shift());
             if (!user)
-                return message.channel.send('Give me a user please').then(Utils_1.Utils.deleteMessage);
+                return this.handler.error('Give me a user please', message.channel);
             const role = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.roles.cache.find(role => role.name === args.join(' '));
             if (!role)
-                return message.channel.send('Give me a valid role name please').then(Utils_1.Utils.deleteMessage);
+                return this.handler.error('Give me a valid role name please', message.channel);
             if (user.roles.cache.has(role.id))
-                return message.channel.send(`The user has already ${role.name} role`).then(Utils_1.Utils.deleteMessage);
+                return this.handler.error(`The user has already ${role.name} role`, message.channel);
             user.roles.add(role);
             const embed = new discord_js_1.MessageEmbed()
                 .setColor('GREEN')

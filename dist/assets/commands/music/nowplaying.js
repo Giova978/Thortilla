@@ -26,16 +26,13 @@ module.exports = class extends Command_1.default {
         this.handler = handler;
     }
     run(message, args) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
-            if (!musicData)
-                return message.channel.send("There is no song playing");
-            if (!musicData.nowPlaying)
-                return message.channel.send("There is no song playing");
+            if (!musicData || !musicData.nowPlaying)
+                return this.handler.error("There is no song playing", message.channel);
             const song = musicData.nowPlaying;
             let description;
-            if (((_a = song) === null || _a === void 0 ? void 0 : _a.duration) === "Live stream") {
+            if ((song === null || song === void 0 ? void 0 : song.duration) === "Live stream") {
                 description = "Live stream";
             }
             else {

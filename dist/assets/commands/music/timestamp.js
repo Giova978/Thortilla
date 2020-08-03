@@ -28,15 +28,15 @@ module.exports = class extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             if (!musicData)
-                return message.channel.send('There is no song playing');
+                return this.handler.error('There is no song playing', message.channel);
             const time = args[0];
             if (!time)
-                return message.channel.send('Give a timestamp');
+                return this.handler.error('Give a timestamp', message.channel);
             const [minutes, seconds] = time.split(':');
             if (!minutes)
-                return message.channel.send('Give a good formated timestamp');
+                return this.handler.error('Give a good formated timestamp', message.channel);
             if (!time)
-                return message.channel.send('Give a good formated timestamp');
+                return this.handler.error('Give a good formated timestamp', message.channel);
             const timeToSkip = ((parseInt(minutes) * 60) + parseInt(seconds)) * 1000;
             musicData.player.seek(timeToSkip);
             message.channel.send(`Skipped to ${time}`);

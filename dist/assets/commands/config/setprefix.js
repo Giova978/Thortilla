@@ -29,10 +29,13 @@ module.exports = class extends Command_1.default {
             const guild = message.guild;
             const prefix = args[0];
             if (!prefix)
-                return message.channel.send(`The current prefix is ${guild.getPrefix}`);
+                return this.handler.error(`The current prefix is ${guild.getPrefix}`, message.channel);
             guild.setPrefix(prefix)
                 .then((text) => message.channel.send(text))
-                .catch(console.error);
+                .catch(err => {
+                this.handler.error('Something went wrong, please try again later', message.channel);
+                console.error(err);
+            });
         });
     }
 };

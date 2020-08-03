@@ -1,4 +1,4 @@
-import { Client, Collection, Message } from "discord.js";
+import { Client, Collection, Message, MessageEmbed, Channel, TextChannel, DMChannel, NewsChannel } from "discord.js";
 import { LavaClient } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
@@ -87,59 +87,13 @@ export default class Handler {
                 });
             });
         }
+    }
 
-        this.client.on("message", async (message: Message) => {
+    public error(text: string, channel: TextChannel | DMChannel | NewsChannel, timeout: number = 5000) {
+        const embed = new MessageEmbed()
+            .setColor('RED')
+            .addField('Error', `\`${text}\``);
 
-            if (!message.guild) return;
-
-            const guild: GuildDB = message.guild as GuildDB;
-            const prefix: string = guild.getPrefix;
-
-            if (message.mentions.has(this.client.user!) && !message.mentions.everyone) {
-                if (message.member?.hasPermission("ADMINISTRATOR")) {
-                    message.content = prefix + message.content.slice(this.client.user!.id.length + 4).trim();
-                } else {
-                    return message.channel.send(`The prefix is \`${prefix}\``);
-                }
-            }
-
-            if (message.author.bot || !message.content.startsWith(prefix)) return;
-
-            const [command, ...args] = message.content.slice(prefix.length).split(" ");
-
-            let cmd: Command | undefined = this.commands.get(command!.toLocaleLowerCase()) || this.aliases.get(command!.toLocaleLowerCase());
-
-            let hasPermission: boolean = false;
-            const modules = guild.getModulesStatus;
-
-            if (!cmd || !cmd.enabled || !modules[cmd.category]) {
-                return;
-            }
-
-            if (cmd.permissions) {
-                for (const perm of cmd.permissions) {
-                    if (message.member?.hasPermission(perm)) {
-                        hasPermission = true;
-                        break;
-                    }
-                }
-            } else {
-                hasPermission = true;
-            }
-
-            if (!hasPermission) return message.channel.send("You don't have the required permissions");
-
-            const now = (new Date).getTime()
-            if (cmd.cooldowns.has(message.author.id)) {
-                const cooldown = cmd.cooldowns.get(message.member!.id);
-                const leftCooldown = `${Math.floor(cooldown! - now) / 1000}`.substring(0, 3);
-
-                if (now < cooldown!) return message.channel.send(`You have to wait ${leftCooldown}`);
-            }
-
-            cmd.cooldowns.set(message.author.id, now + cmd.cooldown * 1000);
-
-            cmd.run(message, args);
-        });
+        channel.send(embed).then((msg) => msg.delete({ timeout }))
     }
 }

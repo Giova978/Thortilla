@@ -16,7 +16,7 @@ const Command_1 = __importDefault(require("../../../handlers/Command"));
 const discord_js_1 = require("discord.js");
 const Utils_1 = require("../../../Utils");
 module.exports = class extends Command_1.default {
-    constructor() {
+    constructor({ handler }) {
         super('removerole', {
             aliases: ['revrole', 'rr'],
             permissions: ['MANAGE_ROLES'],
@@ -24,18 +24,19 @@ module.exports = class extends Command_1.default {
             description: 'Remove a role from the given user',
             usage: '<use> <role name>',
         });
+        this.handler = handler;
     }
     run(message, args) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const user = Utils_1.Utils.getMember(message, args.shift());
             if (!user)
-                return message.channel.send('Give me a user please').then(Utils_1.Utils.deleteMessage);
+                return this.handler.error('Give me a user please', message.channel);
             const role = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.roles.cache.find(role => role.name === args.join(' '));
             if (!role)
-                return message.channel.send('Give me a valid role name please').then(Utils_1.Utils.deleteMessage);
+                return this.handler.error('Give me a valid role name please', message.channel);
             if (!user.roles.cache.has(role.id))
-                return message.channel.send(`The user doesn\'t has the \`${role.name}\` role`).then(Utils_1.Utils.deleteMessage);
+                return this.handler.error(`The user doesn\'t has the \`${role.name}\` role`, message.channel);
             user.roles.remove(role);
             const embed = new discord_js_1.MessageEmbed()
                 .setColor('GREEN')

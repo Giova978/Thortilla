@@ -29,10 +29,8 @@ module.exports = class extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const musicData = this.handler.player.getMusicaData(message.guild.id);
             ;
-            if (!musicData)
-                return message.channel.send('There is no queue');
-            if (musicData.queue.length === 0)
-                return message.channel.send('There is no queue');
+            if (!musicData || musicData.queue.length === 0)
+                return this.handler.error('There is no queue', message.channel);
             const embed = new discord_js_1.MessageEmbed()
                 .setColor('GREEN')
                 .setTitle('Queue')

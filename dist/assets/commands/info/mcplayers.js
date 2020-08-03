@@ -30,7 +30,7 @@ module.exports = class extends Command_1.default {
             const guild = message.guild;
             const ip = guild.getMCAdress;
             if (!ip)
-                return message.channel.send('There is no ip');
+                return this.handler.error('There is no ip', message.channel);
             const { motd, players } = yield (yield axios_1.default.get(`https://mcapi.us/server/status?ip=${ip}`)).data;
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle(`Players in ${motd}`)

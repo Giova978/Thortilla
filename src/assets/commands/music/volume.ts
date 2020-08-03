@@ -21,12 +21,12 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return message.channel.send('There is no song playing');
+        if (!musicData) return this.handler.error('There is no song playing', message.channel);
 
         const volume = parseInt(args[0]);
-        if (isNaN(volume)) return message.channel.send('Give a valid  volume');
-        if (volume > 100) return message.channel.send('Give a valid  volume');
-        if (volume < 1) return message.channel.send('Give a valid  volume');
+        if (isNaN(volume)) return this.handler.error('Give a valid  volume', message.channel);
+        if (volume > 100) return this.handler.error('Give a valid  volume', message.channel);
+        if (volume < 1) return this.handler.error('Give a valid  volume', message.channel);
 
         musicData.player.setVolume(volume);
         musicData.volume = volume;

@@ -21,20 +21,20 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const voiceChannel = message.member?.voice.channel;
-        if (!voiceChannel) return message.channel.send("You has to be in a voice channel");
+        if (!voiceChannel) return this.handler.error("You has to be in a voice channel", message.channel);
 
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
         const voiceChannelUsers = this.handler.player.getMusicaData(message.guild!.id).voiceChannel;
 
-        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return message.channel.send("You have to be in the same channel with music");
+        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return this.handler.error("You have to be in the same channel with music", message.channel);
 
         const query = args.join(" ");
-        if (!query) return message.channel.send("Please give a song name or YT url or playlist url>");
+        if (!query) return this.handler.error("Please give a song name or YT url or playlist url>", message.channel);
 
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
 
         if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
-            return message.channel.send("Playlist are not allowed");
+            return this.handler.error("Playlist are not allowed", message.channel);
         }
 
         if (query.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
@@ -44,7 +44,7 @@ module.exports = class extends Command {
                 const id = newQuery[2].split(/[^0-9a-z_\-]/i)[0];
 
                 const video = await youtube.getVideoByID(id);
-                if (!video) return message.channel.send("Failed to get video, try again");
+                if (!video) return this.handler.error("Failed to get video, try again", message.channel);
 
                 const title = video.title;
                 let duration = this.formatDuration(video.duration);
@@ -70,7 +70,7 @@ module.exports = class extends Command {
                 }
             } catch (error) {
                 console.error(error);
-                return message.channel.send("Something went wrong try again later").then(Utils.deleteMessage);
+                return this.handler.error("Something went wrong try again later", message.channel);
             }
         }
 
@@ -80,7 +80,7 @@ module.exports = class extends Command {
             .then((response: any) => response)
             .catch((error: any) => console.error(error));
 
-        if (!videos) return message.channel.send("We have trouble finding your query please try again");
+        if (!videos) return this.handler.error("We have trouble finding your query please try again", message.channel);
 
         const videosNames: string[] = [];
 
@@ -88,7 +88,7 @@ module.exports = class extends Command {
             videosNames.push(`${i + 1}: ${videos[i].title}`);
         }
 
-        if (videos.length < 1) return message.channel.send("No matches found");
+        if (videos.length < 1) return this.handler.error("No matches found", message.channel);
 
         // Send embed to select song
         const embed = new MessageEmbed().setColor("GREEN").setTitle("Choose a song by comment a number beetween 1 and 5 or exit to exit");
@@ -113,12 +113,12 @@ module.exports = class extends Command {
             .catch((err) => {
                 console.error(err);
                 songEmbed.delete();
-                return message.channel.send("Please try again and enter a number beetween 1 and 5 or exit").then(Utils.deleteMessage);
+                return this.handler.error("Please try again and enter a number beetween 1 and 5 or exit", message.channel);
             });
         // @ts-ignore
         if (userResponse.size === 0) {
             songEmbed.delete();
-            return message.channel.send("Please try again and enter a number beetween 1 and 5 or exit");
+            return this.handler.error("Please try again and enter a number beetween 1 and 5 or exit", message.channel);
         }
         // @ts-ignore
         const videoIndex = parseInt(userResponse.first().content);
@@ -128,11 +128,11 @@ module.exports = class extends Command {
         if (userResponse.first().content === "exit") return songEmbed.delete();
         try {
             var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
-            if (!video) return message.channel.send("Failed to get video, try again");
+            if (!video) return this.handler.error("Failed to get video, try again", message.channel);
         } catch (err) {
             console.error(err);
             songEmbed.delete();
-            return message.channel.send("We have trouble fetching the video please try again");
+            return this.handler.error("We have trouble finding your query please try again", message.channel);
         }
         // @ts-ignore
         userResponse.first().delete();

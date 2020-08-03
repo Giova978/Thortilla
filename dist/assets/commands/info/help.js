@@ -31,8 +31,8 @@ module.exports = class extends Command_1.default {
             if (!commandName)
                 return message.channel.send(this.getAll());
             const command = this.handler.commands.get(args[0]) || this.handler.aliases.get(args[0]);
-            if (!command)
-                return message.channel.send(`No info found about \`${commandName}\``);
+            if (!command || command.category === "debug")
+                return this.handler.error(`No info found about \`${commandName}\``, message.channel);
             message.channel.send(this.getCmd(command));
         });
     }

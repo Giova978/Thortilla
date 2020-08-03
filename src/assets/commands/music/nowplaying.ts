@@ -20,8 +20,7 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return message.channel.send("There is no song playing");
-        if (!musicData.nowPlaying) return message.channel.send("There is no song playing");
+        if (!musicData || !musicData.nowPlaying) return this.handler.error("There is no song playing", message.channel);
 
         const song = musicData.nowPlaying;
 

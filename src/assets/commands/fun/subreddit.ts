@@ -1,22 +1,28 @@
 import Command from "../../../handlers/Command";
 import Axios from "axios";
 import { Message, MessageEmbed } from "discord.js";
+import Handler from "../../../handlers/Handler";
+import { IArgs } from "../../../Utils";
 
 module.exports = class extends Command {
-    constructor() {
+    public handler: Handler;
+
+    constructor({ handler }: IArgs) {
         super('subreddit', {
             aliases: ['sub'],
             category: 'fun',
             description: 'Sends content from the specified subreddit',
             usage: '<subreddit>'
         });
+
+        this.handler = handler;
     }
 
-    public async run(messsage: Message, args: string[]) {
-        messsage.delete();
+    public async run(message: Message, args: string[]) {
+        message.delete();
 
         const subreddit: string | undefined = args[0];
-        if (!subreddit) return messsage.channel.send('Give me a valid subreddit please');
+        if (!subreddit) return this.handler.error('Give me a valid subreddit please', message.channel);
 
         let data: any | undefined;
 
@@ -27,9 +33,9 @@ module.exports = class extends Command {
             console.error(error);
         }
 
-        if (!data) return messsage.channel.send('No data found');
+        if (!data) return this.handler.error('Nothing found', message.channel);
 
-        const collectorFilter = (reaction: any, user: any) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === messsage.author.id;
+        const collectorFilter = (reaction: any, user: any) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === message.author.id;
 
         const embed: MessageEmbed = new MessageEmbed().setTitle('Image');
 
@@ -38,7 +44,7 @@ module.exports = class extends Command {
 
         embed.setImage(data.children[index].data.url);
 
-        const msg: Message = await messsage.channel.send(embed);
+        const msg: Message = await message.channel.send(embed);
 
         await Promise.all([
             msg.react('⬅️'),

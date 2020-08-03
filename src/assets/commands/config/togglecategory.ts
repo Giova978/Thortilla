@@ -21,16 +21,16 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const module: string = args[0];
-        if (!module || module === "config") return message.channel.send("Please provide a valid category");
+        if (!module || module === "config" || module === "debug") return this.handler.error("Please provide a valid category", message.channel);
         const stateString = args[1];
-        if (!stateString || !["on", "off"].includes(stateString)) return message.channel.send("Please provide a valid state");
+        if (!stateString || !["on", "off"].includes(stateString)) return this.handler.error("Please provide a valid state", message.channel);
 
         const guild: GuildDB = message.guild as GuildDB;
 
         const modules = guild.getModulesStatus;
         const modulesKeys = Object.keys(modules);
 
-        if (!modulesKeys.includes(module)) return message.channel.send("Please provide a valid category");
+        if (!modulesKeys.includes(module)) return this.handler.error("Please provide a valid category", message.channel);
 
         const state = stateString === "on" ? true : false;
 
@@ -42,7 +42,7 @@ module.exports = class extends Command {
                 return message.channel.send(`Successfully changed \`${module}\` to \`${stateString}\``);
             })
             .catch((err) => {
-                return message.channel.send("An error ocurred while changing module status, please try again later");
+                return this.handler.error("An error ocurred while changing module status, please try again later", message.channel);
             });
     }
 };

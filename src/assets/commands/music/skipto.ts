@@ -19,19 +19,19 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);;
-        if (message.member?.voice.channel !== musicData?.voiceChannel) return message.channel.send('You have to be in the same voice channel of the song');
-        if (!musicData) return message.channel.send('There is no song to skip');
-        if (musicData.queue.length === 0) return message.channel.send('There is no song to skip');
+        if (message.member?.voice.channel !== musicData?.voiceChannel) return this.handler.error('You have to be in the same voice channel of the song', message.channel);
+        if (!musicData) return this.handler.error('There is no song playing', message.channel);
+        if (musicData.queue.length === 0) return this.handler.error('There is no song to skip', message.channel);
 
         const queueIndex = parseInt(args[0]);
-        if (!queueIndex || queueIndex < 1 || queueIndex > 5) return message.channel.send('Please enter a valid queue index');
+        if (!queueIndex || queueIndex < 1 || queueIndex > 5) return this.handler.error('Please enter a valid queue index', message.channel);
 
         if (args[1] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id, queueIndex);
             return message.channel.send(`Skipped to ${queueIndex}!`);
         }
 
-        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return message.channel.send('You cant vote twice');
+        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return this.handler.error('You cant vote twice', message.channel);
 
         if (musicData.voiceChannel!.members.size < 2) {
             this.handler.player.skip(message.guild!.id, queueIndex);

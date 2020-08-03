@@ -16,22 +16,23 @@ const Command_1 = __importDefault(require("../../../handlers/Command"));
 const Utils_1 = require("../../../Utils");
 const discord_js_1 = require("discord.js");
 module.exports = class extends Command_1.default {
-    constructor() {
+    constructor({ handler }) {
         super('kick', {
             permissions: ["KICK_MEMBERS"],
             category: 'moderation',
             description: 'Kick a user',
             usage: '<user> [reason]',
         });
+        this.handler = handler;
     }
     run(message, args) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const member = Utils_1.Utils.getMember(message, args[0]);
             if (!member)
-                return message.channel.send(`I couldn't find ${args[0]}`).then(Utils_1.Utils.deleteMessage);
+                return this.handler.error(`I couldn't find ${args[0]}`, message.channel);
             if (!member.bannable)
-                return message.channel.send(`I can't kick ${member.displayName}`).then(Utils_1.Utils.deleteMessage);
+                return this.handler.error(`I can't kick <@${member.id}>}`, message.channel);
             args.shift();
             let reason = args.join(' ');
             if (!reason)
@@ -43,7 +44,7 @@ module.exports = class extends Command_1.default {
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle('Kick')
                 .setColor('RED')
-                .addField('Kicked by: ', `<@${(_b = admin) === null || _b === void 0 ? void 0 : _b.id}>`)
+                .addField('Kicked by: ', `<@${admin === null || admin === void 0 ? void 0 : admin.id}>`)
                 .addField('Kicked: ', `<@${member.id}>`)
                 .addField('Reason: ', reason)
                 .addField('Date: ', new Date);

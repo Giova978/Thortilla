@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -81,52 +72,12 @@ class Handler {
                 });
             });
         }
-        this.client.on("message", (message) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
-            if (!message.guild)
-                return;
-            const guild = message.guild;
-            const prefix = guild.getPrefix;
-            if (message.mentions.has(this.client.user) && !message.mentions.everyone) {
-                if ((_a = message.member) === null || _a === void 0 ? void 0 : _a.hasPermission("ADMINISTRATOR")) {
-                    message.content = prefix + message.content.slice(this.client.user.id.length + 4).trim();
-                }
-                else {
-                    return message.channel.send(`The prefix is \`${prefix}\``);
-                }
-            }
-            if (message.author.bot || !message.content.startsWith(prefix))
-                return;
-            const [command, ...args] = message.content.slice(prefix.length).split(" ");
-            let cmd = this.commands.get(command.toLocaleLowerCase()) || this.aliases.get(command.toLocaleLowerCase());
-            let hasPermission = false;
-            const modules = guild.getModulesStatus;
-            if (!cmd || !cmd.enabled || !modules[cmd.category]) {
-                return;
-            }
-            if (cmd.permissions) {
-                for (const perm of cmd.permissions) {
-                    if ((_b = message.member) === null || _b === void 0 ? void 0 : _b.hasPermission(perm)) {
-                        hasPermission = true;
-                        break;
-                    }
-                }
-            }
-            else {
-                hasPermission = true;
-            }
-            if (!hasPermission)
-                return message.channel.send("You don't have the required permissions");
-            const now = (new Date).getTime();
-            if (cmd.cooldowns.has(message.author.id)) {
-                const cooldown = cmd.cooldowns.get(message.member.id);
-                const leftCooldown = `${Math.floor(cooldown - now) / 1000}`.substring(0, 3);
-                if (now < cooldown)
-                    return message.channel.send(`You have to wait ${leftCooldown}`);
-            }
-            cmd.cooldowns.set(message.author.id, now + cmd.cooldown * 1000);
-            cmd.run(message, args);
-        }));
+    }
+    error(text, channel, timeout = 5000) {
+        const embed = new discord_js_1.MessageEmbed()
+            .setColor('RED')
+            .addField('Error', `\`${text}\``);
+        channel.send(embed).then((msg) => msg.delete({ timeout }));
     }
 }
 exports.default = Handler;

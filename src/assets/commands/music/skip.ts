@@ -19,17 +19,17 @@ module.exports = class extends Command {
 
     public run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (message.member?.voice.channel !== musicData.voiceChannel) return message.channel.send('You have to be in the same voice channel of the song');
+        if (message.member?.voice.channel !== musicData.voiceChannel) return this.handler.error('You have to be in the same voice channel of the song', message.channel);
 
-        if (!musicData) return message.channel.send('There is no song playing');
-        if (musicData.queue.length === 0) return message.channel.send('There is no song to skip');
+        if (!musicData) return this.handler.error('There is no song playing', message.channel);
+        if (musicData.queue.length === 0) return this.handler.error('There is no song to skip', message.channel);
 
         if (args[0] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id);
             return message.channel.send('Skipped!');
         }
 
-        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return message.channel.send('You cant vote twice');
+        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return this.handler.error('You cant vote twice', message.channel);
 
         if (musicData.voiceChannel!.members.size <= 2) {
             this.handler.player.skip(message.guild!.id);
@@ -56,21 +56,4 @@ module.exports = class extends Command {
 
         message.channel.send(embed);
     }
-
-    // public skip(musicData: MusicData) {
-    //     if (musicData.queue.length < 1) {
-    //         musicData.musicDispatcher.destroy();
-
-    //         musicData.isPlaying = false;
-    //         musicData.nowPlaying = null;
-    //         musicData.voiceChannel = null;
-
-    //         new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
-    //             op: "leave",
-    //             guil_id: musicData.musicDispatcher.options.guild.id
-    //         })
-    //     } else {
-    //         musicData.musicDispatcher.play();
-    //     }
-    // }
 }

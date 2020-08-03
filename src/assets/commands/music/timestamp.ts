@@ -20,15 +20,15 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return message.channel.send('There is no song playing');
+        if (!musicData) return this.handler.error('There is no song playing', message.channel);
 
         const time = args[0];
-        if (!time) return message.channel.send('Give a timestamp');
+        if (!time) return this.handler.error('Give a timestamp', message.channel);
 
         const [minutes, seconds] = time.split(':');
 
-        if (!minutes) return message.channel.send('Give a good formated timestamp');
-        if (!time) return message.channel.send('Give a good formated timestamp');
+        if (!minutes) return this.handler.error('Give a good formated timestamp', message.channel);
+        if (!time) return this.handler.error('Give a good formated timestamp', message.channel);
 
         const timeToSkip = ((parseInt(minutes) * 60) + parseInt(seconds)) * 1000;
 
