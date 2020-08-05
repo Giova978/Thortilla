@@ -85,7 +85,7 @@ export default class Player {
             volume: 100,
             skipVotes: 0,
             nowPlaying: null,
-            isPlaying: true,
+            isPlaying: false,
             voiceChannel: voiceChannel,
             // @ts-ignore
             textChannel: message.channel,

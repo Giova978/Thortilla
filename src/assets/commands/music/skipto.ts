@@ -24,7 +24,7 @@ module.exports = class extends Command {
         if (musicData.queue.length === 0) return this.handler.error('There is no song to skip', message.channel);
 
         const queueIndex = parseInt(args[0]);
-        if (!queueIndex || queueIndex < 1 || queueIndex > 5) return this.handler.error('Please enter a valid queue index', message.channel);
+        if (!queueIndex || queueIndex < 0 || queueIndex > 5) return this.handler.error('Please enter a valid queue index', message.channel);
 
         if (args[1] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id, queueIndex);
