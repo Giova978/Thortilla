@@ -15,30 +15,30 @@ class MemberDB extends GuildMember {
             userId: this.id,
             guildId: this.guild.id
         })
-        .then((data: any) => {
-            if (!data) {
-                return MemberModel.create({
-                   userId: this.id,
-                    guildId: this.guild.id,
-                })
-                .then((data: any) => {
-                    this.coins = data.coins;
-                })
-                .catch(console.error);
-            }
+            .then((data: any) => {
+                if (!data) {
+                    return MemberModel.create({
+                        userId: this.id,
+                        guildId: this.guild.id,
+                    })
+                        .then((data: any) => {
+                            this.coins = data.coins;
+                        })
+                        .catch(console.error);
+                }
 
-            this.coins = data.coins;
-        })
-        .catch(console.error);
+                this.coins = data.coins;
+            })
+            .catch(console.error);
     }
 
-    public getBalance() {
+    get getBalance() {
         MemberModel.findOne({
-           userId: this.id, 
+            userId: this.id,
             guildId: this.guild.id
         })
-        .then((data: any) => this.coins = data.coins)
-        .catch(console.error);
+            .then((data: any) => this.coins = data.coins)
+            .catch(console.error);
 
         return this.coins;
     }
@@ -46,26 +46,26 @@ class MemberDB extends GuildMember {
     public async setBalance(coins: number) {
         if (isNaN(coins)) return Promise.resolve('Please provide a valid number');
         MemberModel.findOneAndUpdate(
-            {userId: this.id, guildId: this.guild.id },
+            { userId: this.id, guildId: this.guild.id },
             { coins },
             { upsert: true, new: true }
         )
-        .then((data: any) => this.coins = data.coins)
-        .catch((err: Error) => Promise.reject(err));
+            .then((data: any) => this.coins = data.coins)
+            .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(`Correctly setted balance for <!@${this.id}>`);
     }
 
     public async updateBalance(acc: number) {
-        const coins = this.getBalance() + acc;
+        const coins = this.getBalance + acc;
 
         MemberModel.findOneAndUpdate(
-            {userId: this.id, guildId: this.guild.id },
+            { userId: this.id, guildId: this.guild.id },
             { coins },
             { upsert: true, new: true }
         )
-        .then((data: any) => this.coins = data.coins)
-        .catch((err: Error) => Promise.reject(err));
+            .then((data: any) => this.coins = data.coins)
+            .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve();
     }
