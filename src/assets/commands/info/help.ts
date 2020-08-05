@@ -32,7 +32,7 @@ module.exports = class extends Command {
 
     private getCmd(command: Command): MessageEmbed {
 
-        const aliases: string | undefined = command.aliases?.map(alias => `\`${alias}\``).join(' ') || '__';
+        const aliases: string | undefined = command.aliases?.map(alias => `\`${alias}\``).join(' ') || 'None';
 
         const embed: MessageEmbed = new MessageEmbed()
             .setColor('GREEN')

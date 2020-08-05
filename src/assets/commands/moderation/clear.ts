@@ -20,7 +20,7 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const toDelete = +args[0];
-        if (!toDelete) return this.handler.error("Provide a valid number to delete", message.channel);
+        if (!toDelete || isNaN(toDelete)) return this.handler.error("Provide a valid number to delete", message.channel);
         if (toDelete < 1 || toDelete > 100) return this.handler.error("Provide a number between 1 and 100", message.channel);
 
         message.delete();

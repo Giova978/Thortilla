@@ -19,7 +19,7 @@ export default class Command extends Toogleable implements ICommand {
         this.cooldowns = new Collection();
         this.cooldown = 4;
 
-        if (options.cooldown && !isNaN(options.cooldown!)) this.cooldown = options.cooldown;
+        if (options.cooldown && isNaN(options.cooldown!)) this.cooldown = options.cooldown;
         if (Array.isArray(options.aliases) && options.aliases.length != 0) this.aliases = options.aliases;
         if (Array.isArray(options.permissions) && options.permissions.length != 0) this.permissions = options.permissions;
 

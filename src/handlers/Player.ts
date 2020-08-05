@@ -67,7 +67,11 @@ export default class Player {
         if (index > 0) {
             data.player.queue.moveTrack(index, 1);
 
-            data.queue.unshift(data.queue[index]);
+
+            const song = data.queue.splice(index, 1);
+
+            // @ts-expect-error
+            data.queue.unshift(song);
         }
 
         data.player.play();
@@ -78,10 +82,10 @@ export default class Player {
             guildId: guildId,
             player: player,
             queue: [],
-            volume: 50,
+            volume: 100,
             skipVotes: 0,
             nowPlaying: null,
-            isPlaying: false,
+            isPlaying: true,
             voiceChannel: voiceChannel,
             // @ts-ignore
             textChannel: message.channel,
@@ -134,6 +138,7 @@ export default class Player {
                 if (!queue[0]) return;
 
                 musicData.skipVotes = 0;
+                musicData.isPlaying = true;
                 player.setVolume(musicData.volume);
 
                 const embed = new MessageEmbed()

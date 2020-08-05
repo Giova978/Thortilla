@@ -158,7 +158,12 @@ module.exports = class extends Command {
             this.handler.player.play(message.guild!.id);
             return songEmbed.delete();
         } else {
-            const embed = new MessageEmbed().setTitle("Song has been added to the queue").setColor("GREEN").setThumbnail(song.thumbnail).addField("Title", `[${song.title}](${song.url})`).addField("Duration", song.duration);
+            const embed = new MessageEmbed()
+                .setTitle("Song has been added to the queue")
+                .setColor("GREEN")
+                .setThumbnail(song.thumbnail)
+                .addField("Title", `[${song.title}](${song.url})`)
+                .addField("Duration", song.duration);
 
             message.channel.send(embed);
 
