@@ -33,13 +33,6 @@ class MemberDB extends GuildMember {
     }
 
     get getBalance() {
-        MemberModel.findOne({
-            userId: this.id,
-            guildId: this.guild.id
-        })
-            .then((data: any) => this.coins = data.coins)
-            .catch(console.error);
-
         return this.coins;
     }
 
