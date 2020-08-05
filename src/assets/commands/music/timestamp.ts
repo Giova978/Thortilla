@@ -11,7 +11,7 @@ module.exports = class extends Command {
             aliases: ['seek', 'ts'],
             category: 'music',
             permissions: ["PRIORITY_SPEAKER"],
-            description: 'Skips to the gived timestamp',
+            description: 'Skip to the gived timestamp',
             usage: '<timestamp(formata m:s)>'
         });
 

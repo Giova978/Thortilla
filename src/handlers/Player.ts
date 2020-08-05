@@ -67,11 +67,12 @@ export default class Player {
         if (index > 0) {
             data.player.queue.moveTrack(index, 1);
 
+            // Like we add one now we have to substract so it matches a true position in the musicData#queue array
+            const song = data.queue.splice(index - 1, 1)[0];
 
-            const song = data.queue.splice(index, 1);
-
-            // @ts-expect-error
             data.queue.unshift(song);
+
+            this.guildsMusicData.set(guildId, data);
         }
 
         data.player.play();

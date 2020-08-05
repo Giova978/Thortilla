@@ -29,8 +29,12 @@ module.exports = class extends Command {
 
         let description = '';
 
+        // Add one to the index not only for human-readable
+        // Actually in the queue of the Player the index 0 is the current song so the 1 is the index 0 in the queue of the musicData
+        // We just add one to not have to add it later and its more human-readable
+        // And we ensure that the user will enter a correct index
         musicData.queue.forEach((song, index) => {
-            description += `\n\`${index}\`[${song.title}](${song.url}) ${song.duration}`;
+            description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
         });
 
         embed.setDescription(description);

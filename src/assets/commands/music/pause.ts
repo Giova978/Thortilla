@@ -11,7 +11,7 @@ module.exports = class extends Command {
             aliases: ['stop'],
             category: 'music',
             permissions: ["PRIORITY_SPEAKER"],
-            description: 'Pauses the current song',
+            description: 'Pause the current song',
             usage: 'No arguments'
         });
 

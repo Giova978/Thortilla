@@ -29,7 +29,7 @@ module.exports = class extends Command {
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return this.handler.error("You have to be in the same channel with music", message.channel);
 
         const query = args.join(" ");
-        if (!query) return this.handler.error("Please give a song name or YT url or playlist url>", message.channel);
+        if (!query) return this.handler.error("Please give a song name or YT url>", message.channel);
 
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
 
@@ -63,7 +63,6 @@ module.exports = class extends Command {
 
                 if (!musicData?.isPlaying) {
                     this.handler.player.play(message.guild!.id);
-                    message.delete();
                     return message.channel.send(`\`${song.title}\` is ready to play`).then(Utils.deleteMessage);
                 } else {
                     return message.channel.send(`\`${song.title}\` has been added to queue`).then(Utils.deleteMessage);

@@ -10,7 +10,7 @@ module.exports = class extends Command {
         super('volume', {
             aliases: ['v'],
             category: 'music',
-            description: 'Skips to the gived timestamp',
+            description: 'Set the volume of the player',
             usage: '<volume>',
         });
 
