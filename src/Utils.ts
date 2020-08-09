@@ -1,11 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Message, Client, GuildMember, PermissionResolvable } from "discord.js";
-import Handler from "./handlers/Handler";
-import { Snowflake } from "discord.js";
+import { Message, Client, GuildMember, PermissionResolvable, TextChannel, VoiceChannel, Snowflake } from "discord.js";
 import { Player } from "@anonymousg/lavajs";
-import { VoiceChannel } from "discord.js";
-import { TextChannel } from "discord.js";
+import Handler from "./handlers/Handler";
+import TextChannelCS from "./modules/discord/TextChannel";
 
 interface Song {
     url: string;
@@ -37,7 +35,7 @@ interface ICommand {
     usage: string;
     description: string;
 
-    run(message: Message, args: string[]): void;
+    run(message: Message, args: string[], channel: TextChannelCS): void;
 }
 
 interface IOptionsCommand {

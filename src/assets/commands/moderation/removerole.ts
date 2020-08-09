@@ -2,6 +2,7 @@ import Command from "../../../handlers/Command";
 import { Message, GuildMember, Role, MessageEmbed } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,13 +19,13 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const user: GuildMember | undefined = Utils.getMember(message, args.shift());
-        if (!user) return this.handler.error('Give me a user please', message.channel);
+        if (!user) return channel.error('Give me a user please');
         const role: Role | undefined = message.guild?.roles.cache.find(role => role.name === args.join(' '));
-        if (!role) return this.handler.error('Give me a valid role name please', message.channel);
+        if (!role) return channel.error('Give me a valid role name please');
 
-        if (!user.roles.cache.has(role.id)) return this.handler.error(`The user doesn\'t has the \`${role.name}\` role`, message.channel);
+        if (!user.roles.cache.has(role.id)) return channel.error(`The user doesn\'t has the \`${role.name}\` role`);
 
         user.roles.remove(role);
 
@@ -33,6 +34,6 @@ module.exports = class extends Command {
             .setTitle('**Role Added**')
             .setDescription(`**${role.name}** has been succesfully removed from **<@!${user.id}>**`);
 
-        message.channel.send(embed);
+        channel.send(embed);
     }
 }

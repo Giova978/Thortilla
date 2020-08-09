@@ -2,6 +2,7 @@ import Command from '../../../handlers/Command';
 import { Message, MessageEmbed } from 'discord.js';
 import { IArgs } from '../../../Utils';
 import Handler from '../../../handlers/Handler';
+import TextChannelCS from '../../../modules/discord/TextChannel';
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -17,23 +18,23 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public run(message: Message, args: string[]) {
+    public run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (message.member?.voice.channel !== musicData.voiceChannel) return this.handler.error('You have to be in the same voice channel of the song', message.channel);
+        if (message.member?.voice.channel !== musicData.voiceChannel) return channel.error('You have to be in the same voice channel of the song');
 
-        if (!musicData) return this.handler.error('There is no song playing', message.channel);
-        if (musicData.queue.length === 0) return this.handler.error('There is no song to skip', message.channel);
+        if (!musicData) return channel.error('There is no song playing');
+        if (musicData.queue.length === 0) return channel.error('There is no song to skip');
 
         if (args[0] === 'f' && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id);
-            return message.channel.send('Skipped!');
+            return channel.success('Skipped!');
         }
 
-        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return this.handler.error('You cant vote twice', message.channel);
+        if (musicData.nowPlaying!.skipVoteUsers.includes(message.member!.id)) return channel.error('You cant vote twice');
 
         if (musicData.voiceChannel!.members.size <= 2) {
             this.handler.player.skip(message.guild!.id);
-            return message.channel.send('Skipped!');
+            return channel.success('Skipped!');
         }
 
         musicData.skipVotes++;
@@ -44,7 +45,7 @@ module.exports = class extends Command {
 
         if (musicData.skipVotes >= requiredVotes) {
             this.handler.player.skip(message.guild!.id);
-            return message.channel.send('Skipped!');
+            return channel.success('Skipped!');
         }
 
         musicData.nowPlaying!.skipVoteUsers.push(message.member!.id);
@@ -54,6 +55,6 @@ module.exports = class extends Command {
             .setColor('GREEN')
             .addField('Skip', `${musicData.skipVotes}/${requiredVotes}`)
 
-        message.channel.send(embed);
+        channel.send(embed);
     }
 }

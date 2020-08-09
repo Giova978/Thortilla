@@ -3,6 +3,7 @@ import { Message, GuildMember } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
 import { MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,10 +19,10 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const toDelete = +args[0];
-        if (!toDelete || isNaN(toDelete)) return this.handler.error("Provide a valid number to delete", message.channel);
-        if (toDelete < 1 || toDelete > 100) return this.handler.error("Provide a number between 1 and 100", message.channel);
+        if (!toDelete || isNaN(toDelete)) return channel.error("Provide a valid number to delete");
+        if (toDelete < 1 || toDelete > 100) return channel.error("Provide a number between 1 and 100");
 
         message.delete();
 
@@ -33,27 +34,27 @@ module.exports = class extends Command {
                 })
                 .then((messages) => messages.filter((msg) => msg.author.id === user.id));
 
-            if (messages.size < 1) return this.handler.error(`No messages found for <@${user.id}>`, message.channel);
+            if (messages.size < 1) return channel.error(`No messages found for <@${user.id}>`);
 
             return message.channel
                 .bulkDelete(messages, true)
                 .then((messagesDeleted) => {
-                    message.channel.send(`Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`).then(Utils.deleteMessage);
+                    channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`);
                 })
                 .catch((err) => {
                     console.error(err);
-                    this.handler.error("Try again later", message.channel);
+                    channel.error("Try again later");
                 });
         }
 
         message.channel
             .bulkDelete(toDelete, true)
             .then((messagesDeleted) => {
-                message.channel.send(`Successfully deleted \`${messagesDeleted.size}\` messages`).then(Utils.deleteMessage);
+                channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages`);
             })
             .catch((err) => {
                 console.error(err);
-                this.handler.error("Try again later", message.channel);
+                channel.error("Try again later");
             });
     }
 };

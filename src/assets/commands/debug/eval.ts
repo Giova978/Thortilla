@@ -2,6 +2,7 @@ import Command from "../../../handlers/Command";
 import { Message } from "discord.js";
 import Handler from '../../../handlers/Handler';
 import { IArgs } from '../../../Utils';
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     private handler: Handler;
@@ -17,9 +18,9 @@ module.exports = class extends Command {
 
     }
 
-    public async run(message: Message, args: string[]) {
-        if (message.author.id !== process.env.OWNER) return this.handler.error('You are not my developer', message.channel, 1000);
-        if (!args[0]) return this.handler.error('Please provide code', message.channel, 2000)
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
+        if (message.author.id !== process.env.OWNER) return channel.error('You are not my developer', 1000);
+        if (!args[0]) return channel.error('Please provide code', 2000);
 
         try {
             const code = args.join(" ");

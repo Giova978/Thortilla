@@ -2,6 +2,7 @@ import Command from '../../../handlers/Command';
 import { Message, MessageEmbed } from 'discord.js';
 import { IArgs } from '../../../Utils';
 import Handler from '../../../handlers/Handler';
+import TextChannelCS from '../../../modules/discord/TextChannel';
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -17,9 +18,9 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);;
-        if (!musicData.queue || musicData.queue.length === 0) return this.handler.error('There is no queue', message.channel);
+        if (!musicData.queue || musicData.queue.length === 0) return channel.error('There is no queue');
 
         const embed = new MessageEmbed()
             .setColor('GREEN')
@@ -39,6 +40,6 @@ module.exports = class extends Command {
 
         embed.setDescription(description);
 
-        message.channel.send(embed);
+        channel.send(embed);
     }
 }

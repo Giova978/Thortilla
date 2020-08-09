@@ -3,6 +3,7 @@ import Axios from "axios";
 import { Message, MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
 import { IArgs } from "../../../Utils";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,11 +19,11 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         message.delete();
 
         const subreddit: string | undefined = args[0];
-        if (!subreddit) return this.handler.error('Give me a valid subreddit please', message.channel);
+        if (!subreddit) return channel.error('Give me a valid subreddit please');
 
         let data: any | undefined;
 
@@ -33,7 +34,8 @@ module.exports = class extends Command {
             console.error(error);
         }
 
-        if (!data) return this.handler.error('Nothing found', message.channel);
+        if (!data) return channel.error('Nothing found');
+        if (data.children[0].data.over_18 && !channel.nsfw) return channel.info("The post is marked as +18 and this channels is not nsfw");
 
         const collectorFilter = (reaction: any, user: any) => reaction.emoji.name === '⬅️' || reaction.emoji.name === '➡️' || reaction.emoji.name === '🇽' && user.id === message.author.id;
 
@@ -61,13 +63,15 @@ module.exports = class extends Command {
             if (reaction.emoji.name === '⬅️') {
                 index = index-- <= 0 ? 0 : index--;
                 newEmbed.setImage(data.children[index].data.url);
-                msg.edit(newEmbed)
+                msg.edit(newEmbed);
+                msg.reactions.resolve(reaction)?.users.remove(message.author);
             }
 
             if (reaction.emoji.name === '➡️') {
                 index = index++ >= data.children.length ? data.children.length : index++;
                 newEmbed.setImage(data.children[index].data.url);
                 msg.edit(newEmbed);
+                msg.reactions.resolve(reaction)?.users.remove(message.author);
             }
 
             if (reaction.emoji.name === '🇽') {
@@ -77,8 +81,6 @@ module.exports = class extends Command {
 
         collector.on('end', collected => {
             msg.delete();
-            console.log('Ended');
-            console.log(collected.size);
         })
 
     }

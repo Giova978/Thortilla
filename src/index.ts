@@ -6,6 +6,9 @@ import Handler from "./handlers/Handler";
 import { connect } from "mongoose";
 import GuildDB from "./modules/discord/Guild";
 import MemberDB from "./modules/discord/Member";
+import TextChannelCS from "./modules/discord/TextChannel";
+import NewsChannelCS from "./modules/discord/NewsChannel";
+import DMChannelCS from "./modules/discord/DMChannel";
 
 config({
     path: __dirname + "/.env",
@@ -24,6 +27,9 @@ connect(dbUri, {
 
 Structures.extend("Guild", (Guild) => GuildDB);
 Structures.extend("GuildMember", (Member) => MemberDB);
+Structures.extend("TextChannel", (TextChannel) => TextChannelCS);
+Structures.extend("NewsChannel", (NewsChannel) => NewsChannelCS);
+Structures.extend("DMChannel", (DMChannel) => DMChannelCS);
 
 const client: Client = new Client({
     disableMentions: "everyone",

@@ -3,6 +3,7 @@ import { Message, GuildMember } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
 import { MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,10 +19,10 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const member: GuildMember | undefined = Utils.getMember(message, args[0]);
-        if (!member) return this.handler.error(`I couldn't find ${args[0]}`, message.channel);
-        if (!member.bannable) return this.handler.error(`I can't kick <@${member.id}>}`, message.channel);
+        if (!member) return channel.error(`I couldn't find ${args[0]}`);
+        if (!member.bannable) return channel.error(`I can't kick <@${member.id}>}`);
 
         args.shift();
 

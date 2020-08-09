@@ -1,9 +1,11 @@
 import Event from "../../handlers/Event";
-import { Client, Message } from "discord.js";
+import { Client, Message, DMChannel } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import GuildDB from "../../modules/discord/Guild";
 import Command from "../../handlers/Command";
+import TextChannelCS from "../../modules/discord/TextChannel";
+import NewsChannelCS from "../../modules/discord/NewsChannel";
 
 module.exports = class extends Event {
     public client: Client;
@@ -22,6 +24,7 @@ module.exports = class extends Event {
 
         const guild: GuildDB = message.guild as GuildDB;
         const prefix: string = guild.getPrefix;
+        const channel = message.channel as TextChannelCS;
 
         if (message.mentions.has(this.client.user!) && !message.mentions.everyone) {
             if (message.member?.hasPermission("ADMINISTRATOR")) {
@@ -67,6 +70,6 @@ module.exports = class extends Event {
 
         cmd.cooldowns.set(message.author.id, now + cmd.cooldown * 1000);
 
-        cmd.run(message, args);
+        cmd.run(message, args, channel);
     }
 };

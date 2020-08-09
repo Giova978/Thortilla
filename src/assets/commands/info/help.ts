@@ -3,6 +3,7 @@ import Handler from "../../../handlers/Handler";
 import { stripIndents } from "common-tags";
 import { IArgs } from "../../../Utils";
 import { Message, MessageEmbed } from "discord.js";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,14 +19,14 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const commandName: string | undefined = args[0];
 
         if (!commandName) return message.channel.send(this.getAll());
 
         const command: Command | undefined = this.handler.commands.get(args[0]) || this.handler.aliases.get(args[0]);
 
-        if (!command || command.category === "debug") return this.handler.error(`No info found about \`${commandName}\``, message.channel);
+        if (!command || command.category === "debug") return channel.error(`No info found about \`${commandName}\``);
 
         message.channel.send(this.getCmd(command));
     }

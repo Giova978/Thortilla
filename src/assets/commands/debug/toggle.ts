@@ -3,6 +3,7 @@ import Handler from "../../../handlers/Handler";
 import { IArgs, Utils } from "../../../Utils";
 import { Message } from "discord.js";
 import Event from "../../../handlers/Event";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -18,13 +19,13 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
-        if (message.author.id !== process.env.OWNER) return this.handler.error("Command only for debug", message.channel, 1000)
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
+        if (message.author.id !== process.env.OWNER) return channel.error("Command only for debug", 1000)
 
         // The name of the command, event or feature
         const name: string | undefined = args[0];
 
-        if (!name) return this.handler.error("Please give me a command, feature or event to toggle", message.channel)
+        if (!name) return channel.error("Please give me a command, feature or event to toggle")
 
         // The type (command, event or feature)
         const type: string | undefined = args[1];
@@ -37,7 +38,7 @@ module.exports = class extends Command {
         switch (type) {
             case "event":
                 const events: Event[] | undefined = this.handler.events.get(name);
-                if (!events) return this.handler.error("I can't found the events", message.channel);
+                if (!events) return channel.error("I can't found the events");
 
                 events.map((event: Event) => {
                     event.toogle();
@@ -45,20 +46,20 @@ module.exports = class extends Command {
 
                 stateInString = events[0].enabled ? "`enabled`" : "`disabled`";
 
-                message.channel.send(`Events \`${name}\` are now ${stateInString}`);
+                channel.success(`Events \`${name}\` are now ${stateInString}`);
                 break;
 
             default:
                 // Toggle a command
                 const command: Command | undefined = this.handler.commands.get(name) || this.handler.aliases.get(name);
 
-                if (!command) return this.handler.error("I can't found the command", message.channel);
+                if (!command) return channel.error("I can't found the command");
 
                 command.toogle();
 
                 stateInString = command.enabled ? "`enabled`" : "`disabled`";
 
-                message.channel.send(`Command \`${name}\` is now ${stateInString}`);
+                channel.success(`Command \`${name}\` is now ${stateInString}`);
                 break;
         }
     }

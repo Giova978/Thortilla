@@ -3,6 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { stripIndent } from "common-tags";
 import { IArgs, IMusicaData, Song } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -18,9 +19,9 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData || !musicData.nowPlaying) return this.handler.error("There is no song playing", message.channel);
+        if (!musicData || !musicData.nowPlaying) return channel.error("There is no song playing");
 
         const song = musicData.nowPlaying;
 

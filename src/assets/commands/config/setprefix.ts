@@ -3,6 +3,7 @@ import { Message } from "discord.js";
 import Handler from '../../../handlers/Handler';
 import { IArgs } from '../../../Utils';
 import GuildDB from "../../../modules/discord/Guild";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     private handler: Handler;
@@ -20,16 +21,16 @@ module.exports = class extends Command {
 
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const guild: GuildDB = message.guild as GuildDB;
 
         const prefix = args[0];
-        if (!prefix) return this.handler.error(`The current prefix is ${guild.getPrefix}`, message.channel);
+        if (!prefix) return channel.error(`The current prefix is ${guild.getPrefix}`);
 
         guild.setPrefix(prefix)
-            .then((text: string) => message.channel.send(text))
+            .then((text: string) => channel.info(text))
             .catch(err => {
-                this.handler.error('Something went wrong, please try again later', message.channel);
+                channel.error('Something went wrong, please try again later');
                 console.error(err);
             })
     }

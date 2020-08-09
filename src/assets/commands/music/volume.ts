@@ -2,6 +2,7 @@ import Command from '../../../handlers/Command';
 import { Message } from 'discord.js';
 import { IArgs } from '../../../Utils';
 import Handler from '../../../handlers/Handler';
+import TextChannelCS from '../../../modules/discord/TextChannel';
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -19,18 +20,18 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return this.handler.error('There is no song playing', message.channel);
+        if (!musicData) return channel.error('There is no song playing');
 
         const volume = parseInt(args[0]);
-        if (isNaN(volume)) return this.handler.error('Give a valid  volume', message.channel);
-        if (volume > 100) return this.handler.error('Give a valid  volume', message.channel);
-        if (volume < 1) return this.handler.error('Give a valid  volume', message.channel);
+        if (isNaN(volume)) return channel.error('Give a valid  volume');
+        if (volume > 100) return channel.error('Give a valid  volume');
+        if (volume < 1) return channel.error('Give a valid  volume');
 
         musicData.player.setVolume(volume);
         musicData.volume = volume;
 
-        message.channel.send(`Volume is ${volume}`);
+        channel.success(`Volume is ${volume}`);
     }
 }

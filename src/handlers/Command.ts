@@ -1,6 +1,7 @@
 import { ICommand, IOptionsCommand } from "../Utils";
 import { Message, PermissionResolvable, Snowflake, Collection } from "discord.js";
 import Toogleable from "./Toggleable";
+import TextChannelCS from "../modules/discord/TextChannel";
 
 export default class Command extends Toogleable implements ICommand {
     public name: string;
@@ -28,7 +29,7 @@ export default class Command extends Toogleable implements ICommand {
         this.usage = options.usage;
     }
 
-    public run(message: Message, args: string[]) {
+    public run(message: Message, args: string[], channel: TextChannelCS) {
         throw new Error(`${this.name} doesnt have a method `);
     }
 }

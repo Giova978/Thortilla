@@ -3,6 +3,7 @@ import { Message } from "discord.js";
 import Handler from '../../../handlers/Handler';
 import { IArgs, Utils } from '../../../Utils';
 import MemberDB from "../../../modules/discord/Member";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     private handler: Handler;
@@ -20,18 +21,18 @@ module.exports = class extends Command {
 
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const member = (Utils.getMember(message, args[0]) || message.member) as MemberDB;
-        if (!member) return this.handler.error('Please give a user', message.channel);
+        if (!member) return channel.error('Please give a user');
 
         const newBalance = +args[1];
-        if (isNaN(newBalance)) return this.handler.error('Please give a valid number', message.channel);
+        if (isNaN(newBalance)) return channel.error('Please give a valid number');
         member.setBalance(newBalance)
             .then(() => {
-                message.channel.send('Balance changed successfully');
+                channel.success('Balance changed successfully');
             })
             .catch(err => {
-                this.handler.error('Something went wrong, please try again later', message.channel);
+                channel.error('Something went wrong, please try again later');
                 console.error(err);
             })
     }

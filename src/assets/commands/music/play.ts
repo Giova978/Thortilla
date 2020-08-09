@@ -3,6 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import Youtube from "simple-youtube-api";
 import { IArgs, Utils } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 const youtube = new Youtube(process.env.YT_API);
 
 module.exports = class extends Command {
@@ -19,22 +20,23 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const voiceChannel = message.member?.voice.channel;
-        if (!voiceChannel) return this.handler.error("You has to be in a voice channel", message.channel);
+        if (!voiceChannel) return channel.error("You has to be in a voice channel");
 
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
         const voiceChannelUsers = this.handler.player.getMusicaData(message.guild!.id).voiceChannel;
 
-        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return this.handler.error("You have to be in the same channel with music", message.channel);
+        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return channel.error("You have to be in the same channel with music");
 
         const query = args.join(" ");
-        if (!query) return this.handler.error("Please give a song name or YT url>", message.channel);
+        if (!query) return channel.error("Please give a song name or YT url>");
 
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
 
         if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
-            return this.handler.error("Playlist are not allowed", message.channel);
+            // TODO
+            return channel.error("Playlist are not supported for now");
         }
 
         if (query.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
@@ -44,7 +46,7 @@ module.exports = class extends Command {
                 const id = newQuery[2].split(/[^0-9a-z_\-]/i)[0];
 
                 const video = await youtube.getVideoByID(id);
-                if (!video) return this.handler.error("Failed to get video, try again", message.channel);
+                if (!video) return channel.error("Failed to get video, try again");
 
                 const title = video.title;
                 let duration = this.formatDuration(video.duration);
@@ -63,13 +65,13 @@ module.exports = class extends Command {
 
                 if (!musicData?.isPlaying) {
                     this.handler.player.play(message.guild!.id);
-                    return message.channel.send(`\`${song.title}\` is ready to play`).then(Utils.deleteMessage);
+                    return channel.success(`\`${song.title}\` is ready to play`);
                 } else {
-                    return message.channel.send(`\`${song.title}\` has been added to queue`).then(Utils.deleteMessage);
+                    return channel.info(`\`${song.title}\` has been added to queue`);
                 }
             } catch (error) {
                 console.error(error);
-                return this.handler.error("Something went wrong try again later", message.channel);
+                return channel.error("Something went wrong try again later");
             }
         }
 
@@ -79,7 +81,7 @@ module.exports = class extends Command {
             .then((response: any) => response)
             .catch((error: any) => console.error(error));
 
-        if (!videos) return this.handler.error("We have trouble finding your query please try again", message.channel);
+        if (!videos) return channel.error("We have trouble finding your query please try again");
 
         const videosNames: string[] = [];
 
@@ -87,7 +89,7 @@ module.exports = class extends Command {
             videosNames.push(`${i + 1}: ${videos[i].title}`);
         }
 
-        if (videos.length < 1) return this.handler.error("No matches found", message.channel);
+        if (videos.length < 1) return channel.error("No matches found");
 
         // Send embed to select song
         const embed = new MessageEmbed().setColor("GREEN").setTitle("Choose a song by comment a number beetween 1 and 5 or exit to exit");
@@ -112,12 +114,12 @@ module.exports = class extends Command {
             .catch((err) => {
                 console.error(err);
                 songEmbed.delete();
-                return this.handler.error("Please try again and enter a number beetween 1 and 5 or exit", message.channel);
+                return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
             });
         // @ts-ignore
         if (userResponse.size === 0) {
             songEmbed.delete();
-            return this.handler.error("Please try again and enter a number beetween 1 and 5 or exit", message.channel);
+            return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
         }
         // @ts-ignore
         const videoIndex = parseInt(userResponse.first().content);
@@ -127,11 +129,11 @@ module.exports = class extends Command {
         if (userResponse.first().content === "exit") return songEmbed.delete();
         try {
             var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
-            if (!video) return this.handler.error("Failed to get video, try again", message.channel);
+            if (!video) return channel.error("Failed to get video, try again");
         } catch (err) {
             console.error(err);
             songEmbed.delete();
-            return this.handler.error("We have trouble finding your query please try again", message.channel);
+            return channel.error("We have trouble finding your query please try again");
         }
         // @ts-ignore
         userResponse.first().delete();

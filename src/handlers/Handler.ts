@@ -88,12 +88,4 @@ export default class Handler {
             });
         }
     }
-
-    public error(text: string, channel: TextChannel | DMChannel | NewsChannel, timeout: number = 5000) {
-        const embed = new MessageEmbed()
-            .setColor('RED')
-            .addField('Error', `\`${text}\``);
-
-        channel.send(embed).then((msg) => msg.delete({ timeout }))
-    }
 }

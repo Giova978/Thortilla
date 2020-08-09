@@ -3,6 +3,7 @@ import { Message } from "discord.js";
 import Handler from '../../../handlers/Handler';
 import { IArgs } from '../../../Utils';
 import GuildDB from "../../../modules/discord/Guild";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     private handler: Handler;
@@ -20,22 +21,22 @@ module.exports = class extends Command {
 
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const guild: GuildDB = message.guild as GuildDB;
 
         if (!args[0]) {
             const address = guild.getMCAdress;
             if (address) {
-                return this.handler.error(`The current ip is \`${address}\``, message.channel);
+                return channel.error(`The current ip is \`${address}\``);
             }
 
-            return this.handler.error('There is no ip', message.channel);
+            return channel.error('There is no ip');
         }
 
         guild.setMCAdress(args[0])
             .then((text: string) => message.channel.send(text))
             .catch(err => {
-                this.handler.error('Something went wrong, please try again later', message.channel);
+                channel.error('Something went wrong, please try again later');
                 console.error(err);
             });
     }

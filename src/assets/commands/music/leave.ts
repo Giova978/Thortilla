@@ -3,6 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import { LavaNode } from "@anonymousg/lavajs";
+import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -19,9 +20,9 @@ module.exports = class extends Command {
         this.handler = handler;
     }
 
-    public async run(message: Message, args: string[]) {
+    public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return this.handler.error("I am not in a voicechannel", message.channel)
+        if (!musicData) return channel.error("I am not in a voicechannel");
 
         musicData.player.destroy();
 
@@ -33,6 +34,6 @@ module.exports = class extends Command {
 
         this.handler.player.guildsMusicData.delete(message.guild!.id);
 
-        return message.channel.send("Bye have a great time");
+        channel.send("Bye have a great time");
     }
 };
