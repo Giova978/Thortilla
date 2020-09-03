@@ -10,7 +10,8 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super('addrole', {
             aliases: ['adrole', 'adr'],
-            permissions: ['MANAGE_ROLES'],
+            permissions: ["MANAGE_ROLES"],
+            permissionsMe: ["MANAGE_ROLES"],
             category: 'moderation',
             description: 'Adds a role to the given user',
             usage: '<user> <role name>',

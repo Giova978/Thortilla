@@ -40,12 +40,30 @@ module.exports = class extends Event {
 
         let cmd: Command | undefined = this.handler.commands.get(command!.toLocaleLowerCase()) || this.handler.aliases.get(command!.toLocaleLowerCase());
 
-        let hasPermission: boolean = false;
+        // Use to look if the bot and the GuildMember has the required permissions
+        let hasPermission = false;
         const modules = guild.getModulesStatus;
 
         if (!cmd || !cmd.enabled || !modules[cmd.category]) {
             return;
         }
+
+        if (cmd.permissionsMe) {
+            console.log("52:command.ts -> cmd.permissionsMe", cmd.permissionsMe);
+            for (const perm of cmd.permissionsMe) {
+                if (message.guild.me?.hasPermission(perm)) {
+                    hasPermission = true
+                    break;
+                }
+            }
+        } else {
+            hasPermission = true
+        }
+
+        // @ts-ignore
+        const permissionsMe = cmd.permissionsMe?.map((permission) => `\`${this.handler.permissions[permission].english}\` `);
+        if (!hasPermission) return channel.info(`I don't have the required permissions, I need ${permissionsMe}`);
+        hasPermission = false;
 
         if (cmd.permissions) {
             for (const perm of cmd.permissions) {
@@ -58,7 +76,9 @@ module.exports = class extends Event {
             hasPermission = true;
         }
 
-        if (!hasPermission) return message.channel.send("You don't have the required permissions");
+        // @ts-ignore
+        const permissions = cmd.permissions?.map((permission) => `\`${this.handler.permissions[permission].english}\` `);
+        if (!hasPermission) return channel.info(`You don't have the required permissions, you need ${permissions}`);
 
         const now = (new Date).getTime()
         if (cmd.cooldowns.has(message.author.id)) {

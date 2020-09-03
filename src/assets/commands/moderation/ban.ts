@@ -11,6 +11,7 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super('ban', {
             permissions: ["BAN_MEMBERS"],
+            permissionsMe: ["BAN_MEMBERS"],
             category: 'moderation',
             description: 'Ban a user',
             usage: '<user> [reason]',
@@ -21,7 +22,8 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const member: GuildMember | undefined = Utils.getMember(message, args[0]);
-        if (!member) return channel.error(`I couldn't find ${args[0]}`);
+        if (!member) return channel.error(`I couldn't find the user`);
+        if (member.roles.highest.comparePositionTo(message.member?.roles.highest!) < 0) return channel.error(`You can't ban <@${member.id}>`);
         if (!member.bannable) return channel.error(`I can't ban <@${member.id}>`);
 
         args.shift();

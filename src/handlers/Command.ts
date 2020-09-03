@@ -12,6 +12,7 @@ export default class Command extends Toogleable implements ICommand {
     public usage: string;
     public cooldowns: Collection<string, number>;
     public cooldown: number;
+    public permissionsMe?: PermissionResolvable[];
 
     constructor(name: string, options: IOptionsCommand) {
         super();
@@ -23,6 +24,7 @@ export default class Command extends Toogleable implements ICommand {
         if (options.cooldown && !isNaN(options.cooldown!)) this.cooldown = options.cooldown;
         if (Array.isArray(options.aliases) && options.aliases.length != 0) this.aliases = options.aliases;
         if (Array.isArray(options.permissions) && options.permissions.length != 0) this.permissions = options.permissions;
+        if (Array.isArray(options.permissionsMe) && options.permissionsMe.length != 0) this.permissionsMe = options.permissionsMe;
 
         this.category = options.category;
         this.description = options.description;

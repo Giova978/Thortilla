@@ -10,7 +10,8 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super('removerole', {
             aliases: ['revrole', 'rr'],
-            permissions: ['MANAGE_ROLES'],
+            permissions: ["MANAGE_ROLES"],
+            permissionsMe: ["MANAGE_ROLES"],
             category: 'moderation',
             description: 'Remove a role from the given user',
             usage: '<use> <role name>',

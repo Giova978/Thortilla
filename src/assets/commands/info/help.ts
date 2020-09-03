@@ -1,8 +1,8 @@
 import Command from "../../../handlers/Command";
 import Handler from "../../../handlers/Handler";
-import { stripIndents } from "common-tags";
-import { IArgs } from "../../../Utils";
-import { Message, MessageEmbed } from "discord.js";
+import {stripIndents} from "common-tags";
+import {IArgs} from "../../../Utils";
+import {Message, MessageEmbed} from "discord.js";
 import TextChannelCS from "../../../modules/discord/TextChannel";
 
 module.exports = class extends Command {
@@ -35,7 +35,7 @@ module.exports = class extends Command {
 
         const aliases: string | undefined = command.aliases?.map(alias => `\`${alias}\``).join(' ') || 'None';
 
-        const embed: MessageEmbed = new MessageEmbed()
+        return new MessageEmbed()
             .setColor('GREEN')
             .setTitle('Command')
             .setDescription(stripIndents`
@@ -46,8 +46,6 @@ module.exports = class extends Command {
             **Is enabled:** ${command.enabled}
         `)
             .setFooter('Syntax: <> = required, [] = optional');
-
-        return embed;
     }
 
     private getAll(): MessageEmbed {

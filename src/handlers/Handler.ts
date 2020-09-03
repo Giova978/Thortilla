@@ -1,10 +1,9 @@
-import { Client, Collection, Message, MessageEmbed, Channel, TextChannel, DMChannel, NewsChannel } from "discord.js";
+import { Client, Collection } from "discord.js";
 import { LavaClient } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
 import Event from "./Event";
 import Player from "./Player";
-import GuildDB from "../modules/discord/Guild";
 
 export default class Handler {
     public client: Client;
@@ -14,6 +13,53 @@ export default class Handler {
     public commands: Collection<string, Command> = new Collection();
     public aliases: Collection<string, Command> = new Collection();
     public events: Collection<string, Event[]> = new Collection();
+    public permissions = {
+        "ADMINISTRATOR": {
+            "english": "Administrator"
+        },
+        "CREATE_INSTANT_INVITE": {
+            "english": "Create invite"
+        },
+        "KICK_MEMBERS": {
+            "english": "Kick Members"
+        },
+        "BAN_MEMBERS": {
+            "english": "Ban Members"
+        },
+        "MANAGE_CHANNELS": {
+            "english": "Manage Channels"
+        },
+        "VIEW_AUDIT_LOG": {
+            "english": "View Audit Log"
+        },
+        "PRIORITY_SPEAKER": {
+            "english": "Priority Speaker"
+        },
+        "STREAM": {
+            "english": "Stream"
+        },
+        "VIEW_CHANNEL": {
+            "english": "View Channel"
+        },
+        "SEND_MESSAGES": {
+            "english": "Send Messages"
+        },
+        "MANAGE_MESSAGES": {
+            "english": "Manage Messages"
+        },
+        "CONNECT": {
+            "english": "Connect To Voice Channel"
+        },
+        "SPEAK": {
+            "english": "Speak In Voice Channel"
+        },
+        "MANAGE_ROLES": {
+            "english": "Manage Roles"
+        },
+        "ADD_REACTIONS": {
+            "english": "Add Reactions"
+        }
+    }
     // @ts-ignore
     public player: Player;
     // @ts-ignore
@@ -80,7 +126,7 @@ export default class Handler {
     private registerEvents() {
         for (const [eventName, events] of Array.from(this.events)) {
             // @ts-ignore
-            this.client.on(eventName, (...args: any) => {
+            this.client.on(eventName, async (...args: any) => {
                 events.map((event) => {
                     if (!event.enabled) return;
                     event.run(...args);

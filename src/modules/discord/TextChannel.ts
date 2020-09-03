@@ -12,7 +12,7 @@ class TextChannelCS extends TextChannel {
     public error(text: string, timeout: number = 5000) {
         const embed = new MessageEmbed()
             .setColor('RED')
-            .addField('Error', `\`${text}\``);
+            .addField('Error', `${text}`);
 
         this.send(embed).then((msg) => msg.delete({ timeout }));
     }

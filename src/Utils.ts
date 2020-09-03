@@ -31,6 +31,7 @@ interface ICommand {
     name: string;
     aliases?: string[];
     permissions?: PermissionResolvable[];
+    permissionsMe?: PermissionResolvable[];
     category: string;
     usage: string;
     description: string;
@@ -41,6 +42,7 @@ interface ICommand {
 interface IOptionsCommand {
     aliases?: Array<string>;
     permissions?: Array<PermissionResolvable>;
+    permissionsMe?: PermissionResolvable[];
     category: string;
     usage: string;
     description: string;
