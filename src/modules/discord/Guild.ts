@@ -23,6 +23,8 @@ class GuildDB extends Guild {
                     })
                         .then((data: any) => {
                             this.prefix = data.prefix;
+                            this.mcAdress = data.mcAdress;
+                            this.modules = data.modules;
                         })
                         .catch(console.error);
                 }
