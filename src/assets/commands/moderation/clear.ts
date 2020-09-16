@@ -25,7 +25,7 @@ module.exports = class extends Command {
         if (!toDelete || isNaN(toDelete)) return channel.error("Provide a valid number to delete");
         if (toDelete < 1 || toDelete > 100) return channel.error("Provide a number between 1 and 100");
 
-        message.delete();
+        await message.delete();
 
         const user = Utils.getMember(message, args[1]);
         if (user) {
@@ -40,7 +40,7 @@ module.exports = class extends Command {
             return message.channel
                 .bulkDelete(messages, true)
                 .then((messagesDeleted) => {
-                    channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`, 2000);
+                    channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`, 1000);
                 })
                 .catch((err) => {
                     console.error(err);
@@ -51,7 +51,7 @@ module.exports = class extends Command {
         message.channel
             .bulkDelete(toDelete, true)
             .then((messagesDeleted) => {
-                channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages`, 2000);
+                channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages`, 1000);
             })
             .catch((err) => {
                 console.error(err);

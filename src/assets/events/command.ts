@@ -5,7 +5,6 @@ import { IArgs } from "../../Utils";
 import GuildDB from "../../modules/discord/Guild";
 import Command from "../../handlers/Command";
 import TextChannelCS from "../../modules/discord/TextChannel";
-import NewsChannelCS from "../../modules/discord/NewsChannel";
 
 module.exports = class extends Event {
     public client: Client;
@@ -18,7 +17,7 @@ module.exports = class extends Event {
         this.handler = handler;
     }
 
-    public run(message: Message) {
+    public async run(message: Message) {
 
         if (!message.guild) return;
 
@@ -26,12 +25,8 @@ module.exports = class extends Event {
         const prefix: string = guild.getPrefix;
         const channel = message.channel as TextChannelCS;
 
-        if (message.mentions.has(this.client.user!) && !message.mentions.everyone) {
-            if (message.member?.hasPermission("ADMINISTRATOR")) {
-                message.content = prefix + message.content.slice(this.client.user!.id.length + 4).trim();
-            } else {
-                return message.channel.send(`The prefix is \`${prefix}\``);
-            }
+        if (message.mentions.has(this.client.user!) && !message.mentions.everyone && !message.content.startsWith(prefix)) {
+            message.content = prefix + message.content.slice(this.client.user!.id.length + 4).trim();
         }
 
         if (message.author.bot || !message.content.startsWith(prefix)) return;
@@ -49,7 +44,6 @@ module.exports = class extends Event {
         }
 
         if (cmd.permissionsMe) {
-            console.log("52:command.ts -> cmd.permissionsMe", cmd.permissionsMe);
             for (const perm of cmd.permissionsMe) {
                 if (message.guild.me?.hasPermission(perm)) {
                     hasPermission = true
@@ -62,7 +56,7 @@ module.exports = class extends Event {
 
         // @ts-ignore
         const permissionsMe = cmd.permissionsMe?.map((permission) => `\`${this.handler.permissions[permission].english}\` `);
-        if (!hasPermission) return channel.info(`I don't have the required permissions, I need ${permissionsMe}`);
+        if (!hasPermission) return channel.info(`I don't have the required permissions, I need ${permissionsMe?.join(' ')}`);
         hasPermission = false;
 
         if (cmd.permissions) {
@@ -85,7 +79,7 @@ module.exports = class extends Event {
             const cooldown = cmd.cooldowns.get(message.member!.id);
             const leftCooldown = `${Math.floor(cooldown! - now) / 1000}`.substring(0, 3);
 
-            if (now < cooldown!) return message.channel.send(`You have to wait ${leftCooldown}`);
+            if (now < cooldown!) return channel.error(`You have to wait ${leftCooldown}`);
         }
 
         cmd.cooldowns.set(message.author.id, now + cmd.cooldown * 1000);

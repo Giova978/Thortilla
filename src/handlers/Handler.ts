@@ -58,6 +58,9 @@ export default class Handler {
         },
         "ADD_REACTIONS": {
             "english": "Add Reactions"
+        },
+        "MANAGE_GUILD": {
+            "english": "Manage guild"
         }
     }
     // @ts-ignore

@@ -25,7 +25,5 @@
         "simple-youtube-api": "^5.2.1",
         "typescript": "^3.9.7"
     },
-    "devDependencies": {
-        "nodemon": "^2.0.4"
-    }
+    "devDependencies": {}
 }

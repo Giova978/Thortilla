@@ -4,8 +4,6 @@ import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import Player from "../../handlers/Player";
-import Axios from "axios";
-import { setInterval } from "timers";
 
 module.exports = class extends Event {
     public client: Client;
@@ -18,7 +16,7 @@ module.exports = class extends Event {
         this.handler = handler;
     }
 
-    public run() {
+    public async run() {
         this.client.user?.setPresence({
             activity: {
                 name: "$",
@@ -33,6 +31,10 @@ module.exports = class extends Event {
             // @ts-ignore
             this.handler.nodes
         );
+
+        this.handler.lavaClient.on('nodeSuccess', () => {
+            console.log('Connected to lavalink');
+        })
 
         this.handler.player = new Player(this.handler.lavaClient, this.handler);
     }

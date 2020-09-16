@@ -5,6 +5,8 @@ class GuildDB extends Guild {
     public prefix!: string;
     public mcAdress!: string;
     public modules!: any;
+    public tags!: Map<string, string>;
+    public tagPrefix!: string;
 
     constructor(client: Client, data: object) {
         super(client, data);
@@ -25,6 +27,8 @@ class GuildDB extends Guild {
                             this.prefix = data.prefix;
                             this.mcAdress = data.mcAdress;
                             this.modules = data.modules;
+                            this.tags = data.tags;
+                            this.tagPrefix = data.tagPrefix;
                         })
                         .catch(console.error);
                 }
@@ -32,20 +36,35 @@ class GuildDB extends Guild {
                 this.prefix = data.prefix;
                 this.mcAdress = data.mcAdress;
                 this.modules = data.modules;
+                this.tags = data.tags;
+                this.tagPrefix = data.tagPrefix;
             })
             .catch(console.error);
     }
 
     get getPrefix() {
+        this.getDataFromDB();
         return this.prefix;
     }
 
     get getMCAdress() {
+        this.getDataFromDB();
         return this.mcAdress;
     }
 
     get getModulesStatus() {
+        this.getDataFromDB();
         return this.modules;
+    }
+
+    get getTags() {
+        this.getDataFromDB();
+        return this.tags;
+    }
+
+    get getTagPrefix() {
+        this.getDataFromDB();
+        return this.tagPrefix;
     }
 
     public async setPrefix(prefix: string) {
@@ -72,6 +91,23 @@ class GuildDB extends Guild {
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(true);
+    }
+
+    public async setTags(tags: Map<string, string>) {
+        await GuildModel.findOneAndUpdate({ guildId: this.id }, { tags }, { new: true, upsert: true })
+            .then((data: any) => this.tags = data.tags)
+            .catch((err: Error) => Promise.reject(err));
+
+        return Promise.resolve(true);
+    }
+
+    public async setTagPrefix(prefix: string) {
+        if (prefix.length > 2) return Promise.resolve("Can't set a tag prefix longer than 2 characters");
+        await GuildModel.findOneAndUpdate({ guildId: this.id }, { tagPrefix: prefix }, { new: true, upsert: true })
+            .then((data: any) => (this.tagPrefix = data.tagPrefix))
+            .catch((err: Error) => Promise.reject(err));
+
+        return Promise.resolve(`The new prefix is \`${this.tagPrefix}\``);
     }
 }
 

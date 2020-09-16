@@ -1,20 +1,23 @@
 import { Schema, model } from "mongoose";
 
-const GuildSchema: Schema = new Schema({
+const GuildSchema = new Schema({
     guildId: {
         type: String,
         required: true,
     },
+
     prefix: {
         type: String,
         default: "$",
         required: false,
     },
+
     mcAdress: {
         type: String,
         default: "",
         required: false,
     },
+
     modules: {
         type: Object,
         default: {
@@ -25,9 +28,21 @@ const GuildSchema: Schema = new Schema({
             moderation: true,
             music: true,
             balance: true,
+            tags: true,
         },
-        required: false,
+        required: true,
     },
+
+    tags: {
+        type: Map,
+        of: String,
+        default: new Map(),
+    },
+
+    tagPrefix: {
+        type: String,
+        default: "¿"
+    }
 
     // logChannel: {
     //     type: String,

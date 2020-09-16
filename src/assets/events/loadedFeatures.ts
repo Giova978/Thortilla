@@ -16,7 +16,7 @@ module.exports = class extends Event {
         this.Events.setHeading("Event", "Status", "Enabled");
     }
 
-    public run() {
+    public async run() {
         this.handler.commands.map((command) => {
             this.Commands.addRow(command.name, "Loaded", command.enabled);
         });

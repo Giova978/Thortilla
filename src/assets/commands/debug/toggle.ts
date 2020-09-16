@@ -25,7 +25,7 @@ module.exports = class extends Command {
         // The name of the command, event or feature
         const name: string | undefined = args[0];
 
-        if (!name) return channel.error("Please give me a command, feature or event to toggle")
+        if (!name) return channel.error("Please give me a command, feature or event to toggle");
 
         // The type (command, event or feature)
         const type: string | undefined = args[1];

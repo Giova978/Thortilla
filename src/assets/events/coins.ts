@@ -16,15 +16,15 @@ module.exports = class extends Event {
         this.handler = handler;
     }
 
-    public run(message: Message) {
+    public async run(message: Message) {
         const guild: GuildDB = message.guild as GuildDB;
 
         if (!guild.getModulesStatus.balance) return;
 
-        if (!message.content.startsWith(guild.getPrefix) && !message.author.bot) {
+        if (!message.content.startsWith(guild.getPrefix) && !message.content.startsWith(guild.getTagPrefix) && !message.author.bot && !message.mentions.has(this.handler.client.user!)) {
             const member: MemberDB = message.member as MemberDB;
 
-            const chance = !!0.4 && Math.random() <= 0.4;
+            const chance = !!0.2 && Math.random() <= 0.2;
 
             if (chance) {
                 const coinsAdd = Math.floor(Math.random() * (30 - 5) + 5);
@@ -33,7 +33,7 @@ module.exports = class extends Event {
 
                 const embed = new MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
 
-                message.channel.send(embed).then((msg) => Utils.deleteMessage(msg, 2000));
+                message.channel.send(embed).then((msg) => Utils.deleteMessage(msg, 1500));
             }
         }
     }

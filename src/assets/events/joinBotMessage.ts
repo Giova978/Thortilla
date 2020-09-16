@@ -15,26 +15,17 @@ module.exports = class extends Event {
         this.handler = handler;
     }
 
-    public run(guild: Guild) {
+    public async run(guild: Guild) {
         const text = stripIndents`
         Thanks for adding me
-        - My prefix is **$**
-        - You can change it by doing $setprefix
+        - My prefix is **$**, you can change it with \`$setprefix\`
         - If my prefix conflicts with other bot you can mention me and execute commands
-        - $help for a list of commands, you can get detailed info with $info <command>
+        - Use \`$help\` for a list of commands, you can get detailed info with \`$info <command>\`
         `
 
-        const channels = guild.channels.cache.filter(channel => channel.type === 'text');
-
-        this.sendMessage(channels, text);
-    }
-
-    private sendMessage(channels: any, text: string) {
-        channels.first().send(text)
-            .then()
-            .catch(() => {
-                channels.delete(channels.firstKey())
-                this.sendMessage(channels.shift(), text)
-            });
+        // @ts-ignore
+        const firstChannel = guild!.channels.cache.sort((ch1, ch2) => ch1.position < ch2.position ? -1 : 1).find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'));
+        // @ts-ignore
+        firstChannel!.send(text);
     }
 }

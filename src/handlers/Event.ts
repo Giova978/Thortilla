@@ -12,7 +12,7 @@ export default class Event extends Toogleable implements IEvent {
         this.category = category;
     }
 
-    public run(...args: any) {
+    public async run(...args: any): Promise<any> {
         throw new Error(`${this.eventName} doesnt have any run method`);
     }
 }
