@@ -26,6 +26,7 @@ module.exports = class extends Event {
         const channel = message.channel as TextChannelCS;
 
         if (message.mentions.has(this.client.user!) && !message.mentions.everyone && !message.content.startsWith(prefix)) {
+            message.mentions.members?.delete(this.client.user!.id);
             message.content = prefix + message.content.slice(this.client.user!.id.length + 4).trim();
         }
 
