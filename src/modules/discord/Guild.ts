@@ -43,27 +43,22 @@ class GuildDB extends Guild {
     }
 
     get getPrefix() {
-        this.getDataFromDB();
         return this.prefix;
     }
 
     get getMCAdress() {
-        this.getDataFromDB();
         return this.mcAdress;
     }
 
     get getModulesStatus() {
-        this.getDataFromDB();
         return this.modules;
     }
 
     get getTags() {
-        this.getDataFromDB();
         return this.tags;
     }
 
     get getTagPrefix() {
-        this.getDataFromDB();
         return this.tagPrefix;
     }
 
