@@ -20,12 +20,11 @@ module.exports = class extends Event {
 
         if (!message.content.startsWith(guild.getTagPrefix)) return;
 
-        const tagName = message.content.slice(1);
+        const tagName = message.content.slice(1).split(" ")[0];
         const tag = guild.tags.get(tagName);
 
-        if (!tag) return channel.error('Give me a valid tag name', 1000);
+        if (!tag) return channel.error("Give me a valid tag name", 1000);
 
         channel.send(tag);
     }
 };
-

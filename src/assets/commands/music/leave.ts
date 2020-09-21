@@ -24,6 +24,7 @@ module.exports = class extends Command {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
         if (!musicData) return channel.error("I am not in a voicechannel");
 
+        console.log(musicData);
         musicData.player.destroy();
 
         // @ts-ignore

@@ -28,7 +28,11 @@ module.exports = class extends Command {
         let description;
 
         if (song?.duration === "Live stream") {
-            description = "Live stream";
+            description = stripIndent`
+            **[${song.title}](${song.url})**
+
+            Live Stream
+            `;
         } else {
             description = this.getDurationBar(musicData, song!);
         }

@@ -1,4 +1,4 @@
-import { Collection } from "discord.js";
+import { Collection, TextChannel } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
 import { IMusicaData, Song } from "../Utils";
 
@@ -32,7 +32,7 @@ export default class Player {
     }
 
     public getMusicaData(guildId: Snowflake) {
-        return this.guildsMusicData.get(guildId)! ?? {};
+        return this.guildsMusicData.get(guildId)!;
     }
 
     public async add(guildId: Snowflake, message: Message, song: Song) {
@@ -40,7 +40,7 @@ export default class Player {
 
         data.queue.push(song);
 
-        const songs = await data.player.lavaSearch(song.url, message.author, { add: true });
+        const songs = await data.player.lavaSearch(song.url, message.member!, { add: true });
 
         // @ts-ignore
         data.player.queue.add(songs[0]);
@@ -78,7 +78,12 @@ export default class Player {
         data.player.play();
     }
 
-    private initMusicData(guildId: Snowflake, player: Lava.Player, voiceChannel: VoiceChannel, message: Message): IMusicaData {
+    private initMusicData(
+        guildId: Snowflake,
+        player: Lava.Player,
+        voiceChannel: VoiceChannel,
+        message: Message,
+    ): IMusicaData {
         return {
             guildId: guildId,
             player: player,
@@ -88,8 +93,7 @@ export default class Player {
             nowPlaying: null,
             isPlaying: false,
             voiceChannel: voiceChannel,
-            // @ts-ignore
-            textChannel: message.channel,
+            textChannel: message.channel as TextChannel,
             timeout: null,
         };
     }
@@ -111,7 +115,7 @@ export default class Player {
         data.nowPlaying = null;
 
         data.timeout = setTimeout(() => {
-            // @ts-ignore
+            //@ts-expect-error
             new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
                 op: "leave",
                 guil_id: guildId,
@@ -185,10 +189,24 @@ export default class Player {
                 console.error("Error", err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
-                if (queue.length < 1) {
-                    this.leave(player.options.guild.id, player);
-                } else {
+                if (queue.length > 0) {
                     player.play();
+                } else {
+                    this.leave(player.options.guild.id, player);
+                }
+            })
+            .on("trackStuck", (track, player, err) => {
+                musicData = this.getMusicaData(player.options.guild.id);
+                queue = musicData.queue;
+                channel = musicData.textChannel;
+
+                console.error("Error", err);
+                player.stop();
+                channel!.send("There was a problem with the playback");
+                if (queue.length > 0) {
+                    player.play();
+                } else {
+                    this.leave(player.options.guild.id, player);
                 }
             });
     }

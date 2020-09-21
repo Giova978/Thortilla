@@ -27,7 +27,8 @@ module.exports = class extends Command {
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
         const voiceChannelUsers = this.handler.player.getMusicaData(message.guild!.id).voiceChannel;
 
-        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers) return channel.error("You have to be in the same channel with music");
+        if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
+            return channel.error("You have to be in the same channel with music");
 
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url>");
@@ -36,7 +37,7 @@ module.exports = class extends Command {
 
         if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
             // TODO
-            return channel.error("Playlist are not supported for now");
+            return channel.error("Playlist are not supported");
         }
 
         if (query.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
@@ -51,7 +52,7 @@ module.exports = class extends Command {
                 const title = video.title;
                 let duration = this.formatDuration(video.duration);
                 const thumbnail = video.thumbnails.high.url;
-                if (duration === "00:00") duration = "Live stream";
+                if (duration === "00") duration = "Live stream";
                 const song = {
                     url,
                     title,
@@ -92,7 +93,9 @@ module.exports = class extends Command {
         if (videos.length < 1) return channel.error("No matches found");
 
         // Send embed to select song
-        const embed = new MessageEmbed().setColor("GREEN").setTitle("Choose a song by comment a number beetween 1 and 5 or exit to exit");
+        const embed = new MessageEmbed()
+            .setColor("GREEN")
+            .setTitle("Choose a song by comment a number beetween 1 and 5 or exit to exit");
 
         for (let i = 0; i < videosNames.length; i++) {
             embed.addField(`Song ${i + 1}`, `${videosNames[i]}`);
@@ -135,7 +138,8 @@ module.exports = class extends Command {
             songEmbed.delete();
             return channel.error("We have trouble finding your query please try again");
         }
-        // @ts-ignore
+
+        // @ts-expect-error
         userResponse.first().delete();
 
         // Get video and data required to play;
@@ -143,7 +147,7 @@ module.exports = class extends Command {
         const title = video.title;
         let duration = this.formatDuration(video.duration);
         const thumbnail = video.thumbnails.high.url;
-        if (duration === "00:00") duration = "Live stream";
+        if (duration === "00") duration = "Live stream";
         const song = {
             url,
             title,
@@ -173,20 +177,23 @@ module.exports = class extends Command {
     }
 
     private formatDuration(duration: any): string {
-        if (duration.seconds === 0) return "00:00";
         const { hours, minutes, seconds } = duration;
 
         let durationString = "";
 
-        if (hours > 0) duration += `${hours}:`;
+        if (hours > 0) durationString += `${hours}:`;
         if (minutes > 0) {
             const formated = minutes >= 10 ? minutes : `0${minutes}`;
             durationString += `${formated}:`;
+        } else if (hours > 0) {
+            durationString += "00:";
         }
 
         if (seconds > 0) {
             const formated = seconds >= 10 ? seconds : `0${seconds}`;
             durationString += `${formated}`;
+        } else {
+            durationString += "00";
         }
 
         return durationString;
