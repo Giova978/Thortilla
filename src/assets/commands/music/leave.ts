@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import { LavaNode } from "@anonymousg/lavajs";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;

@@ -3,7 +3,7 @@ import * as path from "path";
 import { Message, Client, GuildMember, PermissionResolvable, TextChannel, VoiceChannel, Snowflake } from "discord.js";
 import { Player } from "@anonymousg/lavajs";
 import Handler from "./handlers/Handler";
-import TextChannelCS from "./modules/discord/TextChannel";
+import TextChannelCS from "./models/discord/TextChannel";
 
 interface Song {
     url: string;
@@ -104,7 +104,9 @@ class Utils {
 
         if (!target && toFind) {
             target = message.guild?.members.cache.find((member) => {
-                return member.displayName.toLowerCase().includes(toFind) || member.user.tag.toLowerCase().includes(toFind);
+                return (
+                    member.displayName.toLowerCase().includes(toFind) || member.user.tag.toLowerCase().includes(toFind)
+                );
             });
         }
 
@@ -115,7 +117,12 @@ class Utils {
 
     static formatDate(date: Date | undefined | null): string | undefined {
         if (date === undefined || date === null) return undefined;
-        return new Intl.DateTimeFormat("es-ES", { weekday: "long", year: "numeric", month: "numeric", day: "numeric" }).format(date);
+        return new Intl.DateTimeFormat("es-ES", {
+            weekday: "long",
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+        }).format(date);
     }
 
     static formatTimestamp(timestamp: Date | undefined | null): string | undefined {
@@ -147,4 +154,16 @@ class Utils {
     }
 }
 
-export { Utils, ICommand, IOptionsCommand, IToogle, IEvent, IArgs, IRedditData, IEmbedField, Fields, IMusicaData, Song };
+export {
+    Utils,
+    ICommand,
+    IOptionsCommand,
+    IToogle,
+    IEvent,
+    IArgs,
+    IRedditData,
+    IEmbedField,
+    Fields,
+    IMusicaData,
+    Song,
+};

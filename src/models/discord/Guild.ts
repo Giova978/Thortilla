@@ -14,7 +14,7 @@ class GuildDB extends Guild {
         this.getDataFromDB();
     }
 
-    private getDataFromDB() {
+    public getDataFromDB() {
         GuildModel.findOne({
             guildId: this.id,
         })
@@ -90,7 +90,7 @@ class GuildDB extends Guild {
 
     public async setTags(tags: Map<string, string>) {
         await GuildModel.findOneAndUpdate({ guildId: this.id }, { tags }, { new: true, upsert: true })
-            .then((data: any) => this.tags = data.tags)
+            .then((data: any) => (this.tags = data.tags))
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(true);

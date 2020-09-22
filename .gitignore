@@ -8,6 +8,7 @@ start.bat
 /Lavalink
 /dist
 .idea
+package-lock.json
 
 ### Node ###
 # Logs

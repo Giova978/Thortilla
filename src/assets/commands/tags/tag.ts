@@ -1,19 +1,29 @@
 import Command from "../../../handlers/Command";
-import { Message, MessageEmbed, ReactionEmoji, User, ReactionCollector, Emoji, ReactionManager, ReactionUserManager, MessageReaction } from "discord.js";
-import Handler from '../../../handlers/Handler';
-import { IArgs } from '../../../Utils';
-import TextChannelCS from '../../../modules/discord/TextChannel';
-import GuildDB from "@/modules/discord/Guild";
+import {
+    Message,
+    MessageEmbed,
+    ReactionEmoji,
+    User,
+    ReactionCollector,
+    Emoji,
+    ReactionManager,
+    ReactionUserManager,
+    MessageReaction,
+} from "discord.js";
+import Handler from "../../../handlers/Handler";
+import { IArgs } from "../../../Utils";
+import TextChannelCS from "../../../models/discord/TextChannel";
+import GuildDB from "@/models/discord/Guild";
 import { stripIndents } from "common-tags";
 
 module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('tag', {
-            category: 'tags',
-            description: 'Command used to manipulate tags, to see the content of a tag use ¿<tag name>',
-            permissions: ['MANAGE_GUILD'],
+        super("tag", {
+            category: "tags",
+            description: "Command used to manipulate tags, to see the content of a tag use ¿<tag name>",
+            permissions: ["MANAGE_GUILD"],
             usage: stripIndents`\u200B
             <tag name> [edit | delete | create]
             tag <tag name> create <content>
@@ -24,36 +34,35 @@ module.exports = class extends Command {
         });
 
         this.handler = handler;
-
     }
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const tagName = args[0];
-        if (!tagName) return channel.error('Please give a valid tag name');
+        if (!tagName) return channel.error("Please give a valid tag name");
 
         const operation = args[1];
-        if (!operation || !['edit', 'delete', 'create'].includes(operation)) return channel.error('Please give a valid action(`edit | delete | create`)');
+        if (!operation || !["edit", "delete", "create"].includes(operation))
+            return channel.error("Please give a valid action(`edit | delete | create`)");
 
         const guild: GuildDB = message.guild as GuildDB;
 
         switch (operation) {
-            case 'edit':
+            case "edit":
                 this.editTag(tagName, guild, message);
                 break;
 
-            case 'create':
+            case "create":
                 await this.createTag(tagName, guild, message);
                 break;
 
-            case 'delete':
+            case "delete":
                 this.deleteTag(tagName, guild, message);
                 break;
 
             default:
-                channel.error('Action not recognized', 1000);
+                channel.error("Action not recognized", 1000);
                 break;
         }
-
     }
 
     private getTag(tagName: string, guild: GuildDB) {
@@ -62,21 +71,22 @@ module.exports = class extends Command {
 
     private async createTag(tagName: string, guild: GuildDB, message: Message) {
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor("BLUE")
             .setTitle(`Creating tag \`${tagName}\``)
-            .setDescription('Initated process of creating a tag, you will have 2 minutes to respond with the content');
+            .setDescription("Initated process of creating a tag, you will have 2 minutes to respond with the content");
 
         const filter = (msg: Message) => msg.author === message.author;
         const collector = message.channel.createMessageCollector(filter, { time: 3 * 60 * 1000, max: 1 });
 
         const msg = await message.channel.send(embed);
 
-        collector.on('end', (collected, reason) => {
+        collector.on("end", (collected, reason) => {
             const content = collected.first()?.content;
             if (!content) {
-                embed.setColor('RED')
+                embed
+                    .setColor("RED")
                     .setTitle(`Failed to create tag \`${tagName}\``)
-                    .setDescription('No valid content provided');
+                    .setDescription("No valid content provided");
 
                 msg.edit(embed);
             }
@@ -85,18 +95,23 @@ module.exports = class extends Command {
 
             tags.set(tagName, content!);
 
-            guild.setTags(tags)
+            guild
+                .setTags(tags)
                 .then(() => {
-                    embed.setColor('GREEN')
+                    embed
+                        .setColor("GREEN")
                         .setTitle(`Created tag \`${tagName}\``)
                         .setDescription(`Succesfully created \`${tagName}\` with the provided content`);
 
                     msg.edit(embed);
                 })
-                .catch(err => {
-                    embed.setColor('RED')
+                .catch((err) => {
+                    embed
+                        .setColor("RED")
                         .setTitle(`Failed to create \`${tagName}\``)
-                        .setDescription(`Something went wrong while creating \`${tagName}\` tag, please try again later`);
+                        .setDescription(
+                            `Something went wrong while creating \`${tagName}\` tag, please try again later`,
+                        );
 
                     msg.edit(embed);
                     console.error(err);
@@ -107,24 +122,27 @@ module.exports = class extends Command {
     private async editTag(tagName: string, guild: GuildDB, message: Message) {
         const tag = this.getTag(tagName, guild);
         // @ts-expect-error
-        if (!tag) return message.channel.error('You cant edit a tag that doesnt exists');
+        if (!tag) return message.channel.error("You cant edit a tag that doesnt exists");
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor("BLUE")
             .setTitle(`Editing tag \`${tagName}\``)
-            .setDescription('Initated process of editing a tag, you will have 2 minutes to respond with the new content');
+            .setDescription(
+                "Initated process of editing a tag, you will have 2 minutes to respond with the new content",
+            );
 
         const filter = (msg: Message) => msg.author === message.author;
         const collector = message.channel.createMessageCollector(filter, { time: 3 * 60 * 1000, max: 1 });
 
         const msg = await message.channel.send(embed);
 
-        collector.on('end', (collected, reason) => {
+        collector.on("end", (collected, reason) => {
             const content = collected.first()?.content;
             if (!content) {
-                embed.setColor('RED')
+                embed
+                    .setColor("RED")
                     .setTitle(`Failed to edit tag \`${tagName}\``)
-                    .setDescription('No valid content provided');
+                    .setDescription("No valid content provided");
 
                 msg.edit(embed);
             }
@@ -133,18 +151,23 @@ module.exports = class extends Command {
 
             tags.set(tagName, content!);
 
-            guild.setTags(tags)
+            guild
+                .setTags(tags)
                 .then(() => {
-                    embed.setColor('GREEN')
+                    embed
+                        .setColor("GREEN")
                         .setTitle(`Edited tag \`${tagName}\``)
                         .setDescription(`Succesfully edited \`${tagName}\` with the provided content`);
 
                     msg.edit(embed);
                 })
-                .catch(err => {
-                    embed.setColor('RED')
+                .catch((err) => {
+                    embed
+                        .setColor("RED")
                         .setTitle(`Failed to edit \`${tagName}\``)
-                        .setDescription(`Something went wrong while editing \`${tagName}\` tag, please try again later`);
+                        .setDescription(
+                            `Something went wrong while editing \`${tagName}\` tag, please try again later`,
+                        );
 
                     msg.edit(embed);
                     console.error(err);
@@ -155,54 +178,61 @@ module.exports = class extends Command {
     private async deleteTag(tagName: string, guild: GuildDB, message: Message) {
         const tag = this.getTag(tagName, guild);
         // @ts-expect-error
-        if (!tag) return message.channel.error('You cant delete a tag that doesnt exists');
+        if (!tag) return message.channel.error("You cant delete a tag that doesnt exists");
 
         const embed = new MessageEmbed()
-            .setColor('YELLOW')
+            .setColor("YELLOW")
             .setTitle(`Deleting \`${tagName}\` tag`)
-            .setDescription(`Are you sure you want to delete the \`${tagName}\` tag`)
+            .setDescription(`Are you sure you want to delete the \`${tagName}\` tag`);
 
         const msg = await message.channel.send(embed);
 
-        await msg.react('❌');
-        await msg.react('✅');
+        await msg.react("❌");
+        await msg.react("✅");
 
-        const filter = (reaction: MessageReaction, user: User) => user.id === message.author.id && reaction.emoji.name === '✅' || reaction.emoji.name === '❌';
-        const reactionCollector = msg.createReactionCollector(filter, { max: 1, time: 60000 })
+        const filter = (reaction: MessageReaction, user: User) =>
+            (user.id === message.author.id && reaction.emoji.name === "✅") || reaction.emoji.name === "❌";
+        const reactionCollector = msg.createReactionCollector(filter, { max: 1, time: 60000 });
 
-        reactionCollector.on('end', (collected, reason) => {
+        reactionCollector.on("end", (collected, reason) => {
             const emoji = collected.first()?.emoji;
 
-            if (emoji?.name === '❌') {
-                embed.setColor('RED')
-                    .setTitle('Deletion aborted')
+            if (emoji?.name === "❌") {
+                embed
+                    .setColor("RED")
+                    .setTitle("Deletion aborted")
                     .setDescription(`Deletion of \`${tagName}\` successfully aborted`);
 
                 msg.edit(embed);
             }
 
-            if (emoji?.name === '✅') {
+            if (emoji?.name === "✅") {
                 const tags = guild.getTags;
 
                 tags.delete(tagName);
 
-                guild.setTags(tags)
+                guild
+                    .setTags(tags)
                     .then(() => {
-                        embed.setColor('GREEN')
+                        embed
+                            .setColor("GREEN")
                             .setTitle(`Deleted \`${tagName}\` tag`)
-                            .setDescription(`Successfully deleted \`${tagName}\` tag`)
+                            .setDescription(`Successfully deleted \`${tagName}\` tag`);
 
                         msg.edit(embed);
                     })
-                    .catch(err => {
-                        embed.setColor('RED')
+                    .catch((err) => {
+                        embed
+                            .setColor("RED")
                             .setTitle(`Aborted deletion of \`${tagName}\` tag`)
-                            .setDescription(`Something went wron while deleting \`${tagName}\` tag, please try again later`);
+                            .setDescription(
+                                `Something went wron while deleting \`${tagName}\` tag, please try again later`,
+                            );
 
                         msg.edit(embed);
                         console.error(err);
                     });
             }
-        })
+        });
     }
-}
+};

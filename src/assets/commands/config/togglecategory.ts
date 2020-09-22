@@ -2,8 +2,8 @@ import Command from "../../../handlers/Command";
 import { Message } from "discord.js";
 import Handler from "../../../handlers/Handler";
 import { IArgs } from "../../../Utils";
-import GuildDB from "../../../modules/discord/Guild";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import GuildDB from "../../../models/discord/Guild";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     private handler: Handler;
@@ -22,7 +22,8 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const module: string = args[0];
-        if (!module || module === "config" || module === "debug") return channel.error("Please provide a valid category");
+        if (!module || module === "config" || module === "debug")
+            return channel.error("Please provide a valid category");
         const stateString = args[1];
         if (!stateString || !["on", "off"].includes(stateString)) return channel.error("Please provide a valid state");
 

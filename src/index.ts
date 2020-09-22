@@ -4,11 +4,11 @@ import * as path from "path";
 import * as fs from "fs";
 import Handler from "./handlers/Handler";
 import { connect } from "mongoose";
-import GuildDB from "./modules/discord/Guild";
-import MemberDB from "./modules/discord/Member";
-import TextChannelCS from "./modules/discord/TextChannel";
-import NewsChannelCS from "./modules/discord/NewsChannel";
-import DMChannelCS from "./modules/discord/DMChannel";
+import GuildDB from "./models/discord/Guild";
+import MemberDB from "./models/discord/Member";
+import TextChannelCS from "./models/discord/TextChannel";
+import NewsChannelCS from "./models/discord/NewsChannel";
+import DMChannelCS from "./models/discord/DMChannel";
 
 config({
     path: __dirname + "/.env",
@@ -35,9 +35,9 @@ const client: Client = new Client({
     disableMentions: "everyone",
 });
 
-const categories: Array<string> = fs.readdirSync(
-    path.join(__dirname, "./assets/commands/")
-).filter((cat) => cat !== "debug")
+const categories: Array<string> = fs
+    .readdirSync(path.join(__dirname, "./assets/commands/"))
+    .filter((cat) => cat !== "debug");
 
 const handler: Handler = new Handler(client, "$", categories);
 

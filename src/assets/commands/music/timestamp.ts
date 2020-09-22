@@ -1,19 +1,19 @@
-import Command from '../../../handlers/Command';
-import { Message } from 'discord.js';
-import { IArgs } from '../../../Utils';
-import Handler from '../../../handlers/Handler';
-import TextChannelCS from '../../../modules/discord/TextChannel';
+import Command from "../../../handlers/Command";
+import { Message } from "discord.js";
+import { IArgs } from "../../../Utils";
+import Handler from "../../../handlers/Handler";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     private readonly handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super('timestamp', {
-            aliases: ['seek', 'ts'],
-            category: 'music',
+        super("timestamp", {
+            aliases: ["seek", "ts"],
+            category: "music",
             permissions: ["PRIORITY_SPEAKER"],
-            description: 'Skip to the gived timestamp',
-            usage: '<timestamp(formata m:s)>'
+            description: "Skip to the gived timestamp",
+            usage: "<timestamp(formata m:s)>",
         });
 
         this.handler = handler;
@@ -21,20 +21,20 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return channel.error('There is no song playing');
+        if (!musicData) return channel.error("There is no song playing");
 
         const time = args[0];
-        if (!time) return channel.error('Give a timestamp');
+        if (!time) return channel.error("Give a timestamp");
 
-        const [minutes, seconds] = time.split(':');
+        const [minutes, seconds] = time.split(":");
 
-        if (!minutes) return channel.error('Give a good formated timestamp');
-        if (!time) return channel.error('Give a good formated timestamp');
+        if (!minutes) return channel.error("Give a good formated timestamp");
+        if (!time) return channel.error("Give a good formated timestamp");
 
-        const timeToSkip = ((parseInt(minutes) * 60) + parseInt(seconds)) * 1000;
+        const timeToSkip = (parseInt(minutes) * 60 + parseInt(seconds)) * 1000;
 
         musicData.player.seek(timeToSkip);
 
         channel.success(`Skipped to ${time}`);
     }
-}
+};

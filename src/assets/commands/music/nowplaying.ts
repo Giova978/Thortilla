@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { stripIndent } from "common-tags";
 import { IArgs, IMusicaData, Song } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     private readonly handler: Handler;

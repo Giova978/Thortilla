@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import Youtube from "simple-youtube-api";
 import { IArgs, Utils } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 const youtube = new Youtube(process.env.YT_API);
 
 module.exports = class extends Command {

@@ -3,7 +3,7 @@ import { Message, GuildMember } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
 import { MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -40,7 +40,10 @@ module.exports = class extends Command {
             return message.channel
                 .bulkDelete(messages, true)
                 .then((messagesDeleted) => {
-                    channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`, 1000);
+                    channel.success(
+                        `Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`,
+                        1000,
+                    );
                 })
                 .catch((err) => {
                     console.error(err);

@@ -2,7 +2,7 @@ import Command from "../../../handlers/Command";
 import { Message, MessageEmbed } from "discord.js";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     private readonly handler: Handler;

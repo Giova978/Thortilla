@@ -2,8 +2,8 @@ import { IArgs } from "../../Utils";
 import Event from "../../handlers/Event";
 import Handler from "../../handlers/Handler";
 import { Message } from "discord.js";
-import GuildDB from "@/modules/discord/Guild";
-import TextChannelCS from "@/modules/discord/TextChannel";
+import GuildDB from "@/models/discord/Guild";
+import TextChannelCS from "@/models/discord/TextChannel";
 
 module.exports = class extends Event {
     public handler: Handler;

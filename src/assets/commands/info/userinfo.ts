@@ -2,7 +2,7 @@ import Command from "../../../handlers/Command";
 import { Message, GuildMember, Role, MessageEmbed } from "discord.js";
 import { Utils } from "../../../Utils";
 import { stripIndent } from "common-tags";
-import MemberDB from "../../../modules/discord/Member";
+import MemberDB from "../../../models/discord/Member";
 
 module.exports = class extends Command {
     constructor() {

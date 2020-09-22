@@ -2,8 +2,8 @@ import Event from "../../handlers/Event";
 import { Client, Message, MessageEmbed } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs, Utils } from "../../Utils";
-import GuildDB from "../../modules/discord/Guild";
-import MemberDB from "../../modules/discord/Member";
+import GuildDB from "../../models/discord/Guild";
+import MemberDB from "../../models/discord/Member";
 
 module.exports = class extends Event {
     public client: Client;
@@ -17,11 +17,16 @@ module.exports = class extends Event {
     }
 
     public async run(message: Message) {
-        const guild: GuildDB = message.guild as GuildDB;
+        const guild = message.guild as GuildDB;
 
         if (!guild.getModulesStatus.balance) return;
 
-        if (!message.content.startsWith(guild.getPrefix) && !message.content.startsWith(guild.getTagPrefix) && !message.author.bot && !message.mentions.has(this.handler.client.user!)) {
+        if (
+            !message.content.startsWith(guild.getPrefix) &&
+            !message.content.startsWith(guild.getTagPrefix) &&
+            !message.author.bot &&
+            !message.mentions.has(this.handler.client.user!)
+        ) {
             const member: MemberDB = message.member as MemberDB;
 
             const chance = !!0.2 && Math.random() <= 0.2;
@@ -31,7 +36,9 @@ module.exports = class extends Event {
 
                 member.updateBalance(coinsAdd);
 
-                const embed = new MessageEmbed().setColor("YELLOW").setDescription(`${message.author} you earned ${coinsAdd} coins`);
+                const embed = new MessageEmbed()
+                    .setColor("YELLOW")
+                    .setDescription(`${message.author} you earned ${coinsAdd} coins`);
 
                 message.channel.send(embed).then((msg) => Utils.deleteMessage(msg, 1500));
             }

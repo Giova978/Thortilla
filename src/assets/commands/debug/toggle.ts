@@ -3,7 +3,7 @@ import Handler from "../../../handlers/Handler";
 import { IArgs, Utils } from "../../../Utils";
 import { Message } from "discord.js";
 import Event from "../../../handlers/Event";
-import TextChannelCS from "../../../modules/discord/TextChannel";
+import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -20,7 +20,7 @@ module.exports = class extends Command {
     }
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
-        if (message.author.id !== process.env.OWNER) return channel.error("Command only for debug", 1000)
+        if (message.author.id !== process.env.OWNER) return channel.error("Command only for debug", 1000);
 
         // The name of the command, event or feature
         const name: string | undefined = args[0];
