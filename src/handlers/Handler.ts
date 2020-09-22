@@ -1,9 +1,10 @@
 import { Client, Collection } from "discord.js";
-import { LavaClient } from "@anonymousg/lavajs";
+import { LavaClient, NodeOptions } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
 import Event from "./Event";
 import Player from "./Player";
+import pino from "pino";
 
 export default class Handler {
     public client: Client;
@@ -13,65 +14,66 @@ export default class Handler {
     public commands: Collection<string, Command> = new Collection();
     public aliases: Collection<string, Command> = new Collection();
     public events: Collection<string, Event[]> = new Collection();
+    public logger = pino();
     public permissions = {
-        "ADMINISTRATOR": {
-            "english": "Administrator"
+        ADMINISTRATOR: {
+            english: "Administrator",
         },
-        "CREATE_INSTANT_INVITE": {
-            "english": "Create invite"
+        CREATE_INSTANT_INVITE: {
+            english: "Create invite",
         },
-        "KICK_MEMBERS": {
-            "english": "Kick Members"
+        KICK_MEMBERS: {
+            english: "Kick Members",
         },
-        "BAN_MEMBERS": {
-            "english": "Ban Members"
+        BAN_MEMBERS: {
+            english: "Ban Members",
         },
-        "MANAGE_CHANNELS": {
-            "english": "Manage Channels"
+        MANAGE_CHANNELS: {
+            english: "Manage Channels",
         },
-        "VIEW_AUDIT_LOG": {
-            "english": "View Audit Log"
+        VIEW_AUDIT_LOG: {
+            english: "View Audit Log",
         },
-        "PRIORITY_SPEAKER": {
-            "english": "Priority Speaker"
+        PRIORITY_SPEAKER: {
+            english: "Priority Speaker",
         },
-        "STREAM": {
-            "english": "Stream"
+        STREAM: {
+            english: "Stream",
         },
-        "VIEW_CHANNEL": {
-            "english": "View Channel"
+        VIEW_CHANNEL: {
+            english: "View Channel",
         },
-        "SEND_MESSAGES": {
-            "english": "Send Messages"
+        SEND_MESSAGES: {
+            english: "Send Messages",
         },
-        "MANAGE_MESSAGES": {
-            "english": "Manage Messages"
+        MANAGE_MESSAGES: {
+            english: "Manage Messages",
         },
-        "CONNECT": {
-            "english": "Connect To Voice Channel"
+        CONNECT: {
+            english: "Connect To Voice Channel",
         },
-        "SPEAK": {
-            "english": "Speak In Voice Channel"
+        SPEAK: {
+            english: "Speak In Voice Channel",
         },
-        "MANAGE_ROLES": {
-            "english": "Manage Roles"
+        MANAGE_ROLES: {
+            english: "Manage Roles",
         },
-        "ADD_REACTIONS": {
-            "english": "Add Reactions"
+        ADD_REACTIONS: {
+            english: "Add Reactions",
         },
-        "MANAGE_GUILD": {
-            "english": "Manage guild"
-        }
-    }
-    // @ts-ignore
-    public player: Player;
-    // @ts-ignore
-    public lavaClient: LavaClient;
-    public nodes = [
+        MANAGE_GUILD: {
+            english: "Manage guild",
+        },
+    };
+    // Initialized in ready event
+    public player!: Player;
+    public lavaClient!: LavaClient;
+
+    public nodes: NodeOptions[] = [
         {
-            host: process.env.LAVALINK,
-            port: process.env.PORTLAVA,
-            password: process.env.LAVAPASS,
+            host: process.env.LAVALINK!,
+            port: parseInt(process.env.PORTLAVA!),
+            password: process.env.LAVAPASS!,
         },
     ];
 
@@ -112,7 +114,8 @@ export default class Handler {
 
         if (command.aliases && Array.isArray(command.aliases)) {
             command.aliases.forEach((alias) => {
-                if (this.commands.has(alias) || this.aliases.has(alias)) throw new Error(`The ${alias} is already in use by other command`);
+                if (this.commands.has(alias) || this.aliases.has(alias))
+                    throw new Error(`The ${alias} is already in use by other command`);
                 this.aliases.set(alias, command);
             });
         }

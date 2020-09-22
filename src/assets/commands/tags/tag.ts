@@ -121,7 +121,7 @@ module.exports = class extends Command {
 
     private async editTag(tagName: string, guild: GuildDB, message: Message) {
         const tag = this.getTag(tagName, guild);
-        // @ts-expect-error
+        // @ts-ignore
         if (!tag) return message.channel.error("You cant edit a tag that doesnt exists");
 
         const embed = new MessageEmbed()
@@ -177,7 +177,7 @@ module.exports = class extends Command {
 
     private async deleteTag(tagName: string, guild: GuildDB, message: Message) {
         const tag = this.getTag(tagName, guild);
-        // @ts-expect-error
+        // @ts-ignore
         if (!tag) return message.channel.error("You cant delete a tag that doesnt exists");
 
         const embed = new MessageEmbed()

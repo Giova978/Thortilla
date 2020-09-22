@@ -23,7 +23,7 @@ module.exports = class extends Event {
         try {
             guild.getDataFromDB();
         } catch {
-            return console.log(`Failed to get db data from ${guild.name ?? "No Guild"}`);
+            return console.log(`Failed to get db data from ${guild ? guild.name : "No Guild"}`);
         }
 
         console.log(`Refreshed data from ${guild.name}`);

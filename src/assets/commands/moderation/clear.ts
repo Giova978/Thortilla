@@ -1,7 +1,6 @@
 import Command from "../../../handlers/Command";
-import { Message, GuildMember } from "discord.js";
+import { Message, NewsChannel, TextChannel } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
-import { MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
 
@@ -37,7 +36,7 @@ module.exports = class extends Command {
 
             if (messages.size < 1) return channel.error(`No messages found for <@${user.id}>`);
 
-            return message.channel
+            return channel
                 .bulkDelete(messages, true)
                 .then((messagesDeleted) => {
                     channel.success(
@@ -51,7 +50,7 @@ module.exports = class extends Command {
                 });
         }
 
-        message.channel
+        channel
             .bulkDelete(toDelete, true)
             .then((messagesDeleted) => {
                 channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages`, 1000);

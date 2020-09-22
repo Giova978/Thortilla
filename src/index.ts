@@ -1,9 +1,11 @@
 import { Client, Structures } from "discord.js";
 import { config } from "dotenv";
 import * as path from "path";
-import * as fs from "fs";
+import { readdirSync } from "fs";
 import Handler from "./handlers/Handler";
 import { connect } from "mongoose";
+
+// Models imports
 import GuildDB from "./models/discord/Guild";
 import MemberDB from "./models/discord/Member";
 import TextChannelCS from "./models/discord/TextChannel";
@@ -35,9 +37,9 @@ const client: Client = new Client({
     disableMentions: "everyone",
 });
 
-const categories: Array<string> = fs
-    .readdirSync(path.join(__dirname, "./assets/commands/"))
-    .filter((cat) => cat !== "debug");
+const categories: Array<string> = readdirSync(path.join(__dirname, "./assets/commands/")).filter(
+    (cat) => cat !== "debug",
+);
 
 const handler: Handler = new Handler(client, "$", categories);
 

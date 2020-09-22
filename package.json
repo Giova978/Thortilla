@@ -11,19 +11,21 @@
     "dependencies": {
         "@anonymousg/lavajs": "^3.5.0",
         "@types/common-tags": "^1.8.0",
-        "@types/mongoose": "^5.7.34",
-        "@types/node": "^13.13.15",
+        "@types/mongoose": "^5.7.36",
+        "@types/node": "^14.11.2",
+        "@types/pino": "^6.3.1",
         "@types/request": "^2.48.4",
         "@types/ws": "^7.2.6",
         "ascii-table": "0.0.9",
-        "axios": "^0.19.2",
+        "axios": "^0.20.0",
         "common-tags": "^1.8.0",
-        "discord.js": "^12.2.0",
+        "discord.js": "^12.3.1",
         "dotenv": "^8.2.0",
         "mcquery": "^1.0.2",
-        "mongoose": "^5.9.26",
+        "mongoose": "^5.10.6",
+        "pino": "^6.6.1",
         "simple-youtube-api": "^5.2.1",
-        "typescript": "^3.9.7"
+        "typescript": "^4.0.3"
     },
     "devDependencies": {}
 }

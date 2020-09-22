@@ -1,5 +1,5 @@
 import { ICommand, IOptionsCommand } from "../Utils";
-import { Message, PermissionResolvable, Snowflake, Collection } from "discord.js";
+import { Message, PermissionResolvable, Collection } from "discord.js";
 import Toogleable from "./Toggleable";
 import TextChannelCS from "../models/discord/TextChannel";
 

@@ -1,7 +1,7 @@
 import Command from "../../../handlers/Command";
 import { Message, MessageEmbed } from "discord.js";
 import Youtube from "simple-youtube-api";
-import { IArgs, Utils } from "../../../Utils";
+import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
 const youtube = new Youtube(process.env.YT_API);
@@ -109,27 +109,26 @@ module.exports = class extends Command {
         const userResponse = await message.channel
             .awaitMessages(filter, {
                 max: 1,
-                maxProcessed: 1,
                 time: 60000,
                 errors: ["time"],
             })
-            .then((r) => r)
             .catch((err) => {
-                console.error(err);
-                songEmbed.delete();
-                return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
+                return Promise.reject(false);
             });
-        // @ts-ignore
+
+        if (!userResponse) {
+            songEmbed.delete();
+            return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
+        }
+
         if (userResponse.size === 0) {
             songEmbed.delete();
             return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
         }
-        // @ts-ignore
-        const videoIndex = parseInt(userResponse.first().content);
 
-        // Work the response from the user
-        // @ts-ignore
-        if (userResponse.first().content === "exit") return songEmbed.delete();
+        const videoIndex = parseInt(userResponse.first()?.content!);
+
+        if (userResponse.first()?.content === "exit") return songEmbed.delete();
         try {
             var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
             if (!video) return channel.error("Failed to get video, try again");
@@ -139,13 +138,13 @@ module.exports = class extends Command {
             return channel.error("We have trouble finding your query please try again");
         }
 
-        // @ts-expect-error
-        userResponse.first().delete();
+        userResponse.first()?.delete();
 
         // Get video and data required to play;
         const url = `https://www.youtube.com/watch?v=${video.id}`;
         const title = video.title;
-        let duration = this.formatDuration(video.duration);
+        let duration =
+            this.formatDuration(video.duration) === "00" ? "Live Stream" : this.formatDuration(video.duration);
         const thumbnail = video.thumbnails.high.url;
         if (duration === "00") duration = "Live stream";
         const song = {

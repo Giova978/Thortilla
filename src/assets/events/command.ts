@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { Client, Message } from "discord.js";
+import { Client, Message, NewsChannel, TextChannel } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import GuildDB from "../../models/discord/Guild";

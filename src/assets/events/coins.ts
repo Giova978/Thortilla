@@ -19,7 +19,7 @@ module.exports = class extends Event {
     public async run(message: Message) {
         const guild = message.guild as GuildDB;
 
-        if (!guild.getModulesStatus.balance) return;
+        if (!guild.getModulesStatus?.balance) return;
 
         if (
             !message.content.startsWith(guild.getPrefix) &&
