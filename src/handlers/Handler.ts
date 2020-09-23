@@ -20,7 +20,7 @@ export default class Handler {
             english: "Administrator",
         },
         CREATE_INSTANT_INVITE: {
-            english: "Create invite",
+            english: "Create Invite",
         },
         KICK_MEMBERS: {
             english: "Kick Members",
@@ -62,7 +62,7 @@ export default class Handler {
             english: "Add Reactions",
         },
         MANAGE_GUILD: {
-            english: "Manage guild",
+            english: "Manage Guild",
         },
     };
     // Initialized in ready event
