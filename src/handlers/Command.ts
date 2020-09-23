@@ -12,7 +12,7 @@ export default class Command extends Toogleable implements ICommand {
     public usage: string;
     public cooldowns: Collection<string, number>;
     public cooldown: number;
-    public permissionsMe: PermissionResolvable[] = ["MANAGE_MESSAGES"];
+    public permissionsMe: PermissionResolvable[] = ["SEND_MESSAGES", "ADD_REACTIONS"];
 
     constructor(name: string, options: IOptionsCommand) {
         super();
