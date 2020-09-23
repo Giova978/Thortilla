@@ -12,7 +12,7 @@ export default class Command extends Toogleable implements ICommand {
     public usage: string;
     public cooldowns: Collection<string, number>;
     public cooldown: number;
-    public permissionsMe?: PermissionResolvable[];
+    public permissionsMe: PermissionResolvable[] = ["MANAGE_MESSAGES"];
 
     constructor(name: string, options: IOptionsCommand) {
         super();
@@ -26,7 +26,7 @@ export default class Command extends Toogleable implements ICommand {
         if (Array.isArray(options.permissions) && options.permissions.length != 0)
             this.permissions = options.permissions;
         if (Array.isArray(options.permissionsMe) && options.permissionsMe.length != 0)
-            this.permissionsMe = options.permissionsMe;
+            this.permissionsMe = [...this.permissionsMe, ...options.permissionsMe];
 
         this.category = options.category;
         this.description = options.description;
