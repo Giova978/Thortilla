@@ -1,44 +1,55 @@
 import { MessageEmbed, DMChannel, Client } from "discord.js";
 
 class DMChannelCS extends DMChannel {
-    public prefix!: string;
-    public mcAdress!: string;
-    public modules!: any;
-
     constructor(client: Client, data: any) {
         super(client, data);
     }
 
     public error(text: string, timeout: number = 5000) {
-        const embed = new MessageEmbed()
-            .setColor('RED')
-            .addField('Error', `\`${text}\``);
+        const embed = new MessageEmbed().setColor("RED").addField("Error", `${text}`);
+
+        if (this.lastMessage?.author === this.client.user?.id) {
+            this.lastMessage?.edit(embed).then((msg) => msg.delete({ timeout }));
+            return;
+        }
 
         this.send(embed).then((msg) => msg.delete({ timeout }));
     }
 
     public success(text: string, timeout?: number) {
-        const embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setDescription(text);
+        const embed = new MessageEmbed().setColor("GREEN").setDescription(text);
 
-        this.send(embed)
-            .then(msg => {
+        if (this.lastMessage?.author === this.client.user?.id) {
+            this.lastMessage?.edit(embed).then((msg) => {
                 if (!timeout) return;
-                msg.delete({ timeout })
+                msg.delete({ timeout });
             });
+
+            return;
+        }
+
+        this.send(embed).then((msg) => {
+            if (!timeout) return;
+            msg.delete({ timeout });
+        });
     }
 
     public info(text: string, timeout?: number) {
-        const embed = new MessageEmbed()
-            .setColor("BLUE")
-            .setDescription(text);
+        const embed = new MessageEmbed().setColor("BLUE").setDescription(text);
 
-        this.send(embed)
-            .then(msg => {
+        if (this.lastMessage?.author === this.client.user?.id) {
+            this.lastMessage?.edit(embed).then((msg) => {
                 if (!timeout) return;
-                msg.delete({ timeout })
+                msg.delete({ timeout });
             });
+
+            return;
+        }
+
+        this.send(embed).then((msg) => {
+            if (!timeout) return;
+            msg.delete({ timeout });
+        });
     }
 }
 
