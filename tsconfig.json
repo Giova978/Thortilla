@@ -72,7 +72,10 @@
         /* Disallow inconsistently-cased references to the same file. */
         "baseUrl": "./",
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["src/*"],
+            "models/*": ["src/models/*"],
+            "utils": ["src/Utils.ts"],
+            "handlers/*": ["src/handlers/*"]
         }
     }
 }
