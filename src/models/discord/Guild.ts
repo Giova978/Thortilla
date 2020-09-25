@@ -7,6 +7,7 @@ class GuildDB extends Guild {
     public modules!: any;
     public tags!: Map<string, string>;
     public tagPrefix!: string;
+    public logChannel!: string;
 
     constructor(client: Client, data: object) {
         super(client, data);
@@ -29,6 +30,7 @@ class GuildDB extends Guild {
                             this.modules = data.modules;
                             this.tags = data.tags;
                             this.tagPrefix = data.tagPrefix;
+                            this.logChannel = data.features;
                         })
                         .catch(console.error);
                 }
@@ -38,6 +40,7 @@ class GuildDB extends Guild {
                 this.modules = data.modules;
                 this.tags = data.tags;
                 this.tagPrefix = data.tagPrefix;
+                this.logChannel = data.features;
             })
             .catch(console.error);
     }
@@ -60,6 +63,10 @@ class GuildDB extends Guild {
 
     get getTagPrefix() {
         return this.tagPrefix;
+    }
+
+    get getLogChannel() {
+        return this.logChannel;
     }
 
     public async setPrefix(prefix: string) {
@@ -103,6 +110,15 @@ class GuildDB extends Guild {
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(`The new prefix is \`${this.tagPrefix}\``);
+    }
+
+    public async setLogChannel(channelId: string) {
+        if (typeof channelId !== "string") return Promise.reject(false);
+        await GuildModel.findByIdAndUpdate({ guildId: this.id }, { logChannel: channelId }, { new: true, upsert: true })
+            .then((data: any) => (this.logChannel = data.logChannel))
+            .catch((err: Error) => Promise.reject(err));
+
+        return Promise.resolve(true);
     }
 }
 

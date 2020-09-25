@@ -41,14 +41,14 @@ const GuildSchema = new Schema({
 
     tagPrefix: {
         type: String,
-        default: "¿"
-    }
+        default: "¿",
+    },
 
-    // logChannel: {
-    //     type: String,
-    //     default: null,
-    //     required: false
-    // }
+    logChannel: {
+        type: String,
+        default: null,
+        required: false,
+    },
 });
 
 const GuildModel = model("guild", GuildSchema);
