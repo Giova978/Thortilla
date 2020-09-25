@@ -37,13 +37,13 @@ const client: Client = new Client({
     disableMentions: "everyone",
 });
 
-const categories: Array<string> = readdirSync(path.join(__dirname, "./assets/commands/")).filter(
+const categories: Array<string> = readdirSync(path.join(__dirname, "./features/commands/")).filter(
     (cat) => cat !== "debug",
 );
 
 const handler: Handler = new Handler(client, "$", categories);
 
-handler.load(path.join(__dirname, "./assets"), {
+handler.load(path.join(__dirname, "./features"), {
     client: client,
     handler: handler,
 });
