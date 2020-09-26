@@ -4,6 +4,7 @@ import { Utils, IArgs } from "../../../Utils";
 import { MessageEmbed } from "discord.js";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
+import GuildDB from "@models/discord/Guild";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -21,9 +22,9 @@ module.exports = class extends Command {
     }
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
-        const member: GuildMember | undefined = Utils.getMember(message, args[0]);
+        const member = Utils.getMember(message, args[0]);
         if (!member) return channel.error(`I couldn't find the user`);
-        if (member.roles.highest.comparePositionTo(message.member?.roles.highest!) < 0)
+        if (message.member!.roles.highest.comparePositionTo(member?.roles.highest) <= 0)
             return channel.error(`You can't kick <@${member.id}>`);
         if (!member.bannable) return channel.error(`I can't kick <@${member.id}>`);
 
@@ -32,11 +33,9 @@ module.exports = class extends Command {
         let reason = args.join(" ");
         if (!reason) reason = "No reason specified";
 
-        const admin = await message.guild?.members.fetch(message.author.id);
+        const admin = message.member;
 
-        await member.ban({
-            reason,
-        });
+        await member.kick(reason);
 
         const embed = new MessageEmbed()
             .setTitle("Kick")
@@ -47,5 +46,12 @@ module.exports = class extends Command {
             .addField("Date: ", new Date());
 
         message.channel.send(embed);
+
+        (message.guild as GuildDB).sendLog("kick", {
+            kickedMember: member,
+            kickedBy: admin!,
+            date: new Date(),
+            reason,
+        });
     }
 };

@@ -1,5 +1,6 @@
-import { Client, Guild } from "discord.js";
-import GuildModel from "../db/Guild.model";
+import { BanLog, ClearLog, KickLog } from "@utils";
+import { Client, Guild, MessageEmbed, TextChannel } from "discord.js";
+import GuildModel from "@models/db/Guild.model";
 
 class GuildDB extends Guild {
     public prefix!: string;
@@ -30,7 +31,7 @@ class GuildDB extends Guild {
                             this.modules = data.modules;
                             this.tags = data.tags;
                             this.tagPrefix = data.tagPrefix;
-                            this.logChannel = data.features;
+                            this.logChannel = data.logChannel;
                         })
                         .catch(console.error);
                 }
@@ -40,7 +41,7 @@ class GuildDB extends Guild {
                 this.modules = data.modules;
                 this.tags = data.tags;
                 this.tagPrefix = data.tagPrefix;
-                this.logChannel = data.features;
+                this.logChannel = data.logChannel;
             })
             .catch(console.error);
     }
@@ -114,12 +115,90 @@ class GuildDB extends Guild {
 
     public async setLogChannel(channelId: string) {
         if (typeof channelId !== "string") return Promise.reject(false);
-        await GuildModel.findByIdAndUpdate({ guildId: this.id }, { logChannel: channelId }, { new: true, upsert: true })
+        await GuildModel.findOneAndUpdate({ guildId: this.id }, { logChannel: channelId }, { new: true, upsert: true })
             .then((data: any) => (this.logChannel = data.logChannel))
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(true);
     }
+
+    public sendLog<T extends "clear" | "ban" | "kick">(type: T, payload: Params[T]) {
+        const channel = this.channels.resolve(this.getLogChannel) as TextChannel;
+        if (!channel) return;
+
+        let time, embed;
+        const { date, reason } = payload as KickLog | BanLog;
+
+        switch (type) {
+            case "kick":
+                const { kickedBy, kickedMember } = payload as KickLog;
+                time = `${date.getUTCMonth()}-${date.getUTCDay()}-${date.getUTCFullYear()} | ${date.getUTCHours()}:${date.getUTCMinutes()} UTC`;
+
+                embed = new MessageEmbed()
+                    .setColor("BLUE")
+                    .setTitle("Kick Log")
+                    .setThumbnail(kickedBy.user.avatarURL({ dynamic: false }) || "")
+                    .addField(
+                        "Kicked:",
+                        `${kickedMember.user.username}#${kickedMember.user.discriminator}(${kickedMember.id})`,
+                    )
+                    .addField("Kicked By:", `<@${kickedBy.id}>`, true)
+                    .addField("Reason:", reason, false)
+                    .addField("Date:", time, true)
+                    .setTimestamp(date);
+
+                channel.send(embed);
+                break;
+
+            case "ban":
+                let { bannedMember, bannedBy } = payload as BanLog;
+                time = `${date.getUTCMonth()}-${date.getUTCDay()}-${date.getUTCFullYear()} | ${date.getUTCHours()}:${date.getUTCMinutes()} UTC`;
+
+                embed = new MessageEmbed()
+                    .setColor("BLUE")
+                    .setTitle("Ban Log")
+                    .setThumbnail(bannedBy.user.avatarURL({ dynamic: false }) || "")
+                    .addField(
+                        "Banned:",
+                        `${bannedMember.user.username}#${bannedMember.user.discriminator}(${bannedMember.id})`,
+                    )
+                    .addField("Banned By:", `<@${bannedBy.id}>`, true)
+                    .addField("Reason:", reason, false)
+                    .addField("Date:", time, true)
+                    .setTimestamp(date);
+
+                channel.send(embed);
+                break;
+
+            case "clear":
+                const { clearedChannel, numberOfMessages, clearedBy, messagesAuthor } = payload as ClearLog;
+
+                embed = new MessageEmbed()
+                    .setColor("BLUE")
+                    .setTitle("Clear Log")
+                    .addField("Channel:", `<#${clearedChannel.id}>`)
+                    .addField("Messages Cleared:", numberOfMessages, true)
+                    .addField("Cleaned By:", `<@${clearedBy.id}>`);
+
+                if (messagesAuthor)
+                    embed.addField(
+                        "Messages Author:",
+                        `${messagesAuthor.user.username}#${messagesAuthor.user.discriminator}(${messagesAuthor.id})`,
+                    );
+
+                channel.send(embed);
+                break;
+
+            default:
+                break;
+        }
+    }
 }
+
+type Params = {
+    ban: BanLog;
+    kick: KickLog;
+    clear: ClearLog;
+};
 
 export default GuildDB;

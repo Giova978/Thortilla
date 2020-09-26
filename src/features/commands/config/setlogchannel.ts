@@ -1,10 +1,9 @@
-import Command from "handlers/Command";
+import Command from "@handlers/Command";
 import { Message } from "discord.js";
-import Handler from "handlers/Handler";
-import { IArgs } from "utils";
-import TextChannelCS from "models/discord/TextChannel";
-import GuildDB from "models/discord/Guild";
-
+import Handler from "@handlers/Handler";
+import { IArgs } from "@utils";
+import TextChannelCS from "@models/discord/TextChannel";
+import GuildDB from "@models/discord/Guild";
 module.exports = class extends Command {
     private handler: Handler;
 
@@ -25,7 +24,7 @@ module.exports = class extends Command {
         const guild: GuildDB = message.guild as GuildDB;
         if (!channelIdOrName) {
             const currentLogChannel = channel.guild.channels.resolve(guild.getLogChannel);
-            if (currentLogChannel) return channel.info(`The current log channel is ${currentLogChannel.name}`);
+            if (currentLogChannel) return channel.info(`The current log channel is <#${currentLogChannel.id}>`);
 
             return channel.info("There is no log channel");
         }
@@ -41,9 +40,10 @@ module.exports = class extends Command {
         guild
             .setLogChannel(logChannel.id)
             .then(() => {
-                channel.success(`Successfully updated log channel to ${logChannel.name} channel`);
+                channel.success(`Successfully updated log channel to <#${logChannel.id}> channel`);
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error(err);
                 channel.error("There was an unexpected error while updating log channel, please try again");
             });
     }

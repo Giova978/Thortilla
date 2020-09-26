@@ -3,6 +3,7 @@ import { Message, NewsChannel, TextChannel } from "discord.js";
 import { Utils, IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
+import GuildDB from "@models/discord/Guild";
 
 module.exports = class extends Command {
     public handler: Handler;
@@ -43,6 +44,13 @@ module.exports = class extends Command {
                         `Successfully deleted \`${messagesDeleted.size}\` messages from <@${user.id}>`,
                         1000,
                     );
+
+                    (message.guild as GuildDB).sendLog("clear", {
+                        clearedBy: message.member!,
+                        messagesAuthor: user,
+                        clearedChannel: channel,
+                        numberOfMessages: toDelete,
+                    });
                 })
                 .catch((err) => {
                     console.error(err);
@@ -54,6 +62,12 @@ module.exports = class extends Command {
             .bulkDelete(toDelete, true)
             .then((messagesDeleted) => {
                 channel.success(`Successfully deleted \`${messagesDeleted.size}\` messages`, 1000);
+
+                (message.guild as GuildDB).sendLog("clear", {
+                    clearedBy: message.member!,
+                    clearedChannel: channel,
+                    numberOfMessages: toDelete,
+                });
             })
             .catch((err) => {
                 console.error(err);
