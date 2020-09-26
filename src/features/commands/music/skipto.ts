@@ -27,7 +27,8 @@ module.exports = class extends Command {
 
         const queueIndex = parseInt(args[0]);
         // We don't accept 0 because of what we write in the queue file, go and check
-        if (!queueIndex || queueIndex < 1 || queueIndex > 5) return channel.error("Please enter a valid queue index");
+        if (!queueIndex || queueIndex < 1 || queueIndex > musicData.queue.length)
+            return channel.error("Please enter a valid queue index");
 
         if (args[1] === "f" && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id, queueIndex);

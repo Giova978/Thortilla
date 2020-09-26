@@ -26,7 +26,6 @@ module.exports = class extends Command {
 
         musicData.player.destroy();
 
-        // @ts-ignore
         new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
             op: "leave",
             guil_id: message.guild!.id,
