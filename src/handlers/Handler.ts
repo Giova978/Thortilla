@@ -14,7 +14,7 @@ export default class Handler {
     public commands: Collection<string, Command> = new Collection();
     public aliases: Collection<string, Command> = new Collection();
     public events: Collection<string, Event[]> = new Collection();
-    public logger = pino();
+    public logger: pino.Logger;
     public permissions = {
         ADMINISTRATOR: {
             english: "Administrator",
@@ -81,6 +81,8 @@ export default class Handler {
         this.client = client;
         this.categories = categories;
         this.prefix = prefix;
+
+        this.logger = pino();
     }
 
     public load(directory: any, args: object) {

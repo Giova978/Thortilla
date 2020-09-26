@@ -54,4 +54,8 @@ client.on("error", (err) => {
 
 process.on("SIGINT", () => process.exit());
 
+process.on("unhandledRejection", (reason, promise) => {
+    handler.logger.error(`${reason}: At promise ${promise}`);
+});
+
 client.login(process.env.TOKEN);
