@@ -17,17 +17,15 @@ module.exports = class extends Event {
     }
 
     public async run() {
-        setTimeout(() => {
-            this.handler.commands.map((command) => {
-                this.Commands.addRow(command.name, "Loaded", command.enabled);
-            });
+        this.handler.commands.map((command) => {
+            this.Commands.addRow(command.name, "Loaded", command.enabled);
+        });
 
-            this.handler.events.map((events, eventName) => {
-                this.Events.addRow(eventName, "Loaded", events[0].enabled);
-            });
+        this.handler.events.map((events, eventName) => {
+            this.Events.addRow(eventName, "Loaded", events[0].enabled);
+        });
 
-            console.log(this.Commands.toString());
-            console.log(this.Events.toString());
-        }, 2000);
+        console.log(this.Commands.toString());
+        console.log(this.Events.toString());
     }
 };
