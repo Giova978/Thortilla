@@ -4,15 +4,37 @@ import { Message, Client, GuildMember, PermissionResolvable, TextChannel, VoiceC
 import { Player } from "@anonymousg/lavajs";
 import Handler from "./handlers/Handler";
 import TextChannelCS from "./models/discord/TextChannel";
+import { type } from "os";
 
-interface Song {
+type ClearLog = {
+    clearedBy: GuildMember;
+    messagesAuthor?: GuildMember;
+    clearedChannel: TextChannel;
+    numberOfMessages: number;
+};
+
+type KickLog = {
+    kickedMember: GuildMember;
+    kickedBy: GuildMember;
+    reason: string;
+    date: Date;
+};
+
+type BanLog = {
+    bannedMember: GuildMember;
+    bannedBy: GuildMember;
+    reason: string;
+    date: Date;
+};
+
+type Song = {
     url: string;
     title: string;
     duration: string;
     thumbnail: string;
     durationSec: number;
     skipVoteUsers: string[];
-}
+};
 
 interface IMusicaData {
     guildId: Snowflake;
@@ -75,8 +97,6 @@ interface IEmbedField {
     value: string;
     inline?: boolean;
 }
-
-type Fields = Array<IEmbedField>;
 
 class Utils {
     static readdirSyncRecursive(directory: any): string[] {
@@ -141,17 +161,6 @@ class Utils {
 
         return dateFormated;
     }
-
-    static deleteMessage(message: Message | Message[], time: number = 5000): void {
-        if (Array.isArray(message)) {
-            for (const msg of message) {
-                msg.delete({ timeout: time });
-            }
-            return;
-        }
-
-        message.delete({ timeout: time });
-    }
 }
 
 export {
@@ -163,7 +172,9 @@ export {
     IArgs,
     IRedditData,
     IEmbedField,
-    Fields,
     IMusicaData,
     Song,
+    ClearLog,
+    BanLog,
+    KickLog,
 };
