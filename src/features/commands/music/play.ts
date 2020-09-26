@@ -31,7 +31,7 @@ module.exports = class extends Command {
             return channel.error("You have to be in the same channel with music");
 
         const query = args.join(" ");
-        if (!query) return channel.error("Please give a song name or YT url>");
+        if (!query) return channel.error("Please give a song name or YT url");
 
         const musicData = this.handler.player.getMusicaData(message.guild!.id);
 
@@ -71,7 +71,7 @@ module.exports = class extends Command {
                     return channel.info(`\`${song.title}\` has been added to queue`);
                 }
             } catch (error) {
-                console.error(error);
+                this.handler.logger.error(error);
                 return channel.error("Something went wrong try again later");
             }
         }
@@ -80,26 +80,24 @@ module.exports = class extends Command {
         const videos: Array<any> = await youtube
             .searchVideos(query)
             .then((response: any) => response)
-            .catch((error: any) => console.error(error));
+            .catch(this.handler.logger.error);
 
         if (!videos) return channel.error("We have trouble finding your query please try again");
 
-        const videosNames: string[] = [];
-
-        for (let i = 0; i < videos.length; i++) {
-            videosNames.push(`${i + 1}: ${videos[i].title}`);
-        }
+        const videosNames = videos.map((video, i) => `${i + 1}: ${video.title}`);
 
         if (videos.length < 1) return channel.error("No matches found");
 
         // Send embed to select song
         const embed = new MessageEmbed()
             .setColor("GREEN")
-            .setTitle("Choose a song by comment a number beetween 1 and 5 or exit to exit");
-
-        for (let i = 0; i < videosNames.length; i++) {
-            embed.addField(`Song ${i + 1}`, `${videosNames[i]}`);
-        }
+            .setTitle("Choose a song with a number beetween 1 and 5 or exit to exit")
+            .addFields(
+                videosNames.map((name, i) => ({
+                    name: `Song ${i + 1}`,
+                    value: `${name}`,
+                })),
+            );
 
         const songEmbed = await message.channel.send(embed);
 
@@ -116,24 +114,21 @@ module.exports = class extends Command {
                 return Promise.reject(false);
             });
 
-        if (!userResponse) {
+        if (!userResponse || userResponse.size === 0) {
             songEmbed.delete();
             return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
         }
 
-        if (userResponse.size === 0) {
-            songEmbed.delete();
-            return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
-        }
+        if (userResponse.first()?.content === "exit") return songEmbed.delete();
 
         const videoIndex = parseInt(userResponse.first()?.content!);
 
-        if (userResponse.first()?.content === "exit") return songEmbed.delete();
+        let video;
         try {
-            var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
+            video = await youtube.getVideoByID(videos[videoIndex - 1].id);
             if (!video) return channel.error("Failed to get video, try again");
         } catch (err) {
-            console.error(err);
+            this.handler.logger.error(err);
             songEmbed.delete();
             return channel.error("We have trouble finding your query please try again");
         }
