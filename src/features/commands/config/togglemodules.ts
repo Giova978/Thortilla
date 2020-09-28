@@ -9,11 +9,11 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("togglecategory", {
-            aliases: ["togglemodule", "tgcat"],
+        super("togglemodlues", {
+            aliases: ["tgmod", "togglecategory"],
             permissions: ["ADMINISTRATOR"],
             category: "config",
-            description: "Toggle certain category of commands and events",
+            description: "Toggle certain module of Thortilla",
             usage: "<category> <on or off>",
         });
 
@@ -22,17 +22,16 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const module: string = args[0];
-        if (!module || module === "config" || module === "debug")
-            return channel.error("Please provide a valid category");
+        if (!module || module === "config" || module === "debug") return channel.error("Please provide a valid module");
         const stateString = args[1];
         if (!stateString || !["on", "off"].includes(stateString)) return channel.error("Please provide a valid state");
 
         const guild: GuildDB = message.guild as GuildDB;
 
         const modules = guild.getModulesStatus;
-        const modulesKeys = Object.keys(modules);
+        const availableModules = ["music", "balance", "fun", "info", "tags", "moderation"];
 
-        if (!modulesKeys.includes(module)) return channel.error("Please provide a valid category");
+        if (!availableModules.includes(module)) return channel.error("Please provide a valid module");
 
         const state = stateString === "on" ? true : false;
 
