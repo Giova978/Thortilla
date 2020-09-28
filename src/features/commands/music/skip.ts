@@ -1,8 +1,8 @@
-import Command from "../../../handlers/Command";
+import Command from "@handlers/Command";
 import { Message, MessageEmbed } from "discord.js";
-import { IArgs } from "../../../Utils";
-import Handler from "../../../handlers/Handler";
-import TextChannelCS from "../../../models/discord/TextChannel";
+import { IArgs } from "@utils";
+import Handler from "@handlers/Handler";
+import TextChannelCS from "@models/discord/TextChannel";
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -12,7 +12,7 @@ module.exports = class extends Command {
             aliases: ["s"],
             category: "music",
             description: "Skip the current song",
-            usage: "<f for force skip(need PRIORITY_SPEAKER)>",
+            usage: "<f for force skip(needed Speak Priority)>",
         });
 
         this.handler = handler;
