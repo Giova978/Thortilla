@@ -41,9 +41,9 @@ module.exports = class extends Command {
 
         musicData.skipVotes++;
 
-        const trueMembers = musicData.player.options.voiceChannel.members.map((member) => !member.user.bot);
+        const trueMembers = musicData.player.options.voiceChannel.members.filter((member) => !member.user.bot);
 
-        const requiredVotes = Math.ceil(trueMembers.length / 2);
+        const requiredVotes = Math.ceil(trueMembers.size / 2);
 
         if (musicData.skipVotes >= requiredVotes) {
             this.handler.player.skip(message.guild!.id);
