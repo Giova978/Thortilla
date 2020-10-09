@@ -46,7 +46,31 @@ const GuildSchema = new Schema({
 
     logChannel: {
         type: String,
-        default: null,
+        default: "",
+        required: false,
+    },
+
+    welcomeChannel: {
+        type: String,
+        default: "",
+        required: false,
+    },
+
+    leaveChannel: {
+        type: String,
+        default: "",
+        required: false,
+    },
+
+    welcomeMessage: {
+        type: String,
+        default: "Welcome {user-mention} to {server}",
+        required: false,
+    },
+
+    leaveMessage: {
+        type: String,
+        default: "{user} has left {server}, bye!",
         required: false,
     },
 });
