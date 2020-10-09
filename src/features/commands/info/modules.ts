@@ -33,7 +33,7 @@ module.exports = class extends Command {
                     const state = modules[module] ? "on" : "off";
 
                     return {
-                        name: module,
+                        name: module.charAt(0).toUpperCase() + module.slice(1),
                         value: `Current state: ${state}`,
                     };
                 }),
