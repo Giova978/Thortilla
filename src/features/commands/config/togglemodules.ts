@@ -9,7 +9,7 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("togglemodlues", {
+        super("togglemodules", {
             aliases: ["tgmod", "togglecategory"],
             permissions: ["ADMINISTRATOR"],
             category: "config",
