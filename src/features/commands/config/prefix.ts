@@ -9,7 +9,7 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("setprefix", {
+        super("prefix", {
             aliases: ["stp"],
             permissions: ["MANAGE_GUILD"],
             category: "config",
