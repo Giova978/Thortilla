@@ -117,7 +117,7 @@ export default class Handler {
         if (command.aliases && Array.isArray(command.aliases)) {
             command.aliases.forEach((alias) => {
                 if (this.commands.has(alias) || this.aliases.has(alias))
-                    throw new Error(`The ${alias} is already in use by other command`);
+                    throw new Error(`The ${alias} in command ${command.name} is already in use by other command`);
                 this.aliases.set(alias, command);
             });
         }

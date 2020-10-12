@@ -20,7 +20,12 @@ module.exports = class extends Event {
         const guild: GuildDB = oldState.guild as GuildDB;
         const musicData = this.handler.player.getMusicData(guild.id);
 
-        if (oldState.channelID === musicData.voiceChannel?.id && newState.channel!.members.size < 0) {
+        if (!musicData) return;
+
+        if (
+            oldState.channelID === musicData.voiceChannel?.id &&
+            (!newState.channel || newState.channel!.members.size < 0)
+        ) {
             musicData.player.destroy();
 
             new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({

@@ -22,7 +22,7 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const voiceChannel = message.member?.voice.channel;
-        if (!voiceChannel) return channel.error("You has to be in a voice channel");
+        if (!voiceChannel) return channel.error("You have to be in a voice channel");
 
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
         const voiceChannelUsers = this.handler.player.getMusicData(message.guild!.id).voiceChannel;

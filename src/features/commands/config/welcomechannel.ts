@@ -32,6 +32,7 @@ module.exports = class extends Command {
         }
 
         const givenChannel =
+            message.mentions.channels.first() ||
             channel.guild.channels.resolve(channelIdOrName) ||
             channel.guild.channels.cache.find((channel) => channel.name === channelIdOrName);
 

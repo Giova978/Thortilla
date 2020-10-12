@@ -10,7 +10,7 @@ module.exports = class extends Command {
 
     constructor({ handler }: IArgs) {
         super("settagprefix", {
-            aliases: ["stp"],
+            aliases: ["stagp"],
             permissions: ["MANAGE_GUILD"],
             category: "config",
             description: "Set the tag prefix or gets the current prefix",
