@@ -24,7 +24,9 @@ module.exports = class extends Command {
         const user: GuildMember | undefined = Utils.getMember(message, args.shift());
         if (!user) return channel.error("Give me a user please");
 
-        const role: Role | undefined = message.guild?.roles.cache.find((role) => role.name === args.join(" "));
+        const role: Role | undefined =
+            message.guild?.roles.cache.find((role) => role.name === args.join(" ") || role.id === args[1]) ||
+            message.mentions.roles.first();
         if (!role) return channel.error("Give me a valid role name please");
 
         if (user.roles.cache.has(role.id)) return channel.error(`The user has already ${role.name} role`);
