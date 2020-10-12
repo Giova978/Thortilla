@@ -21,14 +21,14 @@ module.exports = class extends Command {
     }
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
-        const musicData = this.handler.player.getMusicaData(message.guild!.id);
-        if (!musicData) return channel.error("I am not in a voicechannel");
+        const musicData = this.handler.player.getMusicData(message.guild!.id);
+        if (!musicData) return channel.error("I am not in a voice channel");
 
         musicData.player.destroy();
 
         new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
             op: "leave",
-            guil_id: message.guild!.id,
+            guild_id: message.guild!.id,
         });
 
         this.handler.player.guildsMusicData.delete(message.guild!.id);

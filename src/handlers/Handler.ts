@@ -1,4 +1,4 @@
-import { Client, Collection } from "discord.js";
+import { Client, ClientEvents, Collection } from "discord.js";
 import { LavaClient, NodeOptions } from "@anonymousg/lavajs";
 import { Utils } from "../Utils";
 import Command from "./Command";
@@ -13,7 +13,7 @@ export default class Handler {
     public categories: string[];
     public commands: Collection<string, Command> = new Collection();
     public aliases: Collection<string, Command> = new Collection();
-    public events: Collection<string, Event[]> = new Collection();
+    public events: Collection<keyof ClientEvents, Event[]> = new Collection();
     public logger: pino.Logger;
     public permissions = {
         ADMINISTRATOR: {
@@ -133,8 +133,7 @@ export default class Handler {
     // Resgister the events
     private registerEvents() {
         for (const [eventName, events] of Array.from(this.events)) {
-            // @ts-ignore
-            this.client.on(eventName, async (...args: any) => {
+            this.client.on(eventName, async (...args: ClientEvents[typeof eventName]) => {
                 events.map((event) => {
                     if (!event.enabled) return;
                     event.run(...args);

@@ -19,7 +19,7 @@ module.exports = class extends Command {
     }
 
     public run(message: Message, args: string[], channel: TextChannelCS) {
-        const musicData = this.handler.player.getMusicaData(message.guild!.id);
+        const musicData = this.handler.player.getMusicData(message.guild!.id);
         if (message.member?.voice.channel !== musicData.voiceChannel)
             return channel.error("You have to be in the same voice channel of the song");
 

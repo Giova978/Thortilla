@@ -1,7 +1,7 @@
 import Command from "../../../handlers/Command";
 import Handler from "../../../handlers/Handler";
 import { IArgs, Utils } from "../../../Utils";
-import { Message } from "discord.js";
+import { ClientEvents, Message } from "discord.js";
 import Event from "../../../handlers/Event";
 import TextChannelCS from "../../../models/discord/TextChannel";
 
@@ -23,7 +23,7 @@ module.exports = class extends Command {
         if (message.author.id !== process.env.OWNER) return channel.error("Command only for debug", 1000);
 
         // The name of the command, event or feature
-        const name: string | undefined = args[0];
+        const name: keyof ClientEvents | undefined = args[0] as keyof ClientEvents;
 
         if (!name) return channel.error("Please give me a command, feature or event to toggle");
 

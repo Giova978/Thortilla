@@ -31,12 +31,12 @@ export default class Player {
         }
     }
 
-    public getMusicaData(guildId: Snowflake) {
+    public getMusicData(guildId: Snowflake) {
         return this.guildsMusicData.get(guildId)!;
     }
 
     public async add(guildId: Snowflake, message: Message, song: Song) {
-        let data = this.getMusicaData(guildId);
+        let data = this.getMusicData(guildId);
 
         data.queue.push(song);
 
@@ -49,7 +49,7 @@ export default class Player {
     }
 
     public play(guildId: Snowflake) {
-        let data = this.getMusicaData(guildId);
+        let data = this.getMusicData(guildId);
 
         if (data.timeout) clearTimeout(data.timeout);
 
@@ -62,7 +62,7 @@ export default class Player {
     }
 
     public skip(guildId: Snowflake, index: number = 0) {
-        let data = this.getMusicaData(guildId);
+        let data = this.getMusicData(guildId);
 
         if (index > 0) {
             data.player.queue.moveTrack(index, 1);
@@ -110,7 +110,7 @@ export default class Player {
     };
 
     private leave(guildId: Snowflake, player: Lava.Player) {
-        let data = this.getMusicaData(guildId);
+        let data = this.getMusicData(guildId);
         data.isPlaying = false;
         data.nowPlaying = null;
 
@@ -135,7 +135,7 @@ export default class Player {
 
         this.lavaClient
             .on("trackPlay", (track, player) => {
-                musicData = this.getMusicaData(player.options.guild.id);
+                musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
@@ -161,7 +161,7 @@ export default class Player {
                 this.guildsMusicData.set(player.options.guild.id, musicData);
             })
             .on("trackOver", (track, player) => {
-                musicData = this.getMusicaData(player.options.guild.id);
+                musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
 
                 if (queue.length > 0) {
@@ -171,7 +171,7 @@ export default class Player {
                 }
             })
             .on("queueOver", (player) => {
-                musicData = this.getMusicaData(player.options.guild.id);
+                musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
 
                 if (queue.length > 0) {
@@ -181,7 +181,7 @@ export default class Player {
                 }
             })
             .on("trackError", (track, player, err) => {
-                musicData = this.getMusicaData(player.options.guild.id);
+                musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
@@ -195,7 +195,7 @@ export default class Player {
                 }
             })
             .on("trackStuck", (track, player, err) => {
-                musicData = this.getMusicaData(player.options.guild.id);
+                musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
