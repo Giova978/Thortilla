@@ -13,7 +13,7 @@ module.exports = class extends Command {
             category: "music",
             permissions: ["PRIORITY_SPEAKER"],
             description: "Skip to the gived timestamp",
-            usage: "<timestamp(formata m:s)>",
+            usage: "<timestamp(format m:s)>",
         });
 
         this.handler = handler;
