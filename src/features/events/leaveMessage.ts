@@ -27,6 +27,17 @@ module.exports = class extends Event {
             .replace("{user-mention}", `<@${member.id}>`)
             .replace("{server}", member.guild.name);
 
+        const channels = guild.getLeaveMessage.match(/({#:)(\w+)(})/g);
+
+        if (channels) {
+            channels.map((channel) => {
+                const fetchChannel = guild.channels.cache.find((ch) => ch.name === channel[2] || ch.id === channel[2]);
+                if (!fetchChannel) return message.replace(channel[0], "");
+
+                message.replace(channel[0], `<#${fetchChannel?.id}>`);
+            });
+        }
+
         channel.send(message);
     }
 };
