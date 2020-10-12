@@ -14,7 +14,7 @@ module.exports = class extends Command {
             aliases: ["p"],
             category: "music",
             description: "Play a song or playlist",
-            usage: "<Song name or YT url or playlist url>",
+            usage: "<Song name or YT url>",
         });
 
         this.handler = handler;
