@@ -1,15 +1,5 @@
 import Command from "../../../handlers/Command";
-import {
-    Message,
-    MessageEmbed,
-    ReactionEmoji,
-    User,
-    ReactionCollector,
-    Emoji,
-    ReactionManager,
-    ReactionUserManager,
-    MessageReaction,
-} from "discord.js";
+import { Message, MessageEmbed, User, MessageReaction } from "discord.js";
 import Handler from "../../../handlers/Handler";
 import { IArgs } from "../../../Utils";
 import TextChannelCS from "../../../models/discord/TextChannel";
