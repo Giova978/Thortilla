@@ -4,16 +4,17 @@ import Handler from "@handlers/Handler";
 import { IArgs } from "@utils";
 import TextChannelCS from "@models/discord/TextChannel";
 import GuildDB from "@models/discord/Guild";
+
 module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("setlogchannel", {
-            aliases: ["slc"],
+        super("welcomechannel", {
+            aliases: ["swc"],
             permissions: ["MANAGE_GUILD"],
             category: "config",
-            description: "Sets the log channel",
-            usage: "<channel name or id>",
+            description: "Set or retrieve welcome channel",
+            usage: "[channel]",
         });
 
         this.handler = handler;
@@ -23,10 +24,11 @@ module.exports = class extends Command {
         const channelIdOrName = args[0];
         const guild: GuildDB = message.guild as GuildDB;
         if (!channelIdOrName) {
-            const currentLogChannel = channel.guild.channels.resolve(guild.getLogChannel);
-            if (currentLogChannel) return channel.info(`The current log channel is <#${currentLogChannel.id}>`);
+            const currentWelcomeChannel = channel.guild.channels.resolve(guild.getWelcomeChannel);
+            if (currentWelcomeChannel)
+                return channel.info(`The current welcome channel is <#${currentWelcomeChannel.id}>`);
 
-            return channel.info("There is no log channel");
+            return channel.info("There is no welcome channel");
         }
 
         const givenChannel =
@@ -38,13 +40,13 @@ module.exports = class extends Command {
         if (!givenChannel) return channel.error("I cant find the specified channel, please try again");
 
         guild
-            .setLogChannel(givenChannel.id)
+            .setWelcomeChannel(givenChannel.id)
             .then(() => {
-                channel.success(`Successfully updated log channel to <#${givenChannel.id}> channel`);
+                channel.success(`Successfully updated welcome channel to <#${givenChannel.id}> channel`);
             })
             .catch((err) => {
                 console.error(err);
-                channel.error("There was an unexpected error while updating log channel, please try again");
+                channel.error("There was an unexpected error while updating welcome channel, please try again");
             });
     }
 };

@@ -10,7 +10,7 @@ module.exports = class extends Event {
     public handler: Handler;
 
     constructor({ client, handler }: IArgs) {
-        super("voiceStateUpdate", "balance");
+        super("voiceStateUpdate", "music");
 
         this.client = client;
         this.handler = handler;

@@ -4,16 +4,17 @@ import Handler from "@handlers/Handler";
 import { IArgs } from "@utils";
 import TextChannelCS from "@models/discord/TextChannel";
 import GuildDB from "@models/discord/Guild";
+
 module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("setlogchannel", {
-            aliases: ["slc"],
+        super("leavechannel", {
+            aliases: ["slec"],
             permissions: ["MANAGE_GUILD"],
             category: "config",
-            description: "Sets the log channel",
-            usage: "<channel name or id>",
+            description: "Set or retrieve leave channel",
+            usage: "[channel]",
         });
 
         this.handler = handler;
@@ -23,10 +24,10 @@ module.exports = class extends Command {
         const channelIdOrName = args[0];
         const guild: GuildDB = message.guild as GuildDB;
         if (!channelIdOrName) {
-            const currentLogChannel = channel.guild.channels.resolve(guild.getLogChannel);
-            if (currentLogChannel) return channel.info(`The current log channel is <#${currentLogChannel.id}>`);
+            const currentLeaveChannel = channel.guild.channels.resolve(guild.getLeaveChannel);
+            if (currentLeaveChannel) return channel.info(`The current leave channel is <#${currentLeaveChannel.id}>`);
 
-            return channel.info("There is no log channel");
+            return channel.info("There is no leave channel");
         }
 
         const givenChannel =
@@ -38,13 +39,13 @@ module.exports = class extends Command {
         if (!givenChannel) return channel.error("I cant find the specified channel, please try again");
 
         guild
-            .setLogChannel(givenChannel.id)
+            .setLeaveChannel(givenChannel.id)
             .then(() => {
-                channel.success(`Successfully updated log channel to <#${givenChannel.id}> channel`);
+                channel.success(`Successfully updated leave channel to <#${givenChannel.id}> channel`);
             })
             .catch((err) => {
                 console.error(err);
-                channel.error("There was an unexpected error while updating log channel, please try again");
+                channel.error("There was an unexpected error while updating leave channel, please try again");
             });
     }
 };

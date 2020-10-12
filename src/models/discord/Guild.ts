@@ -9,6 +9,10 @@ class GuildDB extends Guild {
     public tags!: Map<string, string>;
     public tagPrefix!: string;
     public logChannel!: string;
+    public welcomeChannel!: string;
+    public leaveChannel!: string;
+    public welcomeMessage!: string;
+    public leaveMessage!: string;
 
     constructor(client: Client, data: object) {
         super(client, data);
@@ -32,6 +36,10 @@ class GuildDB extends Guild {
                             this.tags = data.tags;
                             this.tagPrefix = data.tagPrefix;
                             this.logChannel = data.logChannel;
+                            this.welcomeChannel = data.welcomeChannel;
+                            this.leaveChannel = data.leaveChannel;
+                            this.welcomeMessage = data.welcomeMessage;
+                            this.leaveMessage = data.leaveMessage;
                         })
                         .catch(console.error);
                 }
@@ -42,6 +50,10 @@ class GuildDB extends Guild {
                 this.tags = data.tags;
                 this.tagPrefix = data.tagPrefix;
                 this.logChannel = data.logChannel;
+                this.welcomeChannel = data.welcomeChannel;
+                this.leaveChannel = data.leaveChannel;
+                this.welcomeMessage = data.welcomeMessage;
+                this.leaveMessage = data.leaveMessage;
             })
             .catch(console.error);
     }
@@ -68,6 +80,22 @@ class GuildDB extends Guild {
 
     get getLogChannel() {
         return this.logChannel;
+    }
+
+    get getWelcomeChannel() {
+        return this.welcomeChannel;
+    }
+
+    get getLeaveChannel() {
+        return this.leaveChannel;
+    }
+
+    get getWelcomeMessage() {
+        return this.welcomeMessage;
+    }
+
+    get getLeaveMessage() {
+        return this.leaveMessage;
     }
 
     public async setPrefix(prefix: string) {
@@ -120,6 +148,52 @@ class GuildDB extends Guild {
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(true);
+    }
+
+    public async setWelcomeChannel(channelId: string) {
+        if (typeof channelId !== "string") return Promise.reject(false);
+        await GuildModel.findOneAndUpdate(
+            { guildId: this.id },
+            { welcomeChannel: channelId },
+            { new: true, upsert: true },
+        )
+            .then((data: any) => (this.welcomeChannel = data.welcomeChannel))
+            .catch((err: Error) => Promise.reject(err));
+
+        return Promise.resolve(true);
+    }
+
+    public async setLeaveChannel(channelId: string) {
+        if (typeof channelId !== "string") return Promise.reject(false);
+        await GuildModel.findOneAndUpdate(
+            { guildId: this.id },
+            { leaveChannel: channelId },
+            { new: true, upsert: true },
+        )
+            .then((data: any) => (this.leaveChannel = data.leaveChannel))
+            .catch((err: Error) => Promise.reject(err));
+
+        return Promise.resolve(true);
+    }
+
+    public async setWelcomeMessage(message: string) {
+        await GuildModel.findOneAndUpdate(
+            { guildId: this.id },
+            { welcomeMessage: message },
+            { upsert: true, new: true },
+        )
+            .then((data: any) => (this.welcomeMessage = data.welcomeMessage))
+            .catch((err: Error) => Promise.reject(err));
+
+        Promise.resolve();
+    }
+
+    public async setLeaveMessage(message: string) {
+        await GuildModel.findOneAndUpdate({ guildId: this.id }, { leaveMessage: message }, { upsert: true, new: true })
+            .then((data: any) => (this.leaveMessage = data.leaveMessage))
+            .catch((err: Error) => Promise.reject(err));
+
+        Promise.resolve();
     }
 
     public sendLog<T extends "clear" | "ban" | "kick">(type: T, payload: Params[T]) {
