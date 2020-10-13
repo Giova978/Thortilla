@@ -16,10 +16,18 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[]) {
         const member = (Utils.getMember(message, args[0]) || message.member) as MemberDB;
-        let roles: string[] | undefined = member?.roles.cache.map((role: Role) => `<@&${role.id}>`);
+        let userRoles: string[] | undefined = member?.roles.cache.map((role: Role) => `<@&${role.id}>`);
         // Remove @everyone from roles
-        roles?.pop();
-        if (!roles?.length) roles = ["None"];
+        userRoles?.pop();
+        if (!userRoles?.length) userRoles = ["None"];
+
+        let roles = userRoles.reduce((acc: string, val: string, index) => {
+            return `${acc} ${val}`.length >= 1024 ? acc : `${acc} ${val}`;
+        });
+
+        if (roles.split(" ").length !== userRoles.length) {
+            roles = roles + `${userRoles.slice(roles.split(" ").length).length} more`;
+        }
 
         const embed: MessageEmbed = new MessageEmbed()
             .setColor("GREEN")
@@ -29,7 +37,7 @@ module.exports = class extends Command {
             .addField("**Identifier**", `#${member?.user.discriminator}`, true)
             .addField("**Account Created At**", Utils.formatTimestamp(member?.user.createdAt), true)
             .addField("**Joined At**", Utils.formatTimestamp(member?.joinedAt), true)
-            .addField("**Roles**", roles.join(" "))
+            .addField("**Roles**", roles)
             .addField("**Avatar**", `[**Avatar URL**](${member!.user.displayAvatarURL({ dynamic: false })})`, true)
             .addField("**Balance**", `${member.getBalance} coins`, true)
             .setThumbnail(member!.user.displayAvatarURL({ dynamic: false }));
