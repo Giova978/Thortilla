@@ -20,7 +20,7 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
-        if (!musicData.queue || musicData.queue.length === 0) return channel.error("There is no queue");
+        if (!musicData?.queue || musicData.queue.length === 0) return channel.error("There is no queue");
 
         const embed = new MessageEmbed()
             .setColor("GREEN")
