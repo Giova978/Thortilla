@@ -78,7 +78,7 @@ module.exports = class extends Command {
                     .setTitle(`Failed to create tag \`${tagName}\``)
                     .setDescription("No valid content provided");
 
-                msg.edit(embed);
+                return msg.edit(embed);
             }
 
             const tags = guild.getTags;
@@ -91,7 +91,7 @@ module.exports = class extends Command {
                     embed
                         .setColor("GREEN")
                         .setTitle(`Created tag \`${tagName}\``)
-                        .setDescription(`Succesfully created \`${tagName}\` with the provided content`);
+                        .setDescription(`Successfully created \`${tagName}\` with the provided content`);
 
                     msg.edit(embed);
                 })
