@@ -40,7 +40,7 @@ module.exports = class extends Event {
                     .setColor("YELLOW")
                     .setDescription(`${message.author} you earned ${coinsAdd} coins`);
 
-                message.channel.send(embed).then((msg) => msg.delete({ timeout: 1500 }));
+                message.channel.send(embed).then((msg) => msg.delete({ timeout: 1000 }));
             }
         }
     }
