@@ -54,8 +54,8 @@ module.exports = class extends Command {
             return this.handler.commands
                 .filter((cmd) => cmd.category === category && cmd.category !== "debug")
                 .filter((cmd) => cmd.enabled === true)
-                .map((cmd) => `- \`${cmd.name}\``)
-                .join("\n");
+                .map((cmd) => `\`${cmd.name}\``)
+                .join(" | ");
         };
 
         const info = this.handler.categories
