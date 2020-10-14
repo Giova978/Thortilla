@@ -41,7 +41,7 @@ module.exports = class extends Command {
                 if (!events) return channel.error("I can't found the events");
 
                 events.map((event: Event) => {
-                    event.toogle();
+                    event.toggle();
                 });
 
                 stateInString = events[0].enabled ? "`enabled`" : "`disabled`";
@@ -55,7 +55,7 @@ module.exports = class extends Command {
 
                 if (!command) return channel.error("I can't found the command");
 
-                command.toogle();
+                command.toggle();
 
                 stateInString = command.enabled ? "`enabled`" : "`disabled`";
 

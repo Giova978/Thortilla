@@ -1,13 +1,13 @@
-import { IToogle } from "../Utils";
+import { IToggle } from "../Utils";
 
-export default class Toogleable implements IToogle {
+export default class Toggleable implements IToggle {
     public enabled: boolean;
 
     constructor() {
         this.enabled = true;
     }
 
-    toogle() {
+    toggle() {
         this.enabled = !this.enabled;
     }
 
@@ -15,7 +15,7 @@ export default class Toogleable implements IToogle {
         this.enabled = true;
     }
 
-    disbale() {
+    disable() {
         this.enabled = false;
     }
 }

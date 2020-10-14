@@ -15,7 +15,7 @@ module.exports = class extends Command {
             usage: "<volume>",
         });
 
-        this.disbale();
+        this.disable();
 
         this.handler = handler;
     }

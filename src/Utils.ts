@@ -4,7 +4,6 @@ import { Message, Client, GuildMember, PermissionResolvable, TextChannel, VoiceC
 import { Player } from "@anonymousg/lavajs";
 import Handler from "./handlers/Handler";
 import TextChannelCS from "./models/discord/TextChannel";
-import { type } from "os";
 
 type ClearLog = {
     clearedBy: GuildMember;
@@ -36,7 +35,7 @@ type Song = {
     skipVoteUsers: string[];
 };
 
-interface IMusicaData {
+interface IMusicData {
     guildId: Snowflake;
     player: Player;
     queue: Song[];
@@ -71,12 +70,11 @@ interface IOptionsCommand {
     cooldown?: number;
 }
 
-interface IToogle {
+interface IToggle {
     enabled: boolean;
-
     enable(): void;
-    disbale(): void;
-    toogle(): void;
+    disable(): void;
+    toggle(): void;
 }
 
 interface IEvent {
@@ -157,9 +155,9 @@ class Utils {
         month = month >= 10 ? month : `0${month}`;
         let year = date.getFullYear();
 
-        let dateFormated = `${day}, ${monthDay}/${month}/${year}`;
+        let dateFormatted = `${day}, ${monthDay}/${month}/${year}`;
 
-        return dateFormated;
+        return dateFormatted;
     }
 }
 
@@ -167,12 +165,12 @@ export {
     Utils,
     ICommand,
     IOptionsCommand,
-    IToogle,
+    IToggle,
     IEvent,
     IArgs,
     IRedditData,
     IEmbedField,
-    IMusicaData,
+    IMusicData,
     Song,
     ClearLog,
     BanLog,

@@ -1,6 +1,6 @@
 import { Collection, TextChannel } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
-import { IMusicaData, Song } from "../Utils";
+import { IMusicData, Song } from "../Utils";
 
 import Lava, { LavaNode, PlayerOptions } from "@anonymousg/lavajs";
 import { Message } from "discord.js";
@@ -15,7 +15,7 @@ export default class Player {
         repeatQueue: false,
         skipOnError: false,
     };
-    public readonly guildsMusicData: Collection<Snowflake, IMusicaData> = new Collection();
+    public readonly guildsMusicData: Collection<Snowflake, IMusicData> = new Collection();
 
     constructor(lavaClient: Lava.LavaClient, handler: Handler) {
         this.lavaClient = lavaClient;
@@ -67,7 +67,7 @@ export default class Player {
         if (index > 0) {
             data.player.queue.moveTrack(index, 1);
 
-            // Like we add one now we have to substract so it matches a true position in the musicData#queue array
+            // Like we add one now we have to subtract so it matches a true position in the musicData#queue array
             const song = data.queue.splice(index - 1, 1)[0];
 
             data.queue.unshift(song);
@@ -83,7 +83,7 @@ export default class Player {
         player: Lava.Player,
         voiceChannel: VoiceChannel,
         message: Message,
-    ): IMusicaData {
+    ): IMusicData {
         return {
             guildId: guildId,
             player: player,
@@ -117,7 +117,7 @@ export default class Player {
         data.timeout = setTimeout(() => {
             new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
                 op: "leave",
-                guil_id: guildId,
+                guild_id: guildId,
             });
 
             player.destroy();
