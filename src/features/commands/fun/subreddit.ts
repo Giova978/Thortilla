@@ -39,9 +39,8 @@ module.exports = class extends Command {
             return channel.info("The post is marked as +18 and this channels is not nsfw");
 
         const collectorFilter = (reaction: any, user: any) =>
-            reaction.emoji.name === "⬅️" ||
-            reaction.emoji.name === "➡️" ||
-            (reaction.emoji.name === "🇽" && user.id === message.author.id);
+            user.id === message.author.id &&
+            (reaction.emoji.name === "⬅️" || reaction.emoji.name === "➡️" || reaction.emoji.name === "🇽");
 
         const embed: MessageEmbed = new MessageEmbed().setTitle("Image");
 
