@@ -26,11 +26,7 @@ module.exports = class extends Event {
 
         console.log(`Bot Online`);
 
-        this.handler.lavaClient = new LavaClient(
-            this.client,
-            // @ts-ignore
-            this.handler.nodes,
-        );
+        this.handler.lavaClient = new LavaClient(this.client, this.handler.nodes);
 
         this.handler.lavaClient.on("nodeSuccess", () => {
             console.log("Connected to lavalink");
