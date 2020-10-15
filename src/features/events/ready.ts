@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { LavaClient, LavaNode } from "@anonymousg/lavajs";
+import { LavaClient } from "@anonymousg/lavajs";
 import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
@@ -19,7 +19,7 @@ module.exports = class extends Event {
     public async run() {
         this.client.user?.setPresence({
             activity: {
-                name: "$",
+                name: "$ | http://thortilla.giova.software/",
                 type: "WATCHING",
             },
         });
@@ -29,12 +29,12 @@ module.exports = class extends Event {
         this.handler.lavaClient = new LavaClient(
             this.client,
             // @ts-ignore
-            this.handler.nodes
+            this.handler.nodes,
         );
 
-        this.handler.lavaClient.on('nodeSuccess', () => {
-            console.log('Connected to lavalink');
-        })
+        this.handler.lavaClient.on("nodeSuccess", () => {
+            console.log("Connected to lavalink");
+        });
 
         this.handler.player = new Player(this.handler.lavaClient, this.handler);
     }
