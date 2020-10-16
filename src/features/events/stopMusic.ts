@@ -21,19 +21,19 @@ module.exports = class extends Event {
         const musicData = this.handler.player.getMusicData(guild.id);
 
         if (!musicData) return;
+        if (oldState.channelID !== musicData.voiceChannel?.id) return;
+        if (!oldState.channel) return;
 
-        if (
-            oldState.channelID === musicData.voiceChannel?.id &&
-            (!newState.channel || newState.channel!.members.size < 0)
-        ) {
-            musicData.player.destroy();
+        const trueMembers = oldState.channel.members.filter((member) => !member.user.bot);
+        if (trueMembers.size > 0) return;
 
-            new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
-                op: "leave",
-                guild_id: guild.id,
-            });
+        musicData.player.destroy();
 
-            this.handler.player.guildsMusicData.delete(guild.id);
-        }
+        new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
+            op: "leave",
+            guild_id: guild.id,
+        });
+
+        this.handler.player.guildsMusicData.delete(guild.id);
     }
 };
