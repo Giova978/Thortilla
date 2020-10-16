@@ -67,7 +67,11 @@ module.exports = class extends Command {
             )
             .join("\n");
 
-        const embed: MessageEmbed = new MessageEmbed().setColor("RANDOM").setTitle("Commands").setDescription(info);
+        const embed: MessageEmbed = new MessageEmbed()
+            .setColor("RANDOM")
+            .setTitle("Commands")
+            .setDescription(info)
+            .setFooter("Documentation: http://thortilla.giova.software");
 
         return embed;
     }

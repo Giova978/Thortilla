@@ -26,6 +26,7 @@ module.exports = class extends Command {
             0,
         )} members
             [Invite me to your guild](${await this.handler.client.generateInvite(["ADMINISTRATOR"])})
+            [Website](http://thortilla.giova.software)
             `);
 
         channel.send(embed);
