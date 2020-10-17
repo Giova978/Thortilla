@@ -17,8 +17,15 @@ jobs:
         node-version: '12.x'
     - run: npm ci
     - run: tsc
+    - name: Set up pull request
+    - uses: actions/checkout@v2
+      with:
+          ref: production
+      - name: Reset promotion branch
+        run: |
+          git fetch origin master:master
+          git reset --hard master
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3
       with:
-        branch: production
-        base: master
+        branch: production-promotion
