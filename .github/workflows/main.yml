@@ -20,11 +20,5 @@ jobs:
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3
       with:
-        token: ${{ secrets.PAT }}
-        commit-message: Update report
-        committer: GitHub <noreply@github.com>
-        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-        signoff: false
         branch: production
         base: master
-        title: 'Sync production and master'
