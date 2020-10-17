@@ -38,7 +38,6 @@ module.exports = class extends Command {
             description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
         });
 
-        console.log(musicData.player.queue);
         embed.setDescription(description);
 
         channel.send(embed);

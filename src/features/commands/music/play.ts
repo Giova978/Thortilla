@@ -62,7 +62,7 @@ module.exports = class extends Command {
                     skipVoteUsers: [],
                 };
 
-                await this.handler.player.add(message.guild!.id, message, song);
+                await this.handler.player.add(message.guild!.id, message.member!, song);
 
                 if (!musicData?.isPlaying) {
                     this.handler.player.play(message.guild!.id);
@@ -151,7 +151,7 @@ module.exports = class extends Command {
             skipVoteUsers: [],
         };
 
-        await this.handler.player.add(message.guild!.id, message, song);
+        await this.handler.player.add(message.guild!.id, message.member!, song);
 
         if (!musicData?.isPlaying) {
             this.handler.player.play(message.guild!.id);

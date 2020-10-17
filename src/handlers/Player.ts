@@ -1,4 +1,4 @@
-import { Collection, TextChannel } from "discord.js";
+import { Collection, GuildMember, TextChannel } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
 import { IMusicData, Song } from "../Utils";
 
@@ -35,14 +35,13 @@ export default class Player {
         return this.guildsMusicData.get(guildId)!;
     }
 
-    public async add(guildId: Snowflake, message: Message, song: Song) {
+    public async add(guildId: Snowflake, member: GuildMember, song: Song) {
         let data = this.getMusicData(guildId);
 
         data.queue.push(song);
 
-        const songs = await data.player.lavaSearch(song.url, message.member!, { add: true });
+        const songs = (await data.player.lavaSearch(song.url, member!, { add: false })) as Lava.Track[];
 
-        // @ts-ignore
         data.player.queue.add(songs[0]);
 
         this.guildsMusicData.set(guildId, data);
@@ -95,6 +94,7 @@ export default class Player {
             voiceChannel: voiceChannel,
             textChannel: message.channel as TextChannel,
             timeout: null,
+            lastTracks: [null],
         };
     }
 
@@ -121,11 +121,26 @@ export default class Player {
             });
 
             player.destroy();
-
             this.guildsMusicData.delete(guildId);
         }, 300000);
 
         this.guildsMusicData.set(guildId, data);
+    }
+
+    public async playLastTrack(guildId: Snowflake, member: GuildMember) {
+        const musicData = this.getMusicData(guildId);
+        if (!musicData.lastTracks[0]) return;
+
+        const lastTrack = musicData.lastTracks[0];
+        musicData.queue.unshift(lastTrack);
+
+        const songs = (await musicData.player.lavaSearch(lastTrack.url, member, { add: false })) as Lava.Track[];
+
+        musicData.player.queue.add(songs[0]);
+
+        musicData.player.queue.moveTrack(musicData.player.queue.size - 1, 1);
+
+        this.skip(guildId);
     }
 
     private setListeners() {
@@ -140,6 +155,11 @@ export default class Player {
                 channel = musicData.textChannel;
 
                 if (!queue[0]) return;
+                // The first song will be null so we push the current song
+                musicData.lastTracks.push(queue[0]);
+
+                // When the queue hits 3 of length that means that the structure is [PastSong, LastSong, CurrentSong] so we remove PastSong
+                if (musicData.lastTracks.length > 2) musicData.lastTracks.shift();
 
                 musicData.skipVotes = 0;
                 musicData.isPlaying = true;
@@ -158,11 +178,14 @@ export default class Player {
                 musicData.nowPlaying = queue[0];
                 queue.shift();
 
+                console.log(musicData.player.queue);
+
                 this.guildsMusicData.set(player.options.guild.id, musicData);
             })
             .on("trackOver", (track, player) => {
                 musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
+                musicData.lastTracks.shift();
 
                 if (queue.length > 0) {
                     player.play();
@@ -173,6 +196,7 @@ export default class Player {
             .on("queueOver", (player) => {
                 musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
+                musicData.lastTracks.shift();
 
                 if (queue.length > 0) {
                     player.play();
