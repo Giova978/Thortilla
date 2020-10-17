@@ -12,12 +12,13 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super("tag", {
             category: "tags",
-            description: "Command used to manipulate tags, to see the content of a tag use ¿<tag name>",
+            description:
+                "Command used to manipulate tags, to see the content of a tag use ¿<tag name>.The bot will send a message and you will be asked to give the new content",
             permissions: ["MANAGE_GUILD"],
             usage: stripIndents`\u200B
             <tag name> [edit | delete | create]
-            tag <tag name> create <content>
-            tag <tag name> edit <new content>
+            tag <tag name> create
+            tag <tag name> edit
             tag <tag name> delete
             `,
             cooldown: 2,
