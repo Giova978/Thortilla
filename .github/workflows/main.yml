@@ -1,24 +1,29 @@
 name: Typescript compile
 
-on: 
-  push:
-    branches: master
+on:
+    push:
+        branches: master
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: tsc
-    - name: Create pull request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        branch: production
-        base: master
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "12.x"
+            - run: npm ci
+            - run: tsc
+            - uses: actions/checkout@v2
+              with:
+                  ref: production
+            - name: Reset promotion branch
+              run: |
+                  git fetch origin master:master
+                  git reset --hard master
+            - name: Create pull request
+              uses: peter-evans/create-pull-request@v3
+              with:
+                  branch: production-promotion
