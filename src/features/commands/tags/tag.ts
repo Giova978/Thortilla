@@ -118,7 +118,7 @@ module.exports = class extends Command {
             .setColor("BLUE")
             .setTitle(`Editing tag \`${tagName}\``)
             .setDescription(
-                "Initated process of editing a tag, you will have 2 minutes to respond with the new content",
+                "Initiated process of editing a tag, you will have 2 minutes to respond with the new content",
             );
 
         const filter = (msg: Message) => msg.author === message.author;
@@ -147,7 +147,7 @@ module.exports = class extends Command {
                     embed
                         .setColor("GREEN")
                         .setTitle(`Edited tag \`${tagName}\``)
-                        .setDescription(`Succesfully edited \`${tagName}\` with the provided content`);
+                        .setDescription(`Successfully edited \`${tagName}\` with the provided content`);
 
                     msg.edit(embed);
                 })
@@ -181,7 +181,7 @@ module.exports = class extends Command {
         await msg.react("✅");
 
         const filter = (reaction: MessageReaction, user: User) =>
-            (user.id === message.author.id && reaction.emoji.name === "✅") || reaction.emoji.name === "❌";
+            user.id === message.author.id && (reaction.emoji.name === "✅" || reaction.emoji.name === "❌");
         const reactionCollector = msg.createReactionCollector(filter, { max: 1, time: 60000 });
 
         reactionCollector.on("end", (collected, reason) => {
@@ -216,7 +216,7 @@ module.exports = class extends Command {
                             .setColor("RED")
                             .setTitle(`Aborted deletion of \`${tagName}\` tag`)
                             .setDescription(
-                                `Something went wron while deleting \`${tagName}\` tag, please try again later`,
+                                `Something went wrong while deleting \`${tagName}\` tag, please try again later`,
                             );
 
                         msg.edit(embed);
