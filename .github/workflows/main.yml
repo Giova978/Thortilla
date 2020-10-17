@@ -16,7 +16,6 @@ jobs:
                   node-version: "12.x"
             - run: npm ci
             - run: tsc
-            - name: Set up pull request
             - uses: actions/checkout@v2
               with:
                   ref: production
