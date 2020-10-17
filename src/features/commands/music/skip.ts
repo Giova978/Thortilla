@@ -20,10 +20,11 @@ module.exports = class extends Command {
 
     public run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
+        if (!musicData) return channel.error("There is no song playing");
+
         if (message.member?.voice.channel !== musicData.voiceChannel)
             return channel.error("You have to be in the same voice channel of the song");
 
-        if (!musicData) return channel.error("There is no song playing");
         if (musicData.queue.length === 0) return channel.error("There is no song to skip");
 
         if (args[0] === "f" && message.member.hasPermission("PRIORITY_SPEAKER")) {
