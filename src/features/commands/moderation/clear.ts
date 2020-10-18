@@ -53,7 +53,7 @@ module.exports = class extends Command {
                     });
                 })
                 .catch((err) => {
-                    console.error(err);
+                    this.handler.logger.error(err);
                     channel.error("Try again later");
                 });
         }
@@ -70,7 +70,7 @@ module.exports = class extends Command {
                 });
             })
             .catch((err) => {
-                console.error(err);
+                this.handler.logger.error(err);
                 channel.error("Try again later");
             });
     }

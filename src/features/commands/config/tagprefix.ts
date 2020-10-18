@@ -31,7 +31,7 @@ module.exports = class extends Command {
             .then((text: string) => channel.info(text))
             .catch((err) => {
                 channel.error("Something went wrong, please try again later");
-                console.error(err);
+                this.handler.logger.error(err);
             });
     }
 };

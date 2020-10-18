@@ -45,7 +45,7 @@ module.exports = class extends Command {
                 channel.success(`Successfully updated leave channel to <#${givenChannel.id}> channel`);
             })
             .catch((err) => {
-                console.error(err);
+                this.handler.logger.error(err);
                 channel.error("There was an unexpected error while updating leave channel, please try again");
             });
     }

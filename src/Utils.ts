@@ -46,6 +46,7 @@ interface IMusicData {
     voiceChannel: VoiceChannel | null;
     textChannel: TextChannel | null;
     timeout: NodeJS.Timeout | null;
+    lastTracks: [Song | null, Song?];
 }
 
 interface ICommand {

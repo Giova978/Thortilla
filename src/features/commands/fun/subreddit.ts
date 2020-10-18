@@ -31,7 +31,7 @@ module.exports = class extends Command {
             let response = await Axios.get(`https://www.reddit.com/r/${subreddit}/hot.json`);
             data = response.data.data;
         } catch (error) {
-            console.error(error);
+            this.handler.logger.error(error);
         }
 
         if (!data) return channel.error("Nothing found");
