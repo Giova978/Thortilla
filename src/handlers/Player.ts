@@ -40,7 +40,8 @@ export default class Player {
 
         data.queue.push(song);
 
-        const songs = (await data.player.lavaSearch(song.url, member!, { add: false })) as Lava.Track[];
+        // For some reason LavaJS takes add: false as true so it add the song automatically
+        const songs = (await data.player.lavaSearch(song.url, member!, { add: true })) as Lava.Track[];
 
         data.player.queue.add(songs[0]);
 
@@ -134,7 +135,8 @@ export default class Player {
         const lastTrack = musicData.lastTracks[0];
         musicData.queue.unshift(lastTrack);
 
-        const songs = (await musicData.player.lavaSearch(lastTrack.url, member, { add: false })) as Lava.Track[];
+        // For some reason LavaJS takes add: false as true so it add the song automatically
+        const songs = (await musicData.player.lavaSearch(lastTrack.url, member, { add: true })) as Lava.Track[];
 
         musicData.player.queue.add(songs[0]);
 
