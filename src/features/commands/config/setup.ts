@@ -302,7 +302,7 @@ module.exports = class extends Command {
                 msg.edit(embed);
             })
             .catch((err) => {
-                console.error(err);
+                this.handler.logger.error(err);
                 embed
                     .setColor("RED")
                     .setTitle("Error")

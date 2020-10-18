@@ -178,8 +178,6 @@ export default class Player {
                 musicData.nowPlaying = queue[0];
                 queue.shift();
 
-                console.log(musicData.player.queue);
-
                 this.guildsMusicData.set(player.options.guild.id, musicData);
             })
             .on("trackOver", (track, player) => {
@@ -209,7 +207,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                console.error("Error", err);
+                this.handler.logger.error("Error", err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {
@@ -223,7 +221,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                console.error("Error", err);
+                this.handler.logger.error("Error", err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {

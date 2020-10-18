@@ -105,7 +105,7 @@ module.exports = class extends Command {
                         );
 
                     msg.edit(embed);
-                    console.error(err);
+                    this.handler.logger.error(err);
                 });
         });
     }
@@ -161,7 +161,7 @@ module.exports = class extends Command {
                         );
 
                     msg.edit(embed);
-                    console.error(err);
+                    this.handler.logger.error(err);
                 });
         });
     }
@@ -221,7 +221,7 @@ module.exports = class extends Command {
                             );
 
                         msg.edit(embed);
-                        console.error(err);
+                        this.handler.logger.error(err);
                     });
             }
         });

@@ -13,7 +13,7 @@ class MemberDB extends GuildMember {
     private getDataFromDB() {
         MemberModel.findOne({
             userId: this.id,
-            guildId: this.guild.id
+            guildId: this.guild.id,
         })
             .then((data: any) => {
                 if (!data) {
@@ -37,13 +37,13 @@ class MemberDB extends GuildMember {
     }
 
     public async setBalance(coins: number) {
-        if (isNaN(coins)) return Promise.resolve('Please provide a valid number');
+        if (isNaN(coins)) return Promise.resolve("Please provide a valid number");
         MemberModel.findOneAndUpdate(
             { userId: this.id, guildId: this.guild.id },
             { coins },
-            { upsert: true, new: true }
+            { upsert: true, new: true },
         )
-            .then((data: any) => this.coins = data.coins)
+            .then((data: any) => (this.coins = data.coins))
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve(`Correctly setted balance for <!@${this.id}>`);
@@ -55,9 +55,9 @@ class MemberDB extends GuildMember {
         MemberModel.findOneAndUpdate(
             { userId: this.id, guildId: this.guild.id },
             { coins },
-            { upsert: true, new: true }
+            { upsert: true, new: true },
         )
-            .then((data: any) => this.coins = data.coins)
+            .then((data: any) => (this.coins = data.coins))
             .catch((err: Error) => Promise.reject(err));
 
         return Promise.resolve();
