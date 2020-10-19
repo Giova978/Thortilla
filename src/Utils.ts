@@ -156,7 +156,7 @@ class Utils {
         month = month >= 10 ? month : `0${month}`;
         let year = date.getFullYear();
 
-        let dateFormatted = `${day}, ${monthDay}/${month}/${year}`;
+        let dateFormatted = `${day}, ${month}/${monthDay}/${year}`;
 
         return dateFormatted;
     }
