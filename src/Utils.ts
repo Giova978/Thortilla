@@ -145,7 +145,7 @@ class Utils {
     }
 
     static formatTimestamp(timestamp: Date | undefined | null): string | undefined {
-        if (timestamp === undefined || timestamp === null) return undefined;
+        if (!timestamp) return undefined;
 
         let date = new Date(timestamp);
 
