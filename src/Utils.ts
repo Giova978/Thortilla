@@ -151,7 +151,7 @@ class Utils {
 
         let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         let day = days[date.getDay()];
-        let monthDay = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`;
+        let monthDay = date.getDate() >= 10 ? date.getDate() : `0${date.getDate()}`;
         let month: string | number = date.getMonth();
         month = month >= 10 ? month : `0${month}`;
         let year = date.getFullYear();
