@@ -26,6 +26,9 @@ module.exports = class extends Command {
             .setColor("GREEN")
             .setTitle("Queue")
             .setTimestamp()
+            .setFooter(
+                `Looping queue: ${musicData.player.queue.repeatQueue} | Looping track: ${musicData.player.queue.repeatTrack}`,
+            )
             .setAuthor(this.handler.client.user?.username, this.handler.client.user?.displayAvatarURL());
 
         let description = "";
@@ -35,6 +38,9 @@ module.exports = class extends Command {
         // We just add one to not have to add it later and its more human-readable
         // And we ensure that the user will enter a correct index
         musicData.queue.forEach((song, index) => {
+            // If loopQueue is true this line will remove the current playing song from showing in queue
+            // Otherwise it will do nothing
+            if (song.url === musicData.nowPlaying?.url) return;
             description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
         });
 
