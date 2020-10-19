@@ -145,6 +145,27 @@ export default class Player {
         this.skip(guildId);
     }
 
+    public loopQueue(guildId: Snowflake) {
+        const { player, queue, nowPlaying } = this.getMusicData(guildId);
+
+        if (player.queue.repeatQueue) {
+            return (player.queue.repeatQueue = false);
+        } else {
+            if (queue[queue.length - 1]?.url !== nowPlaying?.url) queue.push(nowPlaying!);
+            return player.queue.toggleRepeat("queue");
+        }
+    }
+
+    public loopTrack(guildId: Snowflake) {
+        const { player } = this.getMusicData(guildId);
+
+        if (player.queue.repeatTrack) {
+            return (player.queue.repeatTrack = false);
+        } else {
+            return player.queue.toggleRepeat("track");
+        }
+    }
+
     private setListeners() {
         let musicData;
         let queue;
@@ -178,14 +199,19 @@ export default class Player {
                 channel!.send(embed);
 
                 musicData.nowPlaying = queue[0];
-                queue.shift();
+                if (player.queue.repeatQueue) {
+                    queue.push(queue.shift()!);
+                } else {
+                    queue.shift();
+                }
 
                 this.guildsMusicData.set(player.options.guild.id, musicData);
             })
             .on("trackOver", (track, player) => {
                 musicData = this.getMusicData(player.options.guild.id);
                 queue = musicData.queue;
-                musicData.lastTracks.shift();
+
+                if (!musicData.player.queue.repeatTrack) musicData.lastTracks.shift();
 
                 if (queue.length > 0) {
                     player.play();

@@ -145,18 +145,18 @@ class Utils {
     }
 
     static formatTimestamp(timestamp: Date | undefined | null): string | undefined {
-        if (timestamp === undefined || timestamp === null) return undefined;
+        if (!timestamp) return undefined;
 
         let date = new Date(timestamp);
 
         let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         let day = days[date.getDay()];
-        let monthDay = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`;
+        let monthDay = date.getDate() >= 10 ? date.getDate() : `0${date.getDate()}`;
         let month: string | number = date.getMonth();
         month = month >= 10 ? month : `0${month}`;
         let year = date.getFullYear();
 
-        let dateFormatted = `${day}, ${monthDay}/${month}/${year}`;
+        let dateFormatted = `${day}, ${month}/${monthDay}/${year}`;
 
         return dateFormatted;
     }

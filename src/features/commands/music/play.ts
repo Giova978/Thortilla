@@ -62,6 +62,7 @@ module.exports = class extends Command {
                     skipVoteUsers: [],
                 };
 
+                // Here try/catch in not necessary. It already is in a try/catch
                 await this.handler.player.add(message.guild!.id, message.member!, song);
 
                 if (!musicData?.isPlaying) {
@@ -91,7 +92,7 @@ module.exports = class extends Command {
         // Send embed to select song
         const embed = new MessageEmbed()
             .setColor("GREEN")
-            .setTitle("Choose a song with a number beetween 1 and 5 or exit to exit")
+            .setTitle("Choose a song with a number between 1 and 5 or exit to exit")
             .addFields(
                 videosNames.map((name, i) => ({
                     name: `Song ${i + 1}`,
@@ -151,7 +152,13 @@ module.exports = class extends Command {
             skipVoteUsers: [],
         };
 
-        await this.handler.player.add(message.guild!.id, message.member!, song);
+        try {
+            await this.handler.player.add(message.guild!.id, message.member!, song);
+        } catch (error) {
+            channel.error("There was a unexpected problem");
+            songEmbed.delete();
+            this.handler.logger.error(error);
+        }
 
         if (!musicData?.isPlaying) {
             this.handler.player.play(message.guild!.id);

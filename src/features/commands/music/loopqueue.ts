@@ -8,11 +8,9 @@ module.exports = class extends Command {
     private handler: Handler;
 
     constructor({ handler }: IArgs) {
-        super("lasttrack", {
-            aliases: ["lt"],
-            permissions: ["PRIORITY_SPEAKER"],
+        super("loopqueue", {
             category: "music",
-            description: "Play the last track",
+            description: "Toggle loop the queue. It will disable loop track",
             usage: "No arguments",
         });
 
@@ -22,12 +20,7 @@ module.exports = class extends Command {
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
         if (!musicData) return channel.error("No song playing");
-        if (musicData.player.queue.repeatQueue || musicData.player.queue.repeatTrack)
-            return channel.error("You cant go back to the last song if any type of looping is on");
-        if (!musicData.lastTracks[0]) return channel.error("No last song, this is the first song");
 
-        this.handler.player.playLastTrack(message.guild!.id, message.member!);
-
-        channel.success("Now playing the last song");
+        channel.success(`Looping queue: ${this.handler.player.loopQueue(message.guild!.id)}`);
     }
 };
