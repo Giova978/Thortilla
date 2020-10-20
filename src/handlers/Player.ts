@@ -39,6 +39,11 @@ export default class Player {
         let data = this.getMusicData(guildId);
 
         data.queue.push(song);
+	if (data.player.queue.repeatQueue) {
+	    const repeatingSong = data.queue.slice(data.queue.length -2, 1)[0];
+
+	    data.queue.push(repeatingSong);
+	}
 
         // For some reason LavaJS takes add: false as true so it add the song automatically
         const songs = (await data.player.lavaSearch(song.url, member!, { add: true })) as Lava.Track[];
