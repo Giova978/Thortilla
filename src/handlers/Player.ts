@@ -1,8 +1,8 @@
 import { Collection, GuildMember, TextChannel } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
-import { IMusicData, Song } from "../Utils";
+import { IMusicData, Song, Utils } from "../Utils";
 
-import Lava, { LavaNode, PlayerOptions } from "@anonymousg/lavajs";
+import Lava, { LavaNode, PlayerOptions, Track } from "@anonymousg/lavajs";
 import { Message } from "discord.js";
 import Handler from "./Handler";
 import { VoiceChannel } from "discord.js";
@@ -38,15 +38,22 @@ export default class Player {
     public async add(guildId: Snowflake, member: GuildMember, song: Song) {
         let data = this.getMusicData(guildId);
 
+        let songs;
+        try {
+            // For some reason LavaJS takes add: false as true so it add the song automatically
+            songs = (await data.player.lavaSearch(song.url, member!, { add: true })) as Lava.Track[];
+        } catch (error) {
+            this.handler.logger.error(error);
+            return Promise.reject("Fail to add");
+        }
+        if (!songs) return Promise.reject("Fail to add");
+
         data.queue.push(song);
-	if (data.player.queue.repeatQueue) {
-	    const repeatingSong = data.queue.slice(data.queue.length -2, 1)[0];
+        if (data.player.queue.repeatQueue) {
+            const repeatingSong = data.queue.splice(data.queue.length - 2, 1)[0];
 
-	    data.queue.push(repeatingSong);
-	}
-
-        // For some reason LavaJS takes add: false as true so it add the song automatically
-        const songs = (await data.player.lavaSearch(song.url, member!, { add: true })) as Lava.Track[];
+            data.queue.push(repeatingSong);
+        }
 
         data.player.queue.add(songs[0]);
 
@@ -154,6 +161,7 @@ export default class Player {
         const { player, queue, nowPlaying } = this.getMusicData(guildId);
 
         if (player.queue.repeatQueue) {
+            queue.pop();
             return (player.queue.repeatQueue = false);
         } else {
             if (queue[queue.length - 1]?.url !== nowPlaying?.url) queue.push(nowPlaying!);
@@ -169,6 +177,28 @@ export default class Player {
         } else {
             return player.queue.toggleRepeat("track");
         }
+    }
+
+    public shuffle(guildId: Snowflake) {
+        const musicData = this.getMusicData(guildId);
+        const copy = [...musicData.queue];
+        const playerQueueCopy = musicData.player.queue.KVArray().reduce((acc, val) => {
+            acc.push(val[1]);
+            return acc;
+        }, [] as Track[]);
+        playerQueueCopy.shift();
+        musicData.player.queue.clearQueue();
+
+        const shuffledQueue = musicData.queue.map(() => {
+            const random = Utils.getRandom(copy.length, 0);
+
+            musicData.player.queue.add(playerQueueCopy[random]);
+            return copy.splice(random, 1)[0];
+        });
+
+        musicData.queue = shuffledQueue;
+
+        this.guildsMusicData.set(guildId, musicData);
     }
 
     private setListeners() {
