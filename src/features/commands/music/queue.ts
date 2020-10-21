@@ -40,7 +40,7 @@ module.exports = class extends Command {
         musicData.queue.forEach((song, index) => {
             // If loopQueue is true this line will remove the current playing song from showing in queue
             // Otherwise it will do nothing
-            if (song.url === musicData.nowPlaying?.url) return;
+            if (song.url === musicData.nowPlaying?.url && musicData.player.queue.repeatQueue) return;
             description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
         });
 
