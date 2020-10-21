@@ -160,6 +160,18 @@ class Utils {
 
         return dateFormatted;
     }
+
+    static getRandom(max: number, min: number) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    /**
+     * @description Return a random item from the given array
+     */
+    static getRandomItemFromArray<T>(arr: T[], max: number, min: number): T {
+        const random = Math.floor(Math.random() * (max - min) + min);
+        return arr[random];
+    }
 }
 
 export {
