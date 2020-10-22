@@ -117,7 +117,7 @@ module.exports = class extends Command {
 
         if (!userResponse || userResponse.size === 0) {
             songEmbed.delete();
-            return channel.error("Please try again and enter a number beetween 1 and 5 or exit");
+            return channel.error("Please try again and enter a number between 1 and 5 or exit");
         }
 
         if (userResponse.first()?.content === "exit") return songEmbed.delete();
@@ -157,7 +157,7 @@ module.exports = class extends Command {
         } catch (error) {
             channel.error("There was a unexpected problem");
             songEmbed.delete();
-            this.handler.logger.error(error);
+            return this.handler.logger.error(error);
         }
 
         if (!musicData?.isPlaying) {
