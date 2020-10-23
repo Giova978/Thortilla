@@ -30,7 +30,7 @@ module.exports = class extends Event {
             const member: MemberDB = message.member as MemberDB;
 
 	    const chances = [true, true, false, false, false, false, false, false, false, false];
-            const chance = chances[Math.floor(Math.random() * chances.length));
+            const chance = chances[Math.floor(Math.random() * chances.length))];
 
             if (chance) {
                 const coinsAdd = Math.floor(Math.random() * (30 - 5) + 5);
