@@ -1,7 +1,7 @@
 import Event from "../../handlers/Event";
 import { Client, Message, MessageEmbed } from "discord.js";
 import Handler from "../../handlers/Handler";
-import { IArgs, Utils } from "../../Utils";
+import { IArgs } from "../../Utils";
 import GuildDB from "../../models/discord/Guild";
 import MemberDB from "../../models/discord/Member";
 
