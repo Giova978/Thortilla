@@ -48,7 +48,6 @@ export default class Player {
         }
         if (!songs) return Promise.reject("Fail to add");
 
-        data.queue.push(song);
         if (data.player.queue.repeatQueue) {
             const repeatingSong = data.queue.splice(data.queue.length - 2, 1)[0];
 
@@ -94,7 +93,7 @@ export default class Player {
         guildId: Snowflake,
         player: Lava.Player,
         voiceChannel: VoiceChannel,
-        message: Message,
+        message: Message
     ): IMusicData {
         return {
             guildId: guildId,
