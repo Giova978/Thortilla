@@ -38,7 +38,7 @@ const client: Client = new Client({
 });
 
 const categories: Array<string> = readdirSync(path.join(__dirname, "./features/commands/")).filter(
-    (cat) => cat !== "debug",
+    (cat) => cat !== "debug"
 );
 
 const handler: Handler = new Handler(client, "$", categories);
