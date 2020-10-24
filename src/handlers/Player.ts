@@ -93,7 +93,7 @@ export default class Player {
         guildId: Snowflake,
         player: Lava.Player,
         voiceChannel: VoiceChannel,
-        message: Message
+        message: Message,
     ): IMusicData {
         return {
             guildId: guildId,
