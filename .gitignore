@@ -9,6 +9,8 @@ start.bat
 /dist
 .idea
 package-lock.json
+tags
+*.swp
 
 ### Node ###
 # Logs
