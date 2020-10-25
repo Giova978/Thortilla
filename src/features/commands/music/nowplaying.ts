@@ -28,16 +28,20 @@ module.exports = class extends Command {
         let description;
 
         if (song?.duration === "Live stream") {
-            description = stripIndent`
+            description = stripIndent(`
             **[${song.title}](${song.url})**
 
             Live Stream
-            `;
+            `);
         } else {
             description = this.getDurationBar(musicData, song!);
         }
 
-        const embed = new MessageEmbed().setTitle("Current song").setColor("GREEN").setDescription(description);
+        const embed = new MessageEmbed()
+            .setTitle("Current song")
+            .setColor("GREEN")
+            .setDescription(description)
+            .setThumbnail(song.thumbnail);
 
         message.channel.send(embed);
     }
