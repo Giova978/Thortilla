@@ -26,12 +26,24 @@ module.exports = class extends Event {
 
         console.log(`Bot Online`);
 
-        this.handler.lavaClient = new LavaClient(this.client, this.handler.nodes);
+        this.handler.commands.get("play")!.disable();
 
-        this.handler.lavaClient.on("nodeSuccess", () => {
-            console.log("Connected to lavalink");
-        });
+        // try {
+        //     this.handler.lavaClient = new LavaClient(
+        //         this.client,
+        //         this.handler.nodes,
+        //     );
 
-        this.handler.player = new Player(this.handler.lavaClient, this.handler);
+        //     this.handler.lavaClient.on("nodeSuccess", () => {
+        //         console.log("Connected to lavalink");
+        //     });
+
+        //     this.handler.player = new Player(
+        //         this.handler.lavaClient,
+        //         this.handler,
+        //     );
+        // } catch (error) {
+        //     console.log("Failed to connect to lavalink");
+        // }
     }
 };
