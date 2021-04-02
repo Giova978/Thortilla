@@ -27,7 +27,7 @@ module.exports = class extends Event {
             !message.author.bot &&
             !message.mentions.has(this.handler.client.user!)
         ) {
-            const member: MemberDB = message.member as MemberDB;
+            const member = message.member as MemberDB;
 
             const chances = [true, true, false, false, false, false, false, false, false, false];
             const chance = chances[Math.floor(Math.random() * chances.length)];

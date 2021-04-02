@@ -24,7 +24,7 @@ module.exports = class extends Command {
         const member = (Utils.getMember(message, args[0]) || message.member) as MemberDB;
         if (!member) return channel.error("Please give a user");
 
-        const newBalance = +args[1];
+        const newBalance = parseInt(args[0]);
         if (isNaN(newBalance)) return channel.error("Please give a valid number");
         member
             .setBalance(newBalance)
