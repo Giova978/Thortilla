@@ -25,7 +25,7 @@ module.exports = class extends Command {
         if (!musicData) return channel.error("There is no song playing");
         if (!musicData.player.paused) return channel.error("The song is not paused");
 
-        musicData.player.resume();
+        musicData.player.pause(false);
         channel.success("The song has been resumed");
     }
 };

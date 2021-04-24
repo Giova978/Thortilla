@@ -1,5 +1,5 @@
 import { Client, ClientEvents, Collection } from "discord.js";
-import { LavaClient, NodeOptions } from "@anonymousg/lavajs";
+import { Manager, NodeOptions } from 'erela.js';
 import { Utils } from "../Utils";
 import Command from "./Command";
 import Event from "./Event";
@@ -67,7 +67,7 @@ export default class Handler {
     };
     // Initialized in ready event
     public player!: Player;
-    public lavaClient!: LavaClient;
+    public manager!: Manager;
 
     public nodes: NodeOptions[] = [
         {

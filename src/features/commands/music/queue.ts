@@ -27,7 +27,7 @@ module.exports = class extends Command {
             .setTitle("Queue")
             .setTimestamp()
             .setFooter(
-                `Looping queue: ${musicData.player.queue.repeatQueue} | Looping track: ${musicData.player.queue.repeatTrack}`,
+                `Looping queue: ${musicData.player.queueRepeat} | Looping track: ${musicData.player.trackRepeat}`,
             )
             .setAuthor(this.handler.client.user?.username, this.handler.client.user?.displayAvatarURL());
 
@@ -40,7 +40,7 @@ module.exports = class extends Command {
         musicData.queue.forEach((song, index) => {
             // If loopQueue is true this line will remove the current playing song from showing in queue
             // Otherwise it will do nothing
-            if (song.url === musicData.nowPlaying?.url && musicData.player.queue.repeatQueue) return;
+            if (song.url === musicData.nowPlaying?.url && musicData.player.queueRepeat) return;
             description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
         });
 

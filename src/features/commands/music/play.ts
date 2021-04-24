@@ -73,6 +73,7 @@ module.exports = class extends Command {
                 }
             } catch (error) {
                 this.handler.logger.error(error);
+                console.log(error);
                 return channel.error("Something went wrong try again later");
             }
         }

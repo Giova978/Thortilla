@@ -55,8 +55,8 @@ module.exports = class extends Command {
     private getDescription(musicData: IMusicData) {
         const { nowPlaying, player, queue, lastTracks } = musicData;
 
-        const text = stripIndent`Looping Queue: ${player.queue.repeatQueue}
-       	Looping Song: ${player.queue.repeatTrack}
+        const text = stripIndent`Looping Queue: ${player.queueRepeat}
+       	Looping Song: ${player.trackRepeat}
 	Paused: ${player.paused}`;
 
         return text;
