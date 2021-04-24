@@ -1,6 +1,6 @@
 import Command from "../../../handlers/Command";
 import Handler from "../../../handlers/Handler";
-import { IArgs, Utils } from "../../../Utils";
+import { IArgs } from "../../../Utils";
 import { ClientEvents, Message } from "discord.js";
 import Event from "../../../handlers/Event";
 import TextChannelCS from "../../../models/discord/TextChannel";

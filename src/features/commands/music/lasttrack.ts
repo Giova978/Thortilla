@@ -22,7 +22,7 @@ module.exports = class extends Command {
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
         if (!musicData) return channel.error("No song playing");
-        if (musicData.player.queue.repeatQueue || musicData.player.queue.repeatTrack)
+        if (musicData.player.queueRepeat || musicData.player.trackRepeat)
             return channel.error("You cant go back to the last song if any type of looping is on");
         if (!musicData.lastTracks[0]) return channel.error("No last song, this is the first song");
 
