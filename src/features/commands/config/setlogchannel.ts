@@ -44,7 +44,7 @@ module.exports = class extends Command {
                 channel.success(`Successfully updated log channel to <#${givenChannel.id}> channel`);
             })
             .catch((err) => {
-                this.handler.logger.error(err);
+                this.handler.logger.error(`Error while updating log channel at guild ${guild.id}`, err);
                 channel.error("There was an unexpected error while updating log channel, please try again");
             });
     }

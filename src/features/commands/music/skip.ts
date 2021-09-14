@@ -42,7 +42,7 @@ module.exports = class extends Command {
 
         musicData.skipVotes++;
 
-        const trueMembers = musicData.player.options.voiceChannel.members.filter((member) => !member.user.bot);
+        const trueMembers = musicData.voiceChannel!.members.filter((member) => !member.user.bot);
 
         const requiredVotes = Math.ceil(trueMembers.size / 2);
 

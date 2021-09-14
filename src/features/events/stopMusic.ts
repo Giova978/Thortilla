@@ -3,7 +3,6 @@ import { Client, VoiceState } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import GuildDB from "@models/discord/Guild";
-import { LavaNode } from "@anonymousg/lavajs";
 
 module.exports = class extends Event {
     public client: Client;
@@ -28,11 +27,6 @@ module.exports = class extends Event {
         if (trueMembers.size > 0) return;
 
         musicData.player.destroy();
-
-        new LavaNode(this.handler.lavaClient, this.handler.nodes[0]).wsSend({
-            op: "leave",
-            guild_id: guild.id,
-        });
 
         this.handler.player.guildsMusicData.delete(guild.id);
     }

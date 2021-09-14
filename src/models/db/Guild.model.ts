@@ -22,7 +22,7 @@ const GuildSchema = new Schema({
         type: Object,
         default: {
             config: true,
-            debug: false,
+            debug: true,
             fun: true,
             info: true,
             moderation: true,

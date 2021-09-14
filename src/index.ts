@@ -49,7 +49,7 @@ handler.load(path.join(__dirname, "./features"), {
 });
 
 client.on("error", (err) => {
-    handler.logger.error(err);
+    handler.logger.error(err, "Error on client");
 });
 
 process.on("SIGINT", () => process.exit());

@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { LavaClient } from "@anonymousg/lavajs";
+import { Manager } from "erela.js";
 import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
@@ -26,12 +26,27 @@ module.exports = class extends Event {
 
         console.log(`Bot Online`);
 
-        this.handler.lavaClient = new LavaClient(this.client, this.handler.nodes);
+        this.handler.manager = new Manager({
+            nodes: this.handler.nodes,
+            shards: 1,
+            autoPlay: false,
+            send: (id, payload) => {
+                const guild = this.handler.client.guilds.cache.get(id);
+                if (guild) guild.shard.send(payload);
+            },
+        })
+            .on("nodeConnect", () => {
+                console.log("Connected to lavalink");
+            })
+            .on("nodeDisconnect", () => {
+                console.log("Disconnect");
+            })
+            .on("nodeError", (node, error) => {
+                this.handler.logger.error(`Lavalink 'nodeError`, node, error);
+                console.log(error);
+            })
+            .init(this.handler.client.user!.id);
 
-        this.handler.lavaClient.on("nodeSuccess", () => {
-            console.log("Connected to lavalink");
-        });
-
-        this.handler.player = new Player(this.handler.lavaClient, this.handler);
+        this.handler.player = new Player(this.handler.manager, this.handler);
     }
 };
