@@ -1,5 +1,5 @@
-import { Client, ClientEvents, Collection } from "discord.js";
-import { Manager, NodeOptions } from 'erela.js';
+import { Client, ClientEvents, Collection, PermissionString } from "discord.js";
+import { Manager, NodeOptions } from "erela.js";
 import { Utils } from "../Utils";
 import Command from "./Command";
 import Event from "./Event";

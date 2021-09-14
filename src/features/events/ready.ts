@@ -33,18 +33,19 @@ module.exports = class extends Event {
             send: (id, payload) => {
                 const guild = this.handler.client.guilds.cache.get(id);
                 if (guild) guild.shard.send(payload);
-            }
+            },
         })
-        .on("nodeConnect", () => {
-            console.log("Connected to lavalink")
-        })
-        .on("nodeDisconnect", () => {
-            console.log("Disconnect");
-        })
-        .on("nodeError", (node, error) => {
-            this.handler.logger.error(error);
-            console.log(error);
-        }).init(this.handler.client.user!.id);
+            .on("nodeConnect", () => {
+                console.log("Connected to lavalink");
+            })
+            .on("nodeDisconnect", () => {
+                console.log("Disconnect");
+            })
+            .on("nodeError", (node, error) => {
+                this.handler.logger.error(`Lavalink 'nodeError`, node, error);
+                console.log(error);
+            })
+            .init(this.handler.client.user!.id);
 
         this.handler.player = new Player(this.handler.manager, this.handler);
     }

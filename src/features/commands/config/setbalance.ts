@@ -33,7 +33,10 @@ module.exports = class extends Command {
             })
             .catch((err) => {
                 channel.error("Something went wrong, please try again later");
-                this.handler.logger.error(err);
+                this.handler.logger.error(
+                    `Error at updating balance of ${member.id} at guild ${message.guild!.id}`,
+                    err,
+                );
             });
     }
 };

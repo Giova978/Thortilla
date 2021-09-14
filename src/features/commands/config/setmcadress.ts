@@ -37,7 +37,7 @@ module.exports = class extends Command {
             .then((text: string) => message.channel.send(text))
             .catch((err) => {
                 channel.error("Something went wrong, please try again later");
-                this.handler.logger.error(err);
+                this.handler.logger.error(`Error at updating mcAdress at guild ${guild.id}`, err);
             });
     }
 };

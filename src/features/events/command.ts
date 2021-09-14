@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { Client, Message, NewsChannel, TextChannel } from "discord.js";
+import { Client, Message } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import GuildDB from "../../models/discord/Guild";
@@ -61,7 +61,7 @@ module.exports = class extends Event {
         }
 
         const permissionsMe = cmd.permissionsMe?.map(
-            // @ts-ignore
+            // @ts-expect-error
             (permission) => `\`${this.handler.permissions[permission].english}\` `,
         );
         if (!hasPermission)

@@ -3,11 +3,20 @@ import { Client, Guild, MessageEmbed, TextChannel } from "discord.js";
 import GuildModel from "@models/db/Guild.model";
 
 class GuildDB extends Guild {
-    public prefix!: string;
+    public prefix: string = "$";
     public mcAdress!: string;
-    public modules!: any;
-    public tags!: Map<string, string>;
-    public tagPrefix!: string;
+    public modules: any = {
+        config: true,
+        debug: true,
+        fun: true,
+        info: true,
+        moderation: true,
+        music: true,
+        balance: true,
+        tags: true,
+    };
+    public tags: Map<string, string> = new Map();
+    public tagPrefix: string = "¿";
     public logChannel!: string;
     public welcomeChannel!: string;
     public leaveChannel!: string;

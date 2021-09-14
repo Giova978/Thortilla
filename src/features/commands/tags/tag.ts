@@ -112,7 +112,7 @@ module.exports = class extends Command {
 
     private async editTag(tagName: string, guild: GuildDB, message: Message) {
         const tag = this.getTag(tagName, guild);
-        // @ts-ignore
+        // @ts-expect-error
         if (!tag) return message.channel.error("You cant edit a tag that doesnt exists");
 
         const embed = new MessageEmbed()

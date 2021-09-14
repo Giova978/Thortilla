@@ -2,7 +2,7 @@ import { Collection, GuildMember, TextChannel } from "discord.js";
 import { Snowflake, MessageEmbed } from "discord.js";
 import { IMusicData, Song, Utils } from "../Utils";
 
-import { Manager, PlayerOptions, Player as erelaPlayer, Track } from "erela.js"
+import { Manager, PlayerOptions, Player as erelaPlayer, Track } from "erela.js";
 import { Message } from "discord.js";
 import Handler from "./Handler";
 import { VoiceChannel } from "discord.js";
@@ -29,7 +29,7 @@ export default class Player {
         const player = this.manager.create(this.options(message, voiceChannel));
         player.setQueueRepeat(this.queueOptions.repeatQueue);
         player.setTrackRepeat(this.queueOptions.repeatTrack);
-        player.connect()
+        player.connect();
 
         this.guildsMusicData.set(guildId, this.initMusicData(guildId, player, voiceChannel, message));
     }
@@ -46,7 +46,7 @@ export default class Player {
             // For some reason LavaJS takes add: false as true so it add the song automatically
             songs = (await data.player.search(song.url, member!)).tracks;
         } catch (error) {
-            this.handler.logger.error(error);
+            this.handler.logger.error(`Error at adding song at guild ${guildId}, song: ${song.url}`, error);
             return Promise.reject("Fail to add");
         }
         if (!songs) return Promise.reject("Fail to add");
@@ -233,7 +233,7 @@ export default class Player {
                 channel!.send(embed);
 
                 musicData.nowPlaying = queue[0];
-                
+
                 if (player.queueRepeat) {
                     queue.push(queue.shift()!);
                 } else {
@@ -270,7 +270,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                this.handler.logger.error("Error", err);
+                this.handler.logger.error(`Error 'trackError', track: ${track.uri}, guild: ${player.guild}`, err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {
@@ -284,7 +284,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                this.handler.logger.error("Error", err);
+                this.handler.logger.error(`Error 'trackStuck', track: ${track.uri}, guild: ${player.guild}`, err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {

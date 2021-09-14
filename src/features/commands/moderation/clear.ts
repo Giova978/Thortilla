@@ -12,6 +12,7 @@ module.exports = class extends Command {
         super("clear", {
             permissions: ["MANAGE_MESSAGES"],
             permissionsMe: ["MANAGE_MESSAGES"],
+            aliases: ["purge", "delete"],
             category: "moderation",
             description: "Clear x messages or search x messages for the author given and delete them",
             usage: "<amount> [user]",
@@ -66,7 +67,7 @@ module.exports = class extends Command {
                 (message.guild as GuildDB).sendLog("clear", {
                     clearedBy: message.member!,
                     clearedChannel: channel,
-                    numberOfMessages: toDelete,
+                    numberOfMessages: messagesDeleted.size,
                 });
             })
             .catch((err) => {
