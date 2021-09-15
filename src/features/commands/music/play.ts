@@ -82,61 +82,16 @@ module.exports = class extends Command {
 
         // For query to search
         const videos: Array<any> = await youtube
-            .searchVideos(query)
+            .searchVideos(query, 1)
             .then((response: any) => response)
             .catch(this.handler.logger.error);
 
         if (!videos) return channel.error("We have trouble finding your query please try again");
         if (videos.length < 1) return channel.error("No matches found");
 
-        let videoIndex = userVideoIndex;
-        if (!userVideoIndex) {
-            const videosNames = videos.map((video, i) => `${i + 1}: ${video.title}`);
-
-            // Send embed to select song
-            const embed = new MessageEmbed()
-                .setColor("GREEN")
-                .setTitle("Choose a song with a number between 1 and 5 or exit to exit")
-                .addFields(
-                    videosNames.map((name, i) => ({
-                        name: `Song ${i + 1}`,
-                        value: `${name}`,
-                    })),
-                );
-
-            const songEmbed = await message.channel.send(embed);
-
-            // Fetch response from user
-            const filter = (m: Message) =>
-                m.author.id === message.author.id && (m.content === "exit" || +m.content <= 5);
-
-            const userResponse = await message.channel
-                .awaitMessages(filter, {
-                    max: 1,
-                    time: 60000,
-                    errors: ["time"],
-                })
-                .catch((err) => {
-                    return Promise.reject(false);
-                });
-
-            if (!userResponse || userResponse.size === 0) {
-                songEmbed.delete();
-                return channel.error("Please try again and enter a number between 1 and 5 or exit");
-            }
-
-            if (userResponse.first()?.content === "exit") return songEmbed.delete();
-
-            videoIndex = parseInt(userResponse.first()?.content!);
-            userResponse.first()?.delete();
-            songEmbed.delete();
-        }
-
-        if (!videoIndex) videoIndex = 1;
-
         let video;
         try {
-            video = await youtube.getVideoByID(videos[videoIndex - 1].id);
+            video = await youtube.getVideoByID(videos[0].id);
             if (!video) return channel.error("Failed to get video, try again");
         } catch (err) {
             this.handler.logger.error(`Error at getting video by search, query: ${query}`, err);
