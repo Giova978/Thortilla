@@ -30,8 +30,6 @@ module.exports = class extends Command {
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
             return channel.error("You have to be in the same channel with music");
 
-        const userVideoIndex = args[0].match(/\$/g) ? parseInt(args.splice(0, 1)[0].substr(1)) : undefined;
-        console.log(userVideoIndex);
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
