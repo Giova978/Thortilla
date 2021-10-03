@@ -146,17 +146,11 @@ module.exports = class extends Command {
 
         if (hours > 0) durationString += `${hours}:`;
         if (minutes > 0) {
-            const formated = minutes >= 10 ? minutes : `0${minutes}`;
-            durationString += `${formated}:`;
-        } else if (hours > 0) {
-            durationString += "00:";
+            durationString += `00${minutes}`.slice(-2);
         }
 
         if (seconds > 0) {
-            const formated = seconds >= 10 ? seconds : `0${seconds}`;
-            durationString += `${formated}`;
-        } else {
-            durationString += "00";
+            durationString += `00${seconds}`.slice(-2);
         }
 
         return durationString;
