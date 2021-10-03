@@ -30,8 +30,6 @@ module.exports = class extends Command {
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
             return channel.error("You have to be in the same channel with music");
 
-        const userVideoIndex = args[0].match(/\$/g) ? parseInt(args.splice(0, 1)[0].substr(1)) : undefined;
-        console.log(userVideoIndex);
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
@@ -148,17 +146,11 @@ module.exports = class extends Command {
 
         if (hours > 0) durationString += `${hours}:`;
         if (minutes > 0) {
-            const formated = minutes >= 10 ? minutes : `0${minutes}`;
-            durationString += `${formated}:`;
-        } else if (hours > 0) {
-            durationString += "00:";
+            durationString += `00${minutes}`.slice(-2);
         }
 
         if (seconds > 0) {
-            const formated = seconds >= 10 ? seconds : `0${seconds}`;
-            durationString += `${formated}`;
-        } else {
-            durationString += "00";
+            durationString += `00${seconds}`.slice(-2);
         }
 
         return durationString;

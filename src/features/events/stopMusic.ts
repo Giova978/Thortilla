@@ -27,7 +27,5 @@ module.exports = class extends Event {
         if (trueMembers.size > 0) return;
 
         musicData.player.destroy();
-
-        this.handler.player.guildsMusicData.delete(guild.id);
     }
 };

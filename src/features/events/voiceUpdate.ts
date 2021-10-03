@@ -1,5 +1,5 @@
 import Event from "../../handlers/Event";
-import { Client, Message, MessageEmbed } from "discord.js";
+import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import { VoicePacket } from "erela.js";
@@ -21,4 +21,4 @@ module.exports = class extends Event {
             this.handler.manager.updateVoiceState(d as VoicePacket);
         }
     }
-}
+};
