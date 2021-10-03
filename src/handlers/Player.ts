@@ -270,7 +270,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                this.handler.logger.error(`Error 'trackError', track: ${track.uri}, guild: ${player.guild}`, err);
+                this.handler.logger.error(`Error 'trackError', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {
@@ -284,7 +284,7 @@ export default class Player {
                 queue = musicData.queue;
                 channel = musicData.textChannel;
 
-                this.handler.logger.error(`Error 'trackStuck', track: ${track.uri}, guild: ${player.guild}`, err);
+                this.handler.logger.error(`Error 'trackStuck', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
                 channel!.send("There was a problem with the playback");
                 if (queue.length > 0) {
@@ -292,6 +292,9 @@ export default class Player {
                 } else {
                     this.leave(player.options.guild, player);
                 }
+            })
+            .on("playerDestroy", (player) => {
+                this.guildsMusicData.delete(player.guild);
             });
     }
 }

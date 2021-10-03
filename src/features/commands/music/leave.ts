@@ -1,11 +1,12 @@
 import Command from "../../../handlers/Command";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
+    private chances: boolean[] = [...Array(8).fill(false), true];
 
     constructor({ handler }: IArgs) {
         super("leave", {
@@ -25,7 +26,9 @@ module.exports = class extends Command {
 
         musicData.player.destroy();
 
-        this.handler.player.guildsMusicData.delete(message.guild!.id);
+        if (this.chances[Math.floor(Math.random() * 10)]) {
+            return channel.send("Milobann, eres gay");
+        }
 
         channel.send("Bye have a great time");
     }
