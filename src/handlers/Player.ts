@@ -295,6 +295,11 @@ export default class Player {
             })
             .on("playerDestroy", (player) => {
                 this.guildsMusicData.delete(player.guild);
+            })
+            .on("playerMove", (player, initChannel, newChannel) => {
+                const musicData = this.getMusicData(player.guild);
+
+                musicData.voiceChannel = this.handler.client.guilds.cache.get(player.guild)?.voice?.channel ?? null;
             });
     }
 }
