@@ -6,7 +6,7 @@ import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
-    private chances: boolean[] = [...Array(8).fill(false), true];
+    private chances: boolean[] = [...Array(9).fill(false), true];
 
     constructor({ handler }: IArgs) {
         super("leave", {
