@@ -149,7 +149,7 @@ module.exports = class extends Command {
 
         if (hours > 0) durationString += `${hours}:`;
         if (minutes > 0) {
-            durationString += `00${minutes}`.slice(-2);
+            durationString += `00${minutes}:`.slice(-3);
         }
 
         if (seconds > 0) {
