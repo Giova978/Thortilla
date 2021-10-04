@@ -27,6 +27,9 @@ module.exports = class extends Command {
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
         const voiceChannelUsers = this.handler.player.getMusicData(message.guild!.id).voiceChannel;
 
+        const chances = [...Array(19).fill(false), true];
+        const chance = Math.floor(Math.random() * chances.length);
+
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
             return channel.error("You have to be in the same channel with music");
 
@@ -54,7 +57,7 @@ module.exports = class extends Command {
                 const thumbnail = video.thumbnails.high.url;
                 if (duration === "00") duration = "Live stream";
                 const song = {
-                    url,
+                    url: `https://www.youtube.com/watch?v=${chance ? "dQw4w9WgXcQ" : video.id}`,
                     title,
                     duration,
                     thumbnail,
@@ -97,7 +100,7 @@ module.exports = class extends Command {
         }
 
         // Get video and data required to play;
-        const url = `https://www.youtube.com/watch?v=${video.id}`;
+        const url = `https://www.youtube.com/watch?v=${chance ? "dQw4w9WgXcQ" : video.id}`;
         const title = video.title;
         let duration =
             this.formatDuration(video.duration) === "00" ? "Live Stream" : this.formatDuration(video.duration);
