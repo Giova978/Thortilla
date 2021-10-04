@@ -28,7 +28,7 @@ module.exports = class extends Command {
         const voiceChannelUsers = this.handler.player.getMusicData(message.guild!.id).voiceChannel;
 
         const chances = [...Array(19).fill(false), true];
-        const chance = Math.floor(Math.random() * chances.length);
+        const chance = chances[Math.floor(Math.random() * chances.length)];
 
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
             return channel.error("You have to be in the same channel with music");
