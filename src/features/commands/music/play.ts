@@ -25,7 +25,8 @@ module.exports = class extends Command {
         if (!voiceChannel) return channel.error("You have to be in a voice channel");
 
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
-        const voiceChannelUsers = this.handler.player.getMusicData(message.guild!.id).voiceChannel;
+        const musicData = this.handler.player.getMusicData(message.guild!.id);
+        const voiceChannelUsers = musicData.voiceChannel;
 
         const chances = [...Array(19).fill(false), true];
         const chance = chances[Math.floor(Math.random() * chances.length)];
@@ -35,8 +36,6 @@ module.exports = class extends Command {
 
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
-
-        const musicData = this.handler.player.getMusicData(message.guild!.id);
 
         if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
             // TODO
