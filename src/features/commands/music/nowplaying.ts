@@ -58,7 +58,7 @@ module.exports = class extends Command {
         let tempDescription = stripIndent`
                                 **[${song.title}](${song.url})**
 
-                                ${durationFormatted}  `;
+                                ${durationFormatted} `;
         const timePassedPer = Math.floor((currentTime.seconds / this.getRawDuration(song.durationSec)) * 20);
 
         for (let i = 0; i < 20; i++) {
