@@ -35,8 +35,6 @@ module.exports = class extends Command {
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
-        const musicData = this.handler.player.getMusicData(message.guild!.id);
-
         const videos: Array<any> = await youtube
             .searchVideos(query)
             .then((response: any) => response)
