@@ -300,6 +300,11 @@ export default class Player {
                 const musicData = this.getMusicData(player.guild);
 
                 musicData.voiceChannel = this.handler.client.guilds.cache.get(player.guild)?.voice?.channel ?? null;
+            })
+            .on("socketClosed", (player, payload) => {
+                if (payload.code !== 4014) return;
+
+                player.destroy();
             });
     }
 }
