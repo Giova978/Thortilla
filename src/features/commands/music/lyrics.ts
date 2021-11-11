@@ -24,6 +24,7 @@ module.exports = class extends Command {
         if (message.member?.voice.channel !== musicData?.voiceChannel)
             return channel.error("You have to be in the same voice channel of the song");
         if (!musicData) return channel.error("There is no song playing");
+        if (!musicData.nowPlaying) return channel.error("There is no song playing");
 
         const cleanedTitle = this.cleanTitle(musicData.nowPlaying!.title);
 
