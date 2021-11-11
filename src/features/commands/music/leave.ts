@@ -23,12 +23,12 @@ module.exports = class extends Command {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
         if (!musicData) return channel.error("I am not in a voice channel");
 
-        const chances = [...Array(9).fill(false), true];
+        // const chances = [...Array(9).fill(false), true];
         musicData.player.destroy();
 
-        if (chances[Math.floor(Math.random() * chances.length)]) {
-            return channel.send("Milobann, eres gay");
-        }
+        // if (chances[Math.floor(Math.random() * chances.length)]) {
+        //     return channel.send("Milobann, eres gay");
+        // }
 
         channel.send("Bye have a great time");
     }
