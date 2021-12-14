@@ -6,7 +6,6 @@ import TextChannelCS from "../../../models/discord/TextChannel";
 
 module.exports = class extends Command {
     public handler: Handler;
-    private chances: boolean[] = [...Array(8).fill(false), true];
 
     constructor({ handler }: IArgs) {
         super("leave", {
@@ -24,11 +23,12 @@ module.exports = class extends Command {
         const musicData = this.handler.player.getMusicData(message.guild!.id);
         if (!musicData) return channel.error("I am not in a voice channel");
 
+        // const chances = [...Array(9).fill(false), true];
         musicData.player.destroy();
 
-        if (this.chances[Math.floor(Math.random() * 10)]) {
-            return channel.send("Milobann, eres gay");
-        }
+        // if (chances[Math.floor(Math.random() * chances.length)]) {
+        //     return channel.send("Milobann, eres gay");
+        // }
 
         channel.send("Bye have a great time");
     }

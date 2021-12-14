@@ -25,15 +25,17 @@ module.exports = class extends Command {
         if (!voiceChannel) return channel.error("You have to be in a voice channel");
 
         this.handler.player.initPlayer(message.guild!.id, message, voiceChannel);
-        const voiceChannelUsers = this.handler.player.getMusicData(message.guild!.id).voiceChannel;
+        const musicData = this.handler.player.getMusicData(message.guild!.id);
+        const voiceChannelUsers = musicData.voiceChannel;
+
+        // const chances = [...Array(19).fill(false), true];
+        const chance = false; //chances[Math.floor(Math.random() * chances.length)];
 
         if (voiceChannelUsers && voiceChannel !== voiceChannelUsers)
             return channel.error("You have to be in the same channel with music");
 
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
-
-        const musicData = this.handler.player.getMusicData(message.guild!.id);
 
         if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
             // TODO
@@ -54,7 +56,7 @@ module.exports = class extends Command {
                 const thumbnail = video.thumbnails.high.url;
                 if (duration === "00") duration = "Live stream";
                 const song = {
-                    url,
+                    url: `https://www.youtube.com/watch?v=${chance ? "dQw4w9WgXcQ" : video.id}`,
                     title,
                     duration,
                     thumbnail,
@@ -97,7 +99,7 @@ module.exports = class extends Command {
         }
 
         // Get video and data required to play;
-        const url = `https://www.youtube.com/watch?v=${video.id}`;
+        const url = `https://www.youtube.com/watch?v=${chance ? "dQw4w9WgXcQ" : video.id}`;
         const title = video.title;
         let duration =
             this.formatDuration(video.duration) === "00" ? "Live Stream" : this.formatDuration(video.duration);
@@ -146,7 +148,7 @@ module.exports = class extends Command {
 
         if (hours > 0) durationString += `${hours}:`;
         if (minutes > 0) {
-            durationString += `00${minutes}`.slice(-2);
+            durationString += `00${minutes}:`.slice(-3);
         }
 
         if (seconds > 0) {

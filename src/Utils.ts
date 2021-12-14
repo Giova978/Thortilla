@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Message, Client, GuildMember, PermissionResolvable, TextChannel, VoiceChannel, Snowflake } from "discord.js";
-import { Player } from 'erela.js';
+import { Player } from "erela.js";
 import Handler from "./handlers/Handler";
 import TextChannelCS from "./models/discord/TextChannel";
 
