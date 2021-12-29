@@ -272,7 +272,9 @@ export default class Player {
 
                 this.handler.logger.error(`Error 'trackError', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
-                channel!.send("There was a problem with the playback");
+                channel!.send(
+                    "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
+                );
                 if (queue.length > 0) {
                     player.play();
                 } else {
@@ -286,7 +288,9 @@ export default class Player {
 
                 this.handler.logger.error(`Error 'trackStuck', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
-                channel!.send("There was a problem with the playback");
+                channel!.send(
+                    "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
+                );
                 if (queue.length > 0) {
                     player.play();
                 } else {
@@ -300,6 +304,7 @@ export default class Player {
                 const musicData = this.getMusicData(player.guild);
 
                 musicData.voiceChannel = this.handler.client.guilds.cache.get(player.guild)?.voice?.channel ?? null;
+                if (!musicData.voiceChannel) player.destroy();
             })
             .on("socketClosed", (player, payload) => {
                 if (payload.code !== 4014) return;
