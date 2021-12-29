@@ -155,7 +155,7 @@ export default class Player {
         const movedSong = musicData.player.queue.remove(musicData.player.queue.size - 1)[0];
         musicData.player.queue.add(movedSong);
 
-        this.skip(guildId);
+        this.play(guildId);
     }
 
     public loopQueue(guildId: Snowflake) {
