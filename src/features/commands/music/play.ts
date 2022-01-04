@@ -45,7 +45,9 @@ module.exports = class extends Command {
             const videos = await Promise.all(playlist.videos.map((video: any) => video.fetch()));
 
             const failed: string[] = [];
-            const succeed = await videos.reduce(async (acc: number, video: any) => {
+            let succeed = 0;
+
+            for (const video of videos) {
                 const song = {
                     url: `https://www.youtube.com/watch?v=${video.id}`,
                     title: video.title,
@@ -57,14 +59,14 @@ module.exports = class extends Command {
 
                 try {
                     await this.handler.player.add(message.guild!.id, message.member!, song);
-                    return ++acc;
+                    succeed++;
                 } catch (error) {
                     failed.push(song.title);
-                    return acc;
+                    this.handler.logger.error(`Failed to add song ${song.title} to queue: ${error}`);
                 }
-            }, 0);
+            }
 
-            if (videos.length === failed.length) {
+            if (succeed < 1) {
                 return channel.error(`Failed to add the playlist to the queue`);
             }
 
@@ -74,8 +76,6 @@ module.exports = class extends Command {
             if (!musicData?.isPlaying) {
                 this.handler.player.play(message.guild!.id);
             }
-
-            console.log(succeed);
 
             return channel.success(`Added ${succeed} songs to the queue`);
         }
@@ -104,7 +104,6 @@ module.exports = class extends Command {
                     skipVoteUsers: [],
                 };
 
-                // Here try/catch in not necessary. We are already in a try/catch
                 await this.handler.player.add(message.guild!.id, message.member!, song);
 
                 if (!musicData?.isPlaying) {
