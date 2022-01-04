@@ -37,16 +37,56 @@ module.exports = class extends Command {
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
-        if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
-            // TODO
-            return channel.error("Playlist are not supported");
+        if (query.match(/^(?!.*\?.*\bv=)https:\/\/(www|music)\.youtube\.com\/.*\?.*\blist=.*$/)) {
+            const id = query.split(/playlist\?list=/)[1].split(/[^0-9a-z_\-]/i)[0];
+            const playlist = await youtube.getPlaylistByID(id);
+            await playlist.getVideos();
+
+            const videos = await Promise.all(playlist.videos.map((video: any) => video.fetch()));
+
+            const failed: string[] = [];
+            const succeed = await videos.reduce(async (acc: number, video: any) => {
+                const song = {
+                    url: `https://www.youtube.com/watch?v=${video.id}`,
+                    title: video.title,
+                    duration: this.formatDuration(video.duration),
+                    thumbnail: video.thumbnails.high.url,
+                    durationSec: video.duration,
+                    skipVoteUsers: [],
+                };
+
+                try {
+                    await this.handler.player.add(message.guild!.id, message.member!, song);
+                    return ++acc;
+                } catch (error) {
+                    failed.push(song.title);
+                    return acc;
+                }
+            }, 0);
+
+            if (videos.length === failed.length) {
+                return channel.error(`Failed to add the playlist to the queue`);
+            }
+
+            if (failed.length > 0)
+                channel.error(`Failed to add the following songs to the queue: ${failed.join(", ")}`);
+
+            if (!musicData?.isPlaying) {
+                this.handler.player.play(message.guild!.id);
+            }
+
+            console.log(succeed);
+
+            return channel.success(`Added ${succeed} songs to the queue`);
         }
 
-        if (query.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
+        if (query.match(/^(http(s)?:\/\/)?((w){3}\.|music\.)?youtu(be|\.be)?(\.com)?\/.+/)) {
             const url = query;
             try {
-                let newQuery = query.replace(/(>|<)/gi, "").split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-                const id = newQuery[2].split(/[^0-9a-z_\-]/i)[0];
+                const id = query
+                    .replace(/(>|<)/gi, "")
+                    .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)[2]
+                    .split(/[^0-9a-z_\-]/i)[0];
 
                 const video = await youtube.getVideoByID(id);
                 if (!video) return channel.error("Failed to get video, try again");
@@ -64,7 +104,7 @@ module.exports = class extends Command {
                     skipVoteUsers: [],
                 };
 
-                // Here try/catch in not necessary. It already is in a try/catch
+                // Here try/catch in not necessary. We are already in a try/catch
                 await this.handler.player.add(message.guild!.id, message.member!, song);
 
                 if (!musicData?.isPlaying) {
