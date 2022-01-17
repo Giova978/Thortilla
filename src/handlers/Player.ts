@@ -135,7 +135,7 @@ export default class Player {
         data.timeout = setTimeout(() => {
             player.destroy();
             this.guildsMusicData.delete(guildId);
-        }, 300000);
+        }, 3600000);
 
         this.guildsMusicData.set(guildId, data);
     }
