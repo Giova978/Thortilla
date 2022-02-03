@@ -118,6 +118,13 @@ module.exports = class extends Command {
                 };
 
                 await this.handler.player.add(message.guild!.id, message.member!, song);
+                StatModel.create({
+                    userId: message.author.id,
+                    guildId: message.guild!.id,
+                    songUrl: song.url,
+                    songTitle: song.title,
+                    action: "play",
+                }).catch(this.handler.logger.error);
 
                 if (!musicData?.isPlaying) {
                     this.handler.player.play(message.guild!.id);
@@ -168,6 +175,13 @@ module.exports = class extends Command {
 
         try {
             await this.handler.player.add(message.guild!.id, message.member!, song);
+            StatModel.create({
+                userId: message.author.id,
+                guildId: message.guild!.id,
+                songUrl: song.url,
+                songTitle: song.title,
+                action: "play",
+            }).catch(this.handler.logger.error);
         } catch (error) {
             channel.error("There was a unexpected problem");
             return this.handler.logger.error(
