@@ -28,8 +28,8 @@ class TextChannelCS extends TextChannel {
             return;
         }
 
-        this.send(embed).then((msg) => {
-            if (!timeout) return;
+        return this.send(embed).then((msg) => {
+            if (!timeout) return msg;
             msg.delete({ timeout });
         });
     }
@@ -46,8 +46,8 @@ class TextChannelCS extends TextChannel {
             return;
         }
 
-        this.send(embed).then((msg) => {
-            if (!timeout) return;
+        return this.send(embed).then((msg) => {
+            if (!timeout) return msg;
             msg.delete({ timeout });
         });
     }

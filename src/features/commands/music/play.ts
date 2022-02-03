@@ -42,6 +42,8 @@ module.exports = class extends Command {
             const playlist = await youtube.getPlaylistByID(id);
             await playlist.getVideos();
 
+            const msg = await channel.info("Playlist found, fetching songs...");
+
             const videos = await Promise.all(playlist.videos.map((video: any) => video.fetch()));
 
             const failed: string[] = [];
@@ -65,6 +67,8 @@ module.exports = class extends Command {
                     this.handler.logger.error(`Failed to add song ${song.title} to queue: ${error}`);
                 }
             }
+
+            msg!.delete();
 
             if (succeed < 1) {
                 return channel.error(`Failed to add the playlist to the queue`);
