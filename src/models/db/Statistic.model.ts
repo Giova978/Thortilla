@@ -27,6 +27,6 @@ const StatScheme: Schema = new Schema({
     },
 });
 
-const StatModel = model("member", StatScheme);
+const StatModel = model("statistics", StatScheme);
 
 export default StatModel;
