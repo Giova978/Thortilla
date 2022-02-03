@@ -4,6 +4,7 @@ import Youtube from "simple-youtube-api";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
+import StatModel from "@models/db/Statistic.model";
 const youtube = new Youtube(process.env.YT_API);
 
 module.exports = class extends Command {
@@ -62,6 +63,14 @@ module.exports = class extends Command {
                 try {
                     await this.handler.player.add(message.guild!.id, message.member!, song);
                     succeed++;
+
+                    StatModel.create({
+                        userId: message.author.id,
+                        guildId: message.guild!.id,
+                        songUrl: song.url,
+                        songTitle: song.title,
+                        action: "play",
+                    });
                 } catch (error) {
                     failed.push(song.title);
                     this.handler.logger.error(`Failed to add song ${song.title} to queue: ${error}`);

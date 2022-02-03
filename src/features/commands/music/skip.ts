@@ -3,6 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { IArgs } from "@utils";
 import Handler from "@handlers/Handler";
 import TextChannelCS from "@models/discord/TextChannel";
+import StatModel from "@models/db/Statistic.model";
 
 module.exports = class extends Command {
     private readonly handler: Handler;
@@ -26,6 +27,14 @@ module.exports = class extends Command {
             return channel.error("You have to be in the same voice channel of the song");
 
         if (musicData.queue.length === 0) return channel.error("There is no song to skip");
+
+        StatModel.create({
+            userId: message.author.id,
+            guildId: message.guild!.id,
+            songUrl: musicData.nowPlaying!.url,
+            songTitle: musicData.nowPlaying!.title,
+            action: "skip",
+        });
 
         if (args[0] === "f" && message.member.hasPermission("PRIORITY_SPEAKER")) {
             this.handler.player.skip(message.guild!.id);
