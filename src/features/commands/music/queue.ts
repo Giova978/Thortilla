@@ -41,7 +41,7 @@ module.exports = class extends Command {
             // If loopQueue is true this line will remove the current playing song from showing in queue
             // Otherwise it will do nothing
             if (song.url === musicData.nowPlaying?.url && musicData.player.queueRepeat) return;
-            description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration}`;
+            description += `\n\`${index + 1}\`[${song.title}](${song.url}) ${song.duration} [<@${song.addedBy}>]`;
         });
 
         embed.setDescription(description);

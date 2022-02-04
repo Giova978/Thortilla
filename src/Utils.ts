@@ -33,6 +33,7 @@ type Song = {
     thumbnail: string;
     durationSec: number;
     skipVoteUsers: string[];
+    addedBy: Snowflake;
 };
 
 interface IMusicData {

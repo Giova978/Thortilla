@@ -58,6 +58,7 @@ module.exports = class extends Command {
                     thumbnail: video.thumbnails.high.url,
                     durationSec: video.duration,
                     skipVoteUsers: [],
+                    addedBy: message.author.id,
                 };
 
                 try {
@@ -115,6 +116,7 @@ module.exports = class extends Command {
                     thumbnail,
                     durationSec: video.duration,
                     skipVoteUsers: [],
+                    addedBy: message.author.id,
                 };
 
                 await this.handler.player.add(message.guild!.id, message.member!, song);
@@ -171,6 +173,7 @@ module.exports = class extends Command {
             thumbnail,
             durationSec: video.duration,
             skipVoteUsers: [],
+            addedBy: message.author.id,
         };
 
         try {
