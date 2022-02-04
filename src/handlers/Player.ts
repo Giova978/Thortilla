@@ -201,6 +201,15 @@ export default class Player {
         this.guildsMusicData.set(guildId, musicData);
     }
 
+    public removeTrack(guildId: Snowflake, position: number) {
+        const musicData = this.getMusicData(guildId);
+        if (!position || position < 0 || position > musicData.queue.length - 1) return false;
+        const removedSong = musicData.queue.splice(position, 1)[0];
+        this.guildsMusicData.set(guildId, musicData);
+
+        return removedSong;
+    }
+
     private setListeners() {
         let musicData;
         let queue;

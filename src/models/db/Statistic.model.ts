@@ -25,6 +25,11 @@ const StatScheme: Schema = new Schema({
         type: String,
         required: true,
     },
+
+    addedBy: {
+        type: String,
+        default: "",
+    },
 });
 
 const StatModel = model("statistic", StatScheme);
