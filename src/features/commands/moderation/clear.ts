@@ -12,7 +12,7 @@ module.exports = class extends Command {
         super("clear", {
             permissions: ["MANAGE_MESSAGES"],
             permissionsMe: ["MANAGE_MESSAGES"],
-            aliases: ["purge", "delete"],
+            aliases: ["purge"],
             category: "moderation",
             description: "Clear x messages or search x messages for the author given and delete them",
             usage: "<amount> [user]",
