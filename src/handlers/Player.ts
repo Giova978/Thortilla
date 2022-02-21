@@ -147,7 +147,6 @@ export default class Player {
         const lastTrack = musicData.lastTracks[0];
         musicData.queue.unshift(lastTrack);
 
-        // For some reason LavaJS takes add: false as true so it add the song automatically
         const songs = (await musicData.player.search(lastTrack.url, member)).tracks;
 
         musicData.player.queue.add(songs[0]);
@@ -256,7 +255,9 @@ export default class Player {
                 musicData = this.getMusicData(player.options.guild);
                 queue = musicData.queue;
 
-                if (!musicData.player.trackRepeat) musicData.lastTracks.shift();
+                if (musicData.player.trackRepeat) return player.play();
+
+                musicData.lastTracks.shift();
 
                 if (queue.length > 0) {
                     player.play();
@@ -285,6 +286,7 @@ export default class Player {
                 channel!.send(
                     "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
                 );
+
                 if (queue.length > 0) {
                     player.play();
                 } else {
@@ -301,6 +303,7 @@ export default class Player {
                 channel!.send(
                     "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
                 );
+
                 if (queue.length > 0) {
                     player.play();
                 } else {
