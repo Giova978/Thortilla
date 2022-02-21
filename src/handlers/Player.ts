@@ -145,14 +145,11 @@ export default class Player {
         if (!musicData.lastTracks[0]) return;
 
         const lastTrack = musicData.lastTracks[0];
-        musicData.queue.unshift(lastTrack);
+        musicData.queue.push(lastTrack);
 
         const songs = (await musicData.player.search(lastTrack.url, member)).tracks;
 
         musicData.player.queue.add(songs[0]);
-
-        const movedSong = musicData.player.queue.remove(musicData.player.queue.size - 1)[0];
-        musicData.player.queue.add(movedSong);
 
         this.play(guildId);
     }
