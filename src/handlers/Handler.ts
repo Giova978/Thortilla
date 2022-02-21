@@ -82,7 +82,13 @@ export default class Handler {
         this.categories = categories;
         this.prefix = prefix;
 
-        this.logger = pino();
+        this.logger = pino({
+            prettyPrint: {
+                colorize: true,
+                translateTime: "yyyy-mm-dd HH:MM:ss",
+                ignore: "hostname,pid",
+            },
+        });
     }
 
     public load(directory: any, args: object) {
