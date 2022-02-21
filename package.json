@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "tsc && node -r ./tsconfig-paths-bootstrap.js dist/index",
+        "debug": "tsc && node -r ./tsconfig-paths-bootstrap.js dist/index",
+        "start": "node -r ./tsconfig-paths-bootstrap.js dist/index",
         "tsc": "tsc"
     },
     "author": "",
