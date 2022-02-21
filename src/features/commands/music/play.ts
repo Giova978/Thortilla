@@ -4,6 +4,7 @@ import Youtube from "simple-youtube-api";
 import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
+import StatModel from "@models/db/Statistic.model";
 const youtube = new Youtube(process.env.YT_API);
 
 module.exports = class extends Command {
@@ -37,16 +38,69 @@ module.exports = class extends Command {
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
-        if (query.match(/^(?!.*\?.*\bv=)https:\/\/www\.youtube\.com\/.*\?.*\blist=.*$/)) {
-            // TODO
-            return channel.error("Playlist are not supported");
+        if (query.match(/^(?!.*\?.*\bv=)https:\/\/(www|music)\.youtube\.com\/.*\?.*\blist=.*$/)) {
+            const id = query.split(/playlist\?list=/)[1].split(/[^0-9a-z_\-]/i)[0];
+            const playlist = await youtube.getPlaylistByID(id);
+            await playlist.getVideos();
+
+            const msg = await channel.info("Playlist found, fetching songs...");
+
+            const videos = await Promise.all(playlist.videos.map((video: any) => video.fetch()));
+
+            const failed: string[] = [];
+            let succeed = 0;
+
+            for (const video of videos) {
+                const song = {
+                    url: `https://www.youtube.com/watch?v=${video.id}`,
+                    title: video.title,
+                    duration: this.formatDuration(video.duration),
+                    thumbnail: video.thumbnails.high.url,
+                    durationSec: video.duration,
+                    skipVoteUsers: [],
+                    addedBy: message.author.id,
+                };
+
+                try {
+                    await this.handler.player.add(message.guild!.id, message.member!, song);
+                    succeed++;
+
+                    StatModel.create({
+                        userId: message.author.id,
+                        guildId: message.guild!.id,
+                        songUrl: song.url,
+                        songTitle: song.title,
+                        action: "play",
+                    });
+                } catch (error) {
+                    failed.push(song.title);
+                    this.handler.logger.error(`Failed to add song ${song.title} to queue: ${error}`);
+                }
+            }
+
+            msg!.delete();
+
+            if (succeed < 1) {
+                return channel.error(`Failed to add the playlist to the queue`);
+            }
+
+            if (failed.length > 0)
+                channel.error(`Failed to add the following songs to the queue: ${failed.join(", ")}`);
+
+            if (!musicData?.isPlaying) {
+                this.handler.player.play(message.guild!.id);
+            }
+
+            return channel.success(`Added ${succeed} songs to the queue`);
         }
 
-        if (query.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/)) {
+        if (query.match(/^(http(s)?:\/\/)?((w){3}\.|music\.)?youtu(be|\.be)?(\.com)?\/.+/)) {
             const url = query;
             try {
-                let newQuery = query.replace(/(>|<)/gi, "").split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-                const id = newQuery[2].split(/[^0-9a-z_\-]/i)[0];
+                const id = query
+                    .replace(/(>|<)/gi, "")
+                    .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)[2]
+                    .split(/[^0-9a-z_\-]/i)[0];
 
                 const video = await youtube.getVideoByID(id);
                 if (!video) return channel.error("Failed to get video, try again");
@@ -62,10 +116,17 @@ module.exports = class extends Command {
                     thumbnail,
                     durationSec: video.duration,
                     skipVoteUsers: [],
+                    addedBy: message.author.id,
                 };
 
-                // Here try/catch in not necessary. It already is in a try/catch
                 await this.handler.player.add(message.guild!.id, message.member!, song);
+                StatModel.create({
+                    userId: message.author.id,
+                    guildId: message.guild!.id,
+                    songUrl: song.url,
+                    songTitle: song.title,
+                    action: "play",
+                }).catch(this.handler.logger.error);
 
                 if (!musicData?.isPlaying) {
                     this.handler.player.play(message.guild!.id);
@@ -112,10 +173,18 @@ module.exports = class extends Command {
             thumbnail,
             durationSec: video.duration,
             skipVoteUsers: [],
+            addedBy: message.author.id,
         };
 
         try {
             await this.handler.player.add(message.guild!.id, message.member!, song);
+            StatModel.create({
+                userId: message.author.id,
+                guildId: message.guild!.id,
+                songUrl: song.url,
+                songTitle: song.title,
+                action: "play",
+            }).catch(this.handler.logger.error);
         } catch (error) {
             channel.error("There was a unexpected problem");
             return this.handler.logger.error(

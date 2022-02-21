@@ -10,9 +10,8 @@ module.exports = class extends Command {
     constructor({ handler }: IArgs) {
         super("lasttrack", {
             aliases: ["lt"],
-            permissions: ["PRIORITY_SPEAKER"],
             category: "music",
-            description: "Play the last track",
+            description: "Adds the last song to the queue",
             usage: "No arguments",
         });
 
@@ -24,10 +23,10 @@ module.exports = class extends Command {
         if (!musicData) return channel.error("No song playing");
         if (musicData.player.queueRepeat || musicData.player.trackRepeat)
             return channel.error("You cant go back to the last song if any type of looping is on");
-        if (!musicData.lastTracks[0]) return channel.error("No last song, this is the first song");
+        if (!musicData.lastTracks[0]) return channel.error("No last song");
 
         this.handler.player.playLastTrack(message.guild!.id, message.member!);
 
-        channel.success("Now playing the last song");
+        channel.success("Last song added to the queue");
     }
 };

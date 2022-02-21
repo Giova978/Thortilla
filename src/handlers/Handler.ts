@@ -1,4 +1,4 @@
-import { Client, ClientEvents, Collection, PermissionString } from "discord.js";
+import { Client, ClientEvents, Collection } from "discord.js";
 import { Manager, NodeOptions } from "erela.js";
 import { Utils } from "../Utils";
 import Command from "./Command";
@@ -82,7 +82,13 @@ export default class Handler {
         this.categories = categories;
         this.prefix = prefix;
 
-        this.logger = pino();
+        this.logger = pino({
+            prettyPrint: {
+                colorize: true,
+                translateTime: "yyyy-mm-dd HH:MM:ss",
+                ignore: "hostname,pid",
+            },
+        });
     }
 
     public load(directory: any, args: object) {

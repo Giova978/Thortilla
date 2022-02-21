@@ -135,7 +135,7 @@ export default class Player {
         data.timeout = setTimeout(() => {
             player.destroy();
             this.guildsMusicData.delete(guildId);
-        }, 300000);
+        }, 3600000);
 
         this.guildsMusicData.set(guildId, data);
     }
@@ -145,17 +145,13 @@ export default class Player {
         if (!musicData.lastTracks[0]) return;
 
         const lastTrack = musicData.lastTracks[0];
-        musicData.queue.unshift(lastTrack);
+        musicData.queue.push(lastTrack);
 
-        // For some reason LavaJS takes add: false as true so it add the song automatically
         const songs = (await musicData.player.search(lastTrack.url, member)).tracks;
 
         musicData.player.queue.add(songs[0]);
 
-        const movedSong = musicData.player.queue.remove(musicData.player.queue.size - 1)[0];
-        musicData.player.queue.add(movedSong);
-
-        this.skip(guildId);
+        this.play(guildId);
     }
 
     public loopQueue(guildId: Snowflake) {
@@ -201,6 +197,15 @@ export default class Player {
         this.guildsMusicData.set(guildId, musicData);
     }
 
+    public removeTrack(guildId: Snowflake, position: number) {
+        const musicData = this.getMusicData(guildId);
+        if (!position || position < 0 || position > musicData.queue.length - 1) return false;
+        const removedSong = musicData.queue.splice(position, 1)[0];
+        this.guildsMusicData.set(guildId, musicData);
+
+        return removedSong;
+    }
+
     private setListeners() {
         let musicData;
         let queue;
@@ -226,10 +231,11 @@ export default class Player {
                     .setTitle("Current Song")
                     .setColor("GREEN")
                     .addField("Now playing", `[${queue[0].title}](${queue[0].url})`)
-                    .addField("Duration", queue[0].duration);
+                    .addField("Duration", queue[0].duration)
+                    .addField("Requested by", `<@${queue[0].addedBy}>`);
 
                 if (queue[0].thumbnail) embed.setThumbnail(queue[0].thumbnail);
-                if (queue[1]) embed.addField("Next song", queue[1].title);
+                if (queue[1]) embed.addField("Next song", `${queue[1].title} [<@${queue[1].addedBy}>]`);
                 channel!.send(embed);
 
                 musicData.nowPlaying = queue[0];
@@ -246,7 +252,9 @@ export default class Player {
                 musicData = this.getMusicData(player.options.guild);
                 queue = musicData.queue;
 
-                if (!musicData.player.trackRepeat) musicData.lastTracks.shift();
+                if (musicData.player.trackRepeat) return player.play();
+
+                musicData.lastTracks.shift();
 
                 if (queue.length > 0) {
                     player.play();
@@ -272,7 +280,10 @@ export default class Player {
 
                 this.handler.logger.error(`Error 'trackError', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
-                channel!.send("There was a problem with the playback");
+                channel!.send(
+                    "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
+                );
+
                 if (queue.length > 0) {
                     player.play();
                 } else {
@@ -286,7 +297,10 @@ export default class Player {
 
                 this.handler.logger.error(`Error 'trackStuck', track: ${track?.uri}, guild: ${player.guild}`, err);
                 player.stop();
-                channel!.send("There was a problem with the playback");
+                channel!.send(
+                    "There was a problem with the playback. Try again, maybe with another video, selecting it from the $search command",
+                );
+
                 if (queue.length > 0) {
                     player.play();
                 } else {
@@ -300,6 +314,7 @@ export default class Player {
                 const musicData = this.getMusicData(player.guild);
 
                 musicData.voiceChannel = this.handler.client.guilds.cache.get(player.guild)?.voice?.channel ?? null;
+                if (!musicData.voiceChannel) player.destroy();
             })
             .on("socketClosed", (player, payload) => {
                 if (payload.code !== 4014) return;

@@ -19,7 +19,7 @@ module.exports = class extends Event {
     public async run() {
         this.client.user?.setPresence({
             activity: {
-                name: "$ | http://thortilla.giova.software/",
+                name: "$",
                 type: "WATCHING",
             },
         });

@@ -21,7 +21,7 @@ module.exports = class extends Event {
         if (!message.guild) return;
 
         const guild: GuildDB = message.guild as GuildDB;
-        const prefix: string = guild.getPrefix;
+        const prefix: string = process.env.DEV ? "$$" : guild.getPrefix;
         const channel = message.channel as TextChannelCS;
 
         if (

@@ -33,6 +33,9 @@ module.exports = class extends Command {
 
         const timeToSkip = (parseInt(minutes) * 60 + parseInt(seconds)) * 1000;
 
+        if (timeToSkip >= musicData.nowPlaying?.durationSec! * 1000)
+            return channel.error("Please provide a valid timestamp");
+
         musicData.player.seek(timeToSkip);
 
         channel.success(`Skipped to ${time}`);
