@@ -113,6 +113,21 @@ export default class Handler {
         this.registerEvents();
     }
 
+    public reloadCommand(command: Command) {
+        if (this.commands.has(command.name)) {
+            const oldCommand = this.commands.get(command.name);
+            this.commands.delete(command.name);
+
+            if (oldCommand!.aliases && Array.isArray(oldCommand!.aliases)) {
+                oldCommand!.aliases.forEach((alias) => {
+                    this.aliases.delete(alias);
+                });
+            }
+        }
+
+        this.loadCommand(command);
+    }
+
     private loadCommand(command: Command) {
         if (this.commands.has(command.name) || this.aliases.has(command.name)) {
             throw new Error(`This command name (${command.name}) is in use`);
