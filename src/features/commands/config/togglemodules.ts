@@ -22,14 +22,17 @@ module.exports = class extends Command {
 
     public async run(message: Message, args: string[], channel: TextChannelCS) {
         const module: string = args[0];
-        if (!module || module === "config" || module === "debug") return channel.error("Please provide a valid module");
+        if (!module || module === "config") return channel.error("Please provide a valid module");
+        if (module === "debug" && message.author.id !== process.env.OWNER)
+            return channel.error("Please provide a valid module");
+
         const stateString = args[1];
         if (!stateString || !["on", "off"].includes(stateString)) return channel.error("Please provide a valid state");
 
         const guild: GuildDB = message.guild as GuildDB;
 
         const modules = guild.getModulesStatus;
-        const availableModules = ["music", "balance", "fun", "info", "tags", "moderation"];
+        const availableModules = ["music", "balance", "fun", "info", "tags", "moderation", "debug"];
 
         if (!availableModules.includes(module)) return channel.error("Please provide a valid module");
 

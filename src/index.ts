@@ -12,6 +12,8 @@ import TextChannelCS from "./models/discord/TextChannel";
 import NewsChannelCS from "./models/discord/NewsChannel";
 import DMChannelCS from "./models/discord/DMChannel";
 
+import commandupdater from "./commandupdater";
+
 config({
     path: __dirname + "/.env",
 });
@@ -51,6 +53,8 @@ handler.load(path.join(__dirname, "./features"), {
 client.on("error", (err) => {
     handler.logger.error(err, "Error on client");
 });
+
+if (process.env.DEV) commandupdater(handler);
 
 process.on("SIGINT", () => process.exit());
 
