@@ -15,6 +15,7 @@ module.exports = class extends Event {
     }
 
     public async run(guild: Guild) {
+        if (!guild.id) return;
         const { player, isPlaying } = this.handler.player.getMusicData(guild.id);
         if (isPlaying) player.destroy();
     }
