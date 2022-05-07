@@ -40,6 +40,7 @@ export default class Player {
 
     public async add(guildId: Snowflake, member: GuildMember, song: Song) {
         let data = this.getMusicData(guildId);
+        if (!data) return Promise.reject("No music data found");
 
         let songs;
         try {

@@ -5,6 +5,7 @@ import { IArgs } from "../../../Utils";
 import Handler from "../../../handlers/Handler";
 import TextChannelCS from "../../../models/discord/TextChannel";
 import StatModel from "@models/db/Statistic.model";
+import { SearchResult } from "erela.js-spotify/dist/plugin";
 const youtube = new Youtube(process.env.YT_API);
 
 module.exports = class extends Command {
@@ -38,14 +39,27 @@ module.exports = class extends Command {
         const query = args.join(" ");
         if (!query) return channel.error("Please give a song name or YT url");
 
-        if (query.match(/^(?!.*\?.*\bv=)https:\/\/(www|music)\.youtube\.com\/.*\?.*\blist=.*$/)) {
-            const id = query.split(/playlist\?list=/)[1].split(/[^0-9a-z_\-]/i)[0];
-            const playlist = await youtube.getPlaylistByID(id);
-            await playlist.getVideos();
+        // Spotify regex from https://github.com/MenuDocs/erela.js-spotify/blob/master/src/plugin.ts
+        if (
+            query.match(/^(?!.*\?.*\bv=)https:\/\/(www|music)\.youtube\.com\/.*\?.*\blist=.*$/) ||
+            query.match(/(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(playlist|album)[\/:]([A-Za-z0-9]+)/)
+        ) {
+            let preFetchedVideos;
+
+            if (query.match(/(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(playlist|album)[\/:]([A-Za-z0-9]+)/)) {
+                const playlist = (await this.handler.manager.search(query, message.member)) as SearchResult;
+                await Promise.all(playlist.tracks.map((track) => track.resolve()));
+
+                preFetchedVideos = await Promise.all(playlist.tracks.map((track) => youtube.getVideo(track.uri)));
+            } else {
+                const id = query.split(/playlist\?list=/)[1].split(/[^0-9a-z_\-]/i)[0];
+                preFetchedVideos = await youtube.getPlaylistByID(id);
+                await preFetchedVideos.getVideos().videos;
+            }
 
             const msg = await channel.info("Playlist found, fetching songs...");
 
-            const videos = await Promise.all(playlist.videos.map((video: any) => video.fetch()));
+            const videos = await Promise.all(preFetchedVideos.map((video: any) => video.fetch()));
 
             const failed: string[] = [];
             let succeed = 0;
@@ -78,7 +92,7 @@ module.exports = class extends Command {
                 }
             }
 
-            msg!.delete();
+            msg?.delete();
 
             if (succeed < 1) {
                 return channel.error(`Failed to add the playlist to the queue`);
@@ -94,15 +108,31 @@ module.exports = class extends Command {
             return channel.success(`Added ${succeed} songs to the queue`);
         }
 
-        if (query.match(/^(http(s)?:\/\/)?((w){3}\.|music\.)?youtu(be|\.be)?(\.com)?\/.+/)) {
+        // Spotify regex from https://github.com/MenuDocs/erela.js-spotify/blob/master/src/plugin.ts
+        if (
+            query.match(/^(http(s)?:\/\/)?((w){3}\.|music\.)?youtu(be|\.be)?(\.com)?\/.+/) ||
+            query.match(/(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track)[\/:]([A-Za-z0-9]+)/)
+        ) {
             const url = query;
             try {
-                const id = query
-                    .replace(/(>|<)/gi, "")
-                    .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)[2]
-                    .split(/[^0-9a-z_\-]/i)[0];
+                let video;
 
-                const video = await youtube.getVideoByID(id);
+                if (query.match(/(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track)[\/:]([A-Za-z0-9]+)/)) {
+                    const {
+                        tracks: [track],
+                    } = (await this.handler.manager.search(query)) as SearchResult;
+                    await track.resolve();
+
+                    video = await youtube.getVideo(track.uri);
+                } else {
+                    const id = query
+                        .replace(/(>|<)/gi, "")
+                        .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)[2]
+                        .split(/[^0-9a-z_\-]/i)[0];
+
+                    video = await youtube.getVideoByID(id);
+                }
+
                 if (!video) return channel.error("Failed to get video, try again");
 
                 const title = video.title;

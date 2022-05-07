@@ -4,6 +4,7 @@ import { Client } from "discord.js";
 import Handler from "../../handlers/Handler";
 import { IArgs } from "../../Utils";
 import Player from "../../handlers/Player";
+import Spotify from "erela.js-spotify";
 
 module.exports = class extends Event {
     public client: Client;
@@ -34,6 +35,12 @@ module.exports = class extends Event {
                 const guild = this.handler.client.guilds.cache.get(id);
                 if (guild) guild.shard.send(payload);
             },
+            plugins: [
+                new Spotify({
+                    clientID: process.env.SPOTIFY_ID!,
+                    clientSecret: process.env.SPOTIFY_CLIENT!,
+                }),
+            ],
         })
             .on("nodeConnect", () => {
                 console.log("Connected to lavalink");
