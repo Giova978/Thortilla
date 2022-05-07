@@ -15,7 +15,7 @@ export default function (handler: Handler) {
             // Delete the cached required file
             delete require.cache[require.resolve(distPath)];
 
-            const command = new (require(distPath))(handler);
+            const command = new (require(distPath))({ client: handler.client, handler });
             handler.reloadCommand(command);
             console.log(`Reloaded ${command.name}`);
         } catch (error) {
