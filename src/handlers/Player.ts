@@ -318,8 +318,6 @@ export default class Player {
                 if (!musicData.voiceChannel) player.destroy();
             })
             .on("socketClosed", (player, payload) => {
-                if (payload.code !== 4014) return;
-
                 player.destroy();
             });
     }
