@@ -34,6 +34,6 @@
         "simple-youtube-api": "^5.2.1",
         "tsconfig-paths": "^3.9.0",
         "typescript": "^4.0.3",
-        "undici": "^3.3.5"
+        "undici": "^5.8.0"
     }
 }
